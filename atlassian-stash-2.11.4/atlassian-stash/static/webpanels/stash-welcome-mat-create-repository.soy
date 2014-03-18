@@ -1,0 +1,11 @@
+{namespace stash.web.project.overview.banner}
+/**
+ * @param project
+ */
+{template .stashWelcomeMatCreateRepository}
+<a href="{nav_repo_create($project)}" class="create-repository-link">
+    <span class="icon"></span>
+    <h3>{stash_i18n('stash.web.welcome-mat.create.repository.heading', 'Create Repository')}</h3>
+    <p>{stash_i18n('stash.web.welcome-mat.create.repository.text', 'Create a Git repository to manage your code. Share your repository with other users by giving them access to your project.')}</p>
+</a>
+{/template}

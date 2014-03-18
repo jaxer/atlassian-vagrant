@@ -1,0 +1,40 @@
+{namespace widget.aui}
+
+/**
+ * @param menuId
+ * @param? menuClass
+ * @param menuContents deprecated since 2.6 for removal in 3.0. Use the $menuContent param instead.
+ * @param menuContent
+ * @param? triggerId
+ * @param? triggerTitle
+ * @param? triggerClass
+ * @param? triggerText
+ * @param? triggerContents deprecated since 2.6 for removal in 3.0. Use the $triggerContent param instead.
+ * @param? triggerContent
+ * @param? showIcon
+ * @param? dataContainer
+ * @param? hasCustomStyle
+ **/
+{template .dropdown2}
+{let $menuContent :
+    $menuContent ? $menuContent :
+        ($menuContents ? $menuContents : '') /}
+{let $triggerContent :
+    $triggerContent ? $triggerContent :
+        ($triggerContents ? $triggerContents : '') /}
+<a class="aui-dropdown2-trigger{if $triggerClass} {$triggerClass}{/if}" aria-owns="{$menuId}" aria-haspopup="true" {if $triggerId}id="{$triggerId}"{/if} {if $triggerTitle}title="{$triggerTitle}"{/if} {if $dataContainer}data-container="{$dataContainer}"{/if} href="#">
+    {if $triggerContent}
+        {$triggerContent|noAutoescape}
+    {/if}
+    {if $triggerText}
+        {$triggerText}
+    {/if}
+    {if $showIcon}
+        <span class="icon aui-icon-dropdown"></span>
+    {/if}
+</a>
+<div style="display: none" id="{$menuId}" class="aui-dropdown2{if not $hasCustomStyle} aui-style-default{/if}{if $menuClass} {$menuClass}{/if}">
+    {$menuContent|noAutoescape}
+</div>
+
+{/template}

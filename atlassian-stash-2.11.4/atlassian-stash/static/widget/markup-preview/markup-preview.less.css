@@ -1,0 +1,9 @@
+.preview-button,.preview-help{width:16px;height:16px;margin-bottom:5px;display:block;}.preview-button .aui-icon,.preview-help .aui-icon{color:#707070;}
+.preview-button.aui-button.aui-button-link,.preview-button.aui-button.aui-button-link:visited{padding:0;border:none;}
+.preview-markup{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:#FAFAFA;border:1px solid #cccccc;cursor:pointer;display:none;min-height:64px;padding:5px;word-wrap:break-word;white-space:normal;}
+.preview-spinner{width:0;height:0;position:absolute;left:50%;top:50%;}
+.rendering .preview-spinner{display:block;}
+.rendering textarea{opacity:0.5;filter:alpha(opacity=50);}
+.previewing .expandingText,.previewing textarea,.previewing textarea.expanding{display:none;}
+.previewing .preview-markup{display:block;}
+.rendering .preview-button,.previewing .preview-button{background-position:0 -64px;}.rendering .preview-button:hover,.previewing .preview-button:hover{background-position:0 -96px;}

@@ -1,0 +1,1 @@
+define("model/content-tree-node-types",function(){return{DIRECTORY:"DIRECTORY",FILE:"FILE",SUBMODULE:"SUBMODULE"}});

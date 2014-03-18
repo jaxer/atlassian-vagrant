@@ -1,0 +1,13 @@
+{namespace stash.web.repository}
+
+/**
+ */
+{template .gettingStartedInfo}
+{{stash_i18n('stash.help.repository.cloning','{0}Learn more about cloning repositories{1}','<a href="https://www.atlassian.com/git/tutorial/git-basics#!clone" target="_blank">', '</a>')|noAutoescape}}
+{/template}
+
+/**
+ */
+{template .readOnlyInfo}
+{{stash_i18n('stash.web.repository.readonly.tooltip', 'You have {0}read-only{1} access', '<strong>', '</strong>')|noAutoescape}}
+{/template}

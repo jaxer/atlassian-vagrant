@@ -1,0 +1,26 @@
+<atlassian-plugin key="com.atlassian.stash.stash-web-api" name="Stash Public Web Components">
+
+    <stash-resource key="branch-selector-field" name="Branch selector widget">
+        <directory location="/static/stash/api/feature/branch-selector-field/" source="webContextStatic"/>
+        <dependency>com.atlassian.stash.stash-web-plugin:branch-selector-field-internals</dependency>
+    </stash-resource>
+
+    <stash-resource key="pull-request-web-panels" name="Templates for use in Pull Request web panels">
+        <resource type="download" name="pull-request-web-panels.js" location="/static/stash/api/feature/pull-request/pull-request-web-panels.soy">
+            <param name="source" value="webContextStatic" />
+        </resource>
+        <dependency>com.atlassian.stash.stash-web-plugin:summary-panel-widget</dependency>
+    </stash-resource>
+
+    <stash-resource key="file-handlers" name="File handlers">
+        <!-- Only required by file handlers _at the moment_ -->
+        <resource type="download" name="handler-registry.js" location="/static/util/handler-registry.js">
+            <param name="source" value="webContextStatic"/>
+        </resource>
+        <resource type="download" name="file-handlers.js" location="/static/stash/api/feature/files/file-handlers.js">
+            <param name="source" value="webContextStatic"/>
+        </resource>
+        <dependency>com.atlassian.stash.stash-web-plugin:global</dependency>
+    </stash-resource>
+
+</atlassian-plugin>

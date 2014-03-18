@@ -1,0 +1,122 @@
+{namespace stash.layout}
+
+/**
+ * @param repository
+ * @param pullRequest
+ * @param activeTab
+ * @param content
+ * @param? dataAttributes
+ * @param? pageBottomContent
+ * @param? windowTitle
+ * @param maxChanges max changes to show in the diff tree
+ * @param? relevantContextLines
+ */
+{template .pullRequest}
+    {webResourceManager_requireResourcesForContext('internal.layout.pullRequest')}
+    {webResourceManager_requireResourcesForContext('stash.layout.pullRequest')}
+    {requirePageData('stash.layout.pullRequest', [ 'repository' : $repository, 'pullRequest' : $pullRequest])}
+    {call stash.layout.repository}
+        {{param windowTitle: $windowTitle ? $windowTitle : stash_i18n('stash.web.pull-request.windowtitle', 'Pull Request #{0}: {1}', '' + $pullRequest.id, $pullRequest.title) /}}
+        {param dataAttributes: $dataAttributes /}
+        {param content}
+            <header class="pull-request-metadata">
+                <div class="pull-request-metadata-primary">
+                    <div class="pull-request-id-and-state">
+                        <span class="pull-request-id">#{$pullRequest.id}</span>
+                        {call stash.widget.lozenge.pullRequestState}
+                            {param state: $pullRequest.state /}
+                        {/call}
+                    </div>
+                    {call stash.feature.pullRequest.branchToBranch}
+                        {param sourceRef: $pullRequest.fromRef /}
+                        {param targetRef: $pullRequest.toRef /}
+                    {/call}
+                    <h2 class="title">{$pullRequest.title}</h2>
+                </div>
+                <div class="pull-request-metadata-secondary">
+                    {call aui.toolbar2.toolbar2}
+                        {param extraClasses : 'pull-request-toolbar' /}
+                        {param content}
+                            {call aui.toolbar2.item}
+                                {param item: 'secondary' /}
+                                {param content}
+                                    {foreach $webSection in getWebSections('stash.pull-request.toolbar',
+                                        [ 'repository' : $repository, 'pullRequest' : $pullRequest])}
+                                        {call stash.buttons.buttons}
+                                            {param extraClasses: $webSection.styleClass /}
+                                            {param content}
+                                                {foreach $webItem in getWebItems($webSection.key,
+                                                    [ 'repository' : $repository, 'pullRequest' : $pullRequest])}
+                                                    {call stash.buttons.button}
+                                                        {param isPrimary: (not $webItem.params['stashButtonPrimary'] ? false : true) /}
+                                                        {param isPressed: (not $webItem.params['stashButtonActive'] ? false : true) /}
+                                                        {param iconType: $webItem.params['stashIconClass'] or $webItem.params['stashButtonIconClass'] ? 'custom' : '' /}
+                                                        /* stashButtonIconClass is deprecated in 2.4, use stashIconClass instead */
+                                                        {param iconClass: $webItem.params['stashButtonIconClass'] ? $webItem.params['stashButtonIconClass'] + ' deprecated' : $webItem.params['stashIconClass'] /}
+                                                        {param buttonText: $webItem.linkText /}
+                                                        {param title: $webItem.tooltip /}
+                                                        {param extraClasses: $webItem.styleClass /}
+                                                    {/call}
+                                                {/foreach}
+                                            {/param}
+                                        {/call}
+                                    {/foreach}
+                                {/param}
+                            {/call}
+                        {/param}
+                    {/call}
+                    {if length($pullRequest.reviewers) > 0}
+                        {call stash.layout.pullRequest.participantsSection}
+                            {param extraClasses: 'reviewers' /}
+                            {param participantRoles: $pullRequest.reviewers /}
+                            {param participantRoleHeading}
+                                {if length($pullRequest.reviewers) == 1}
+                                    {stash_i18n('stash.web.pull-request.reviewers.label.singular', 'Reviewer')}
+                                {else}
+                                    {stash_i18n('stash.web.pull-request.reviewers.label.plural', 'Reviewers')}
+                                {/if}
+                            {/param}
+                            {param participantMenuId: 'overflow-reviewers' /}
+                        {/call}
+                    {/if}
+                </div>
+            </header>
+            {call widget.aui.webItemTabs}
+                {param webItems: getWebItems('stash.pull-request.nav', [ 'repository' : $repository, 'pullRequest' : $pullRequest ]) /}
+                {param context: [ 'repository' : $repository, 'pullRequest' : $pullRequest ] /}
+                {param activeTab: $activeTab /}
+                {param isDisabled: true /}
+                {param tabPanesContent}
+                    {call widget.aui.tabPane}
+                        {param isActive: true /}
+                        {param extraClasses: 'pull-request-content' /}
+                        {param content}
+                            {$content|noAutoescape}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+        {param repository: $repository /}
+        {param activeNav: 'stash.repository.nav.pull-requests' /}
+        {param pageBottomContent}
+            // Deprecated since 2.4 for removal in 3.0
+            {requirePageData('stash.internal.pull-request.view', [
+                'pullRequest' : $pullRequest,
+                'watchable' : $pullRequest
+            ])}
+            <script>require('layout/pull-request').onReady(
+                {to_json($pullRequest, ['markup' : 'description'])|noAutoescape},
+                '{$activeTab|escapeJs}',
+                '.pull-request-content',
+                {to_json(getWebItems('stash.repository.difftree.header'))|noAutoescape},
+                {to_json(getWebSections('stash.commits.extras', [ 'repository' : $repository ]))|noAutoescape},
+                {$maxChanges ? $maxChanges : 'null'},
+                {$relevantContextLines ? $relevantContextLines : 'null'}
+            );</script>
+            {if $pageBottomContent}
+                {$pageBottomContent|noAutoescape}
+            {/if}
+        {{/param}}
+    {/call}
+{/template}

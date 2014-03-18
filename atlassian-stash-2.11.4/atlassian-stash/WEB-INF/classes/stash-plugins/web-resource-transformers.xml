@@ -1,0 +1,15 @@
+<atlassian-plugin key="com.atlassian.stash.stash-web-resource-transformers" name="System Web Resource Transformers">
+
+    <web-resource-transformer key="stashJsI18n" name="Stash JavaScript I18n Transformer"
+                              class="com.atlassian.stash.internal.web.i18n.JavascriptI18NWebResourceTransformer"/>
+
+    <web-resource-transformer key="stashJsHelp" name="Stash JavaScript Help Transformer"
+                              class="com.atlassian.stash.internal.web.help.JavascriptHelpUrlWebResourceTransformer"/>
+
+    <web-resource-transformer key="dateFormat" name="Stash JavaScript Date Format Transformer"
+                              class="com.atlassian.stash.internal.web.StashDateFormatWebResourceTransformer"/>
+
+    <web-resource-transformer key="development" name="Stash Development Transformers"
+                              class="com.atlassian.stash.internal.web.DevelopmentWebResourceTransformer"/>
+
+</atlassian-plugin>

@@ -1,0 +1,16 @@
+{namespace stash.feature.pullRequest}
+
+/**
+ * @param extraClasses
+ */
+{template .mergeConflictBanner}
+    {call widget.aui.message.warning}
+        {param extraClasses}
+            merge-conflicted-message{if $extraClasses} {$extraClasses}{/if}
+        {/param}
+        {param content}
+            <strong>{stash_i18n('stash.web.pull-request.merge.conflicts', 'This pull request can\'\'t be merged.')}</strong>{sp}
+            {{stash_i18n('stash.web.pull-request.merge.conflicts.need.resolving', 'You will need to resolve conflicts to be able to merge. {0}More information{1}.', '<a href="#" class="manual-merge">', '</a>')|noAutoescape}}
+        {/param}
+    {/call}
+{/template}

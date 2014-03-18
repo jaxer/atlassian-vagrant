@@ -1,0 +1,84 @@
+{namespace stash.widget}
+
+/**
+ * @param? branchesOnly
+ * @deprecated in 2.4, removal in 3.0. Use feature/repository/revision-reference-selector or feature/repository/branch-selector instead.
+ */
+{template .branchSelector}
+    <div class="deprecated branch-selector">
+        <header>
+            <input type="text" name="filter" placeholder="{stash_i18n('stash.web.filebrowser.branchselector.search.placeholder', 'Search')}"/>
+        </header>
+        <div class="aui-tabs horizontal-tabs">
+            <ul class="tabs-menu">
+                <li class="menu-item active-tab">
+                    <a id="branch-selector-tab-branch" href="#branch-pane" data-type="branch"><strong>{stash_i18n('stash.web.filebrowser.branchselector.tablabel.branches', 'Branches')}</strong></a>
+                </li>
+                {if not $branchesOnly}
+                <li class="menu-item">
+                    <a id="branch-selector-tab-tag" href="#tag-pane" data-type="tag"><strong>{stash_i18n('stash.web.filebrowser.branchselector.tablabel.tags', 'Tags')}</strong></a>
+                </li>
+                {/if}
+            </ul>
+        </div>
+        <div class="tabs-pane active-pane" id="branch-pane">
+            <ul class="branch-list">
+            </ul>
+        </div>
+        {if not $branchesOnly}
+        <div class="tabs-pane" id="tag-pane">
+            <ul class="branch-list">
+            </ul>
+        </div>
+        {/if}
+    </div>
+{/template}
+
+/**
+ * @param branchesPage
+ * @param branchSelectorType
+ * @deprecated in 2.4, removal in 3.0. Use feature/repository/revision-reference-selector or feature/repository/branch-selector instead.
+ */
+{template .branchSelectorItems}
+    {foreach $branch in $branchesPage.values}
+        /* when we have a nav builder, build an actual url */
+        <li class="result"
+            data-id="{$branch.id}"
+            data-csid="{$branch.latestChangeset}"
+            data-default="{$branch.isDefault ? 'true' : 'false'}">
+            // we set tabindex=-1 because we want the branch selector results to be traversed with up/down keys.
+            // native browser tabbing is reserved for the Branches and Tags tabs and the filter input.
+            <a href="{$branch.url ? $branch.url : '#'}" tabindex="-1"><span class="aui-icon aui-icon-small aui-iconfont-devtools-{$branchSelectorType}"></span>{$branch.displayId}</a>
+        </li>
+    {ifempty}
+        <li>
+            <span class="no-results">{$branchSelectorType == 'tag' ?
+                    stash_i18n('stash.web.filebrowser.branchselector.label.noTagsFound', 'No tags found') :
+                     stash_i18n('stash.web.filebrowser.branchselector.label.noBranchesFound', 'No branches found')}</span>
+        </li>
+    {/foreach}
+    {if $branchesPage.isLastPage and length($branchesPage.values) > 0}
+        <li><span>{$branchSelectorType == 'tag' ? stash_i18n('cavar.widget.branchselector.label.noMoreTags', 'No more tags') : stash_i18n('cavar.widget.branchselector.label.noMoreBranches', 'No more branches')}</span></li>
+    {/if}
+{/template}
+
+/**
+ * @param revisionRefType
+ * @param? initialValue
+ * @param? extraClasses
+ * @deprecated in 2.4, removal in 3.0. Use feature/repository/revision-reference-selector or feature/repository/branch-selector instead.
+ */
+{template .branchSelectorTrigger}
+    <button class="deprecated aui-button branch-selector-trigger{if $extraClasses} {$extraClasses}{/if}"
+        {if $initialValue} title="{{stash_i18n('stash.web.branchselector.tooltip', 'Branch: {0}', $initialValue)}}"{/if}>
+        <span class="ref-type-icon aui-icon aui-icon-small aui-iconfont-devtools-{$revisionRefType}"></span>
+        <span class="ref-name">
+            {if $initialValue}
+                {$initialValue}
+            {else}
+                {stash_i18n('stash.web.branchselector.default', 'Select Branch')}
+            {/if}
+        </span>
+        <span class="icon icon-dropdown"></span>
+    </button>
+{/template}

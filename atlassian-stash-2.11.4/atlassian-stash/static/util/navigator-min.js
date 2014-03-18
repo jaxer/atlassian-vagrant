@@ -1,0 +1,1 @@
+define("util/navigator",["exports"],function(B){var C=window.navigator.userAgent;var A=window.navigator.platform;B._getUserAgent=function(){return C};B._getPlatform=function(){return A}});

@@ -1,0 +1,20 @@
+@import "../../../global.less";
+
+@descriptionActionWidth: 20px;
+
+.pull-request-details .pull-request-description {
+    .previewable-textarea-wrapper {
+        position: relative;
+        width: @auiLongFieldWidth;
+    }
+
+    .description-actions {
+        width: @descriptionActionWidth;
+        z-index: 5;
+        margin-left: @baseSpacing;
+        position: absolute;
+        top: 0;
+        left: @auiLongFieldWidth;
+    }
+}
+

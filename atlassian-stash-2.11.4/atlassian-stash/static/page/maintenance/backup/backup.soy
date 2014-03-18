@@ -1,0 +1,27 @@
+{namespace stash.maintenance}
+
+/**
+ * @param? cancelToken
+ * @param? errorTexts
+ * @param status
+ */
+{template .backup}
+{webResourceManager_requireResourcesForContext('stash.page.backup')}
+{call stash.layout.maintenance}
+    {param windowTitle : stash_i18n('stash.web.maintenance.title', 'Currently under maintenance') /}
+    {param cancelToken: $cancelToken /}
+    {param status: $status /}
+    {param errorTexts: $errorTexts /}
+    {param heading: stash_i18n('stash.web.maintenance.backup.title', 'Performing Backup') /}
+    {param description:
+        $cancelToken ?
+            stash_i18n('stash.web.maintenance.backup.description.admin', 'Backup is currently underway and shouldn\'\'t take long. You may cancel the backup to restore access to the system, or wait for it to complete.') :
+            stash_i18n('stash.web.maintenance.backup.description', 'Backup is currently underway and shouldn\'\'t take long.') /}
+    {param cancelButtonText: stash_i18n('stash.web.backup.button.cancel', 'Cancel backup') /}
+    {param pageBottomContent}
+        <script>
+            require('page/maintenance/backup').onReady({if $cancelToken}true{else}false{/if});
+        </script>
+    {/param}
+{/call}
+{/template}

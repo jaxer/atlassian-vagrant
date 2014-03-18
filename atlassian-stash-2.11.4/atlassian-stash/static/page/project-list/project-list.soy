@@ -1,0 +1,68 @@
+{namespace stash.page}
+
+/**
+* @param projectPage a page of projects
+*/
+{template .projectList}
+{webResourceManager_requireResourcesForContext('stash.page.projectList')}
+{call stash.layout.entity}
+    {param windowTitle: stash_i18n('stash.web.project.list.window.title', 'Projects') /}
+    {param entityName: stash_i18n('stash.web.project.heading', 'Projects') /}
+    {param activeHeaderNav: 'projects-menu' /}
+    {param panelClass: 'fixed-right' /}
+    {param actionWebItems: getWebItems('stash.project.list.actions') /}
+    {param content}
+        {call widget.aui.group.group}
+            {param extraClasses: 'project-banners' /}
+            {param content}
+                {foreach $webPanel in getWebPanels('stash.web.project.list.banner', ['projectPage' : $projectPage])}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {$webPanel|noAutoescape}
+                        {/param}
+                    {/call}
+                {/foreach}
+            {/param}
+        {/call}
+
+        {call stash.feature.project.projectTable}
+            {param projectPage: $projectPage /}
+            {param id: 'projects-table' /}
+        {/call}
+    {/param}
+    {param panelSidebarContent}
+        <section>
+            {foreach $webItem in getWebItems('stash.project.list.sidebar.items')}
+                {call stash.widget.welcomeMat}
+                    {param title: $webItem.linkText /}
+                    {param href: $webItem.url /}
+                    {param content}
+                        <p>
+                        {$webItem.tooltip}
+                        </p>
+                    {/param}
+                    {param size: 'small' /}
+                    {param backgroundClass: $webItem.styleClass /}
+                {/call}
+            {/foreach}
+        </section>
+        <section>
+            <ul>
+                {foreach $webItem in getWebItems('stash.project.help.basics')} // Deprecated since 2.4 for removal in 3.0, use the stash.project.list.sidebar.items plugin point instead
+                    <li>{call stash.widget.webItem data="$webItem" /}</li>
+                {/foreach}
+            </ul>
+            <ul>
+                {foreach $webItem in getWebItems('stash.project.help.reference')} // Deprecated since 2.4 for removal in 3.0, use the stash.project.list.sidebar.items plugin point instead
+                    <li>{call stash.widget.webItem data="$webItem" /}</li>
+                {/foreach}
+            </ul>
+        </section>
+    {/param}
+    {param pageBottomContent}
+    <script>
+        require('page/project-list').onReady('projects-table');
+    </script>
+    {/param}
+{/call}
+{/template}

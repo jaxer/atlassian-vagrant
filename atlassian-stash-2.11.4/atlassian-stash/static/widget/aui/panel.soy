@@ -1,0 +1,16 @@
+{namespace widget.aui}
+
+/**
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param? extraClasses
+ */
+{template .panel}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+    {call aui.page.pagePanel}
+        {param extraClasses: 'content-body' + ($extraClasses ? ' ' + $extraClasses : '' ) /}
+        {param content: $content /}
+    {/call}
+{/template}

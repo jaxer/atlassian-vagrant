@@ -1,0 +1,17 @@
+{namespace stash.page}
+
+/**
+ * @param repository
+ * @param cloneUrl
+ * @param currentUser
+ */
+{template .emptyRepositoryInstructions}
+    {foreach $webPanel in getWebPanels('stash.empty.repository.instructions', [
+        'project' : $repository.project,
+        'repository' : $repository,
+        'cloneUrl' : $cloneUrl,
+        'user' : $currentUser
+    ])}
+        {$webPanel|noAutoescape}
+    {/foreach}
+{/template}

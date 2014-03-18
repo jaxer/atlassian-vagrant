@@ -1,0 +1,18 @@
+.aui-page-header-main .repository-badges{display:inline-block;padding:0;margin:0 0 0 10px;list-style:none;}.aui-page-header-main .repository-badges .repository-badge{margin-left:5px;}.aui-page-header-main .repository-badges .repository-badge:first-child{margin-left:0;}
+.aui-page-header-main .repository-badges .repository-badge .badge{width:16px;height:16px;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;background-size:16px 16px;vertical-align:top;}.aui-page-header-main .repository-badges .repository-badge .badge.repository-read-only{background-image:url('icons/icon-readonly-lock.png');background-color:#979797;}
+.aui-page-header-main .fork-origin{color:#707070;display:inline-block;white-space:nowrap;margin-left:10px;vertical-align:text-bottom;}.aui-page-header-main .fork-origin>a{-o-text-overflow:ellipsis;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;display:inline-block;max-width:150px;vertical-align:bottom;}
+.aui-page-header-main .fork-origin .aui-icon{margin-right:10px;vertical-align:top;}
+.aui-page-header-actions>li>a,.aui-page-header-actions>li>span{margin-left:5px;}
+.aui-page-header-actions>li>a,.aui-page-header-actions>li>div,.aui-page-header-actions>li>span{vertical-align:top;}
+.aui-page-header-actions .aui-button>.aui-icon{margin-right:10px;color:#707070;}
+.aui-page-header-actions .clone-repo:after{width:0;height:0;border:4px solid transparent;border-bottom:none;border-top-color:#333333;opacity:0.8;display:inline-block;content:"";vertical-align:middle;margin-left:5px;}
+.aui-button.repository-protocol{-webkit-border-top-right-radius:0;-moz-border-radius-topright:0;border-top-right-radius:0;-webkit-border-bottom-right-radius:0;-moz-border-radius-bottomright:0;border-bottom-right-radius:0;}
+#inline-dialog-clone-repo-dialog .contents{padding:0;}
+#inline-dialog-clone-repo-dialog .clone-url{padding:15px;}#inline-dialog-clone-repo-dialog .clone-url .aui-button,#inline-dialog-clone-repo-dialog .clone-url input{float:left;display:block;}
+#inline-dialog-clone-repo-dialog .clone-url .aui-button{width:60px;}
+#inline-dialog-clone-repo-dialog .clone-url input{-webkit-border-radius:0 3.01px 3.01px 0;-moz-border-radius:0 3.01px 3.01px 0;border-radius:0 3.01px 3.01px 0;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;padding:0 5px;border-left:none;max-width:none;width:270px;height:30px;font-size:12px;font-family:monospace;}
+#inline-dialog-clone-repo-dialog .clone-url .aui-dropdown2-trigger{width:73px;}#inline-dialog-clone-repo-dialog .clone-url .aui-dropdown2-trigger~input{width:257px;}
+#inline-dialog-clone-repo-dialog .clone-url.git-ssh-clone-url .aui-dropdown2-trigger{width:63px;}#inline-dialog-clone-repo-dialog .clone-url.git-ssh-clone-url .aui-dropdown2-trigger~input{width:267px;}
+#repository-protocol-selector{z-index:3600;}
+.repository-protocol[disabled],.repository-protocol[disabled]:hover,.repository-protocol[disabled]:focus,.repository-protocol[disabled]:active,.repository-protocol[aria-disabled="true"],.repository-protocol[aria-disabled="true"]:hover,.repository-protocol[aria-disabled="true"]:focus,.repository-protocol[aria-disabled="true"]:active,.repository-protocol[aria-disabled="true"][aria-pressed]{color:#333333;text-shadow:0 1px 0 #fff;}
+#content>.aui-page-header .aui-page-header-actions{white-space:nowrap;}

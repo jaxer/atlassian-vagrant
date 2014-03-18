@@ -1,0 +1,143 @@
+{namespace stash.widget}
+
+/**
+ * @param? url
+ * @param? linkText
+ * @param? styleClass
+ * @param? linkId
+ * @param? tooltip
+ * @param? contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param? content
+ * @param? params
+ * @param? forceLink sometimes we want to force the use of an anchor rather than a span
+ */
+{template .webItem}
+{let $content: ($contents ? $contents : $content) /}
+     <{$url or $forceLink ? 'a' : 'span'}
+        {if $url} href="{$url}"{/if}
+        {if $linkId} id="{$linkId}"{/if}
+        {if $styleClass} class="{$styleClass}"{/if}
+        {if $tooltip} title="{$tooltip}"{/if}
+        >
+        {if $content}
+            {$content|noAutoescape}
+        {elseif $params and $params['stashIconClass']}
+            <span class="aui-icon {$params['stashIconClass']}">{$linkText}</span>
+        {else}
+            {$linkText}
+        {/if}
+    </{$url or $forceLink ? 'a' : 'span'}>
+{/template}
+
+/**
+ * @param linkText
+ * @param? linkId
+ * @param? tooltip
+ * @param? url
+ * @param? styleClass
+ * @param? extraClasses
+ * @param? params
+ */
+{template .webItemButton}
+    {call stash.buttons.button}
+        {param buttonText: $linkText ? $linkText : '' /}
+        {param id: $linkId /}
+        {param title: $tooltip /}
+        {param extraClasses: $styleClass and $extraClasses ?
+                                $styleClass + ' ' + $extraClasses :
+                             $styleClass ?
+                                $styleClass :
+                             $extraClasses /}
+        {param href: $url /}
+        {param iconType: $params['stashIconClass'] ? 'custom' : '' /}
+        {param iconClass: $params['stashIconClass'] /}
+        {param iconText: not $linkText ? $tooltip : '' /} // Just an icon button, so put the tooltip as iconText for accessibility
+    {/call}
+{/template}
+
+/**
+ * @deprecated since 2.5 for removal in 3.0. Use stash.widget.webItemButton instead.
+ *
+ * @param linkText
+ * @param? linkId
+ * @param? tooltip
+ * @param? url
+ * @param? styleClass
+ */
+{template .webItemToolbarButton}
+    {call .webItemButton data="all"}
+        {param extraClasses: 'deprecated' /}
+    {/call}
+{/template}
+
+/**
+ * @param linkText
+  * @param? linkId
+  * @param? tooltip
+  * @param? url
+  * @param? styleClass
+  * @param? isActive
+ */
+{template .webItemtabMenuItem private="true"}
+    {call widget.aui.tabMenuItem}
+        {param id: $linkId /}
+        {param tooltip: $tooltip /}
+        {param text: $linkText /}
+        {param url: $url /}
+        {param extraClasses: $styleClass /}
+        {param isActive: $isActive /}
+    {/call}
+{/template}
+
+/**
+ * Sometimes we need to use the webItem with slightly different options for
+ * AUI Dropdown 2 checkbox links. Since these are links without a href the
+ * webItem turns them in to a span, here we'll call the webItem with a
+ * forceLink parameter to force it to use an anchor.
+ *
+ * @param? url
+ * @param? linkText
+ * @param? styleClass
+ * @param? linkId
+ * @param? tooltip
+ * @param? content
+ * @param? params
+ */
+{template .webItemDropdownItem}
+    {call .webItem data="all"}
+        {param forceLink: true /}
+    {/call}
+{/template}
+
+/**
+ * Given a location and context, generate singular buttons and button sections.
+ *
+ * @param location The location string to get web fragments for
+ * @param context The data to pass to the web fragments
+ * @param? isReverse Whether the fragments should be reverse-ordered
+ */
+{template .webFragmentButtons}
+    {foreach $webFragment in ($isReverse ?
+            reverse(getWebFragments($location, $context)) :
+            getWebFragments($location, $context))}
+        {switch $webFragment.type}
+            {case 'ITEM'}
+                {call stash.buttons.buttons}
+                    {param content}
+                        {call .webItemButton data="$webFragment" /}
+                    {/param}
+                {/call}
+            {case 'SECTION'}
+                {call stash.buttons.buttons}
+                    {param extraClasses: $webFragment.styleClass /}
+                    {param content}
+                        {foreach $webItem in ($isReverse ?
+                            reverse(getWebItems($location + '/' + $webFragment.key, $context)) :
+                            getWebItems($location + '/' + $webFragment.key, $context))}
+                            {call .webItemButton data="$webItem" /}
+                        {/foreach}
+                    {/param}
+                {/call}
+        {/switch}
+    {/foreach}
+{/template}

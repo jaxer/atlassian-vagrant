@@ -1,0 +1,41 @@
+{namespace stash.page.setup}
+
+/**
+ * @param? form
+ * @param? fieldErrors
+ * @param? formErrors
+ */
+{template .adminUser}
+{webResourceManager_requireResourcesForContext('stash.page.setup.adminUser')}
+{call stash.layout.setup}
+    {param step: stash_i18n('stash.web.setup.title.admin.account.setup', 'Administrator account setup') /}
+    {param content}
+        {call widget.form.xsrfProtectedForm}
+            {param action: '' /}
+            {param errors: $formErrors /}
+            {param autocomplete: 'off' /}
+            {param longLabels: true /}
+            {param content}
+                <input type='hidden' name='step' value='user'/>
+                {call stash.widget.userFormFields}
+                    {param form: $form /}
+                    {param fieldErrors: $fieldErrors /}
+                {/call}
+                {call widget.aui.form.buttons}
+                    {param content}
+                        {call widget.aui.form.submit}
+                            {param id: 'setupJira' /}
+                            {param isPrimary: true /}
+                            {param label: stash_i18n('stash.web.setup.integrate.with.jira', 'Integrate with JIRA') /}
+                        {/call}
+                        {call widget.aui.form.submit}
+                            {param id: 'skipJira' /}
+                            {param label: stash_i18n('stash.web.setup.go.to.stash', 'Go to Stash') /}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+{/call}
+{/template}

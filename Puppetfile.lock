@@ -1,0 +1,43 @@
+FORGE
+  remote: http://forge.puppetlabs.com
+  specs:
+    mkrakowitzer/deploy (0.0.1)
+    puppetlabs/apt (1.4.2)
+      puppetlabs/stdlib (>= 2.2.1)
+    puppetlabs/concat (1.1.0-rc1)
+      puppetlabs/stdlib (>= 3.0.0)
+    puppetlabs/firewall (1.0.2)
+    puppetlabs/stdlib (4.1.0)
+
+GIT
+  remote: git://github.com/brycejohnson/puppet-jira.git
+  ref: master
+  sha: c73b3e22645e75d7387303102e51763e59ec2b2f
+  specs:
+    jira (0.0.3)
+      mkrakowitzer/deploy (>= 0.0.1)
+
+GIT
+  remote: git://github.com/mkrakowitzer/puppet-stash.git
+  ref: master
+  sha: 24d62bed62f417a00f65601aa7b7d9774e43219e
+  specs:
+    stash (0.0.1)
+      mkrakowitzer/deploy (>= 0.0.1)
+
+GIT
+  remote: git://github.com/puppetlabs/puppetlabs-postgresql.git
+  ref: master
+  sha: 400a82d7e0f7374b61962364cb95315d0b5ee0d0
+  specs:
+    postgresql (3.3.1)
+      puppetlabs/apt (< 2.0.0, >= 1.1.0)
+      puppetlabs/concat (< 2.0.0, >= 1.0.0)
+      puppetlabs/firewall (>= 0.0.4)
+      puppetlabs/stdlib (< 5.0.0, >= 3.2.0)
+
+DEPENDENCIES
+  jira (>= 0)
+  postgresql (>= 0)
+  stash (>= 0)
+

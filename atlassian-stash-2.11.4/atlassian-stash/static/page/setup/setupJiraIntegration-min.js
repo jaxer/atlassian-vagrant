@@ -1,0 +1,1 @@
+define("page/setup/jiraIntegration",["jquery","exports"],function(B,A){A.onReady=function(){B("#submitSkip").click(function(D){D.preventDefault();var C=B(this).parents("form.aui");C.find("#skip").val("true");C.submit()})}});

@@ -1,0 +1,297 @@
+{namespace stash.admin.users}
+
+/**
+* @param username
+* @param user
+* @param captchaChallenged
+* @param editableDetails
+* @param editableGroups
+* @param editablePermissions
+* @param editableDirectory
+* @param isDeletable
+* @param? highestGlobalPermission
+*/
+{template .edit}
+{webResourceManager_requireResourcesForContext('stash.page.admin.users.edit')}
+{call stash.layout.admin}
+    {param activeTab: 'admin-general-users' /}
+    {param content}
+        {call .viewandedit data="all"}
+            {param secondarySection}
+                {call .userSecondarySection}
+                    {param user: $user /}
+                    {param editableGroups: $editableGroups /}
+                    {param webItems: getWebItems('stash.web.userdetails.secondary.tabs', [ 'user' : $user ]) /}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+    {param pageBottomContent}
+        <script>require('page/admin/userEdit').onReady("{$user.name|escapeJs}", {lb}
+                groupsTableSelector: '#user-groups-table',
+                passwordLinkSelector: '#update-password-user',
+                renameUserLinkSelector: '#rename-user',
+                clearCaptchaLinkSelector: '#clear-captcha',
+                deleteLinkSelector: '#delete-user'
+            {rb});
+        </script>
+    {/param}
+{/call}
+{/template}
+
+/**
+* @param username
+* @param user
+* @param captchaChallenged
+* @param editableDetails
+* @param editablePermissions
+* @param editableDirectory
+* @param isDeletable
+* @param secondarySection
+* @param? highestGlobalPermission
+*/
+{template .viewandedit}
+
+    {if $user}
+        <ol class="aui-nav aui-nav-breadcrumbs">
+            {call stash.widget.breadcrumbs.back}
+                {param id: 'users-breadcrumb' /}
+                {param href: nav_admin_users() /}
+                {param text: stash_i18n('stash.web.users.back.link', 'Back to Users') /}
+            {/call}
+        </ol>
+
+        {if $editableDetails or $captchaChallenged}
+            {call aui.toolbar2.toolbar2}
+                {param content}
+                    {call aui.toolbar2.item}
+                        {param item: 'primary' /}
+                        {param content}
+                            {call stash.buttons.buttons}
+                                {param content}
+                                    {if $editableDetails}
+                                        {call stash.buttons.button}
+                                            {param buttonText: stash_i18n('stash.web.users.edit.button', 'Edit') /}
+                                            {{param title: stash_i18n('stash.web.users.edit', 'Edit user details for {0}', $user.displayName) /}}
+                                            {param id: 'edit-details' /}
+                                        {/call}
+                                        {call stash.buttons.button}
+                                            {param buttonText: stash_i18n('stash.web.users.changepassword', 'Change password') /}
+                                            {{param title: stash_i18n('stash.web.users.changepassword', 'Change password for {0}', $user.displayName) /}}
+                                            {param id: 'update-password-user' /}
+                                        {/call}
+                                        {call stash.buttons.button}
+                                            {param buttonText: stash_i18n('stash.web.users.renameuser', 'Rename') /}
+                                            {{param title: stash_i18n('stash.web.users.renameuser', 'Change username for {0}', $user.displayName) /}}
+                                            {param id: 'rename-user' /}
+                                        {/call}
+                                    {/if}
+                                    {if $captchaChallenged}
+                                        {call stash.buttons.button}
+                                            {param buttonText: stash_i18n('stash.web.users.clearcaptcha', 'Clear CAPTCHA') /}
+                                            {param href: nav_admin_user_captcha($user.name) /}
+                                            {{param title: stash_i18n('stash.web.users.clearcaptcha.title', 'Clear the CAPTCHA challenge preventing {0} from logging in due to too many failed logins.', $user.displayName) /}}
+                                            {param id: 'clear-captcha' /}
+                                        {/call}
+                                    {/if}
+                                {/param}
+                            {/call}
+                            {if $isDeletable}
+                                {call stash.buttons.buttons}
+                                    {param content}
+                                        {call stash.buttons.button}
+                                            {param buttonText: stash_i18n('stash.web.users.delete', 'Delete') /}
+                                            {param href: nav_admin_user_delete($user.name) /}
+                                            {{param title: stash_i18n('stash.web.users.delete.title', 'Delete {0}', $user.displayName) /}}
+                                            {param id: 'delete-user' /}
+                                        {/call}
+                                    {/param}
+                                {/call}
+                            {/if}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/if}
+
+        <div class="notifications">
+            {if not $editableDirectory}
+                {call widget.aui.message.info}
+                    {param content}
+                        {stash_i18n('stash.web.users.edit.read.only.warning', 'You cannot edit this user\'\'s display name, password or email address as they are stored in a read-only user directory.')}
+                    {/param}
+                {/call}
+            {/if}
+        </div>
+
+        {call widget.aui.group.group}
+            {param extraClasses: 'panel-details' /}
+            {param content}
+                {call widget.aui.group.item}
+                    {param content}
+                         {call stash.widget.avatar}
+                            {param person: $user /}
+                            {param size: 'xxxlarge' /}
+                         {/call}
+                         {foreach $webPanel in getWebPanels('stash.web.userdetails.avatar.caption', [ 'user' : $user ])}
+                            {$webPanel|noAutoescape}
+                         {/foreach}
+                    {/param}
+                {/call}
+                {call widget.aui.group.item}
+                    {param content}
+                        <div class="details">
+                            {call .userDetailsForm data="all"/}
+                         </div>
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+        {$secondarySection|noAutoescape}
+
+    {else}
+        {call widget.aui.group.group}
+            {param content}
+                {call widget.aui.group.item}
+                    {param content}
+                        {call widget.aui.message.error}
+                            {param content}
+                                {{stash_i18n('stash.web.users.view.notfound', 'The user {0} does not exist', $username)}}
+                            {/param}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * @param user
+ * @param editableDetails
+ * @param editablePermissions
+ * @param? highestGlobalPermission
+ */
+{template .userDetailsForm}
+    <form id="user-details" method="POST" action="{nav_rest_admin_users()}" class="aui{if $editableDetails} editable{/if}">
+        <div class="field-group">
+            <input type="text" readonly="readonly" id="fullname" name="fullname"
+                   value="{$user.displayName}" title="{$user.displayName}"
+                   data-rollback="{$user.displayName}">
+        </div>
+        <div class="field-group">
+            <label for="name"></label>
+            <input type="text" readonly="readonly" id="name" name="name"
+                   value="{$user.name}"
+                   data-rollback="{$user.name}">
+        </div>
+        <div class="field-group">
+            <label for="email"></label>
+            <input type="text" readonly="readonly" id="email" name="email"
+               value="{$user.emailAddress ? $user.emailAddress : ''}"
+               data-rollback="{$user.emailAddress ? $user.emailAddress : ''}">
+        </div>
+        <div class="field-group user-permission">
+            {call stash.feature.permission.lozenge}
+                {param permission: $highestGlobalPermission /}
+            {/call}
+            {if $editablePermissions}
+                <a href="{nav_admin_global_perms()}" id="change-permissions">{stash_i18n('stash.web.users.change.permissions', 'Change permissions')}</a>
+            {/if}
+        </div>
+        {if $editableDetails}
+            {call widget.aui.form.buttons}
+                {param content}
+                    {call stash.buttons.button}
+                        {param buttonText: stash_i18n('stash.web.button.save', 'Save') /}
+                        {param isPrimary: true /}
+                        {param extraClasses: 'save' /}
+                    {/call}
+                    {call widget.aui.form.cancelButton}
+                        {param href: '' /}
+                    {/call}
+                {/param}
+            {/call}
+        {/if}
+    </form>
+{/template}
+
+/**
+ * Adds at least the group list to the profile and user admin page. As the ability to transform itself into
+ * a pluggable, dynamic AUI tab based on web items and web panels. Used by SSH currently
+ *
+ * @param user
+ * @param editableGroups
+ * @param webItems
+ **/
+{template .userSecondarySection}
+    {call widget.aui.group.group}
+        {param extraClasses: length($webItems) == 0 ? 'group-picker' : 'user-secondary-section' /}
+        {param content}
+            {call widget.aui.group.item}
+                {param content}
+                    {if length($webItems) > 0}
+                        {call widget.aui.webItemTabs}
+                            {param webItems: $webItems /}
+                            {param tabItemsContent}
+                                {call widget.aui.tabMenuItem}
+                                    {param text: stash_i18n('stash.web.users.group.membership', 'Groups') /}
+                                    {param url: '#groups-tab' /}
+                                    {param isActive: true /}
+                                {/call}
+                            {/param}
+                            {param tabPanesContent}
+                                {call widget.aui.tabPane}
+                                    {param isActive: true /}
+                                    {param id: 'groups-tab' /}
+                                    {param extraClasses: 'group-picker' /}
+                                    {param content}
+                                        {call .groupsPaneContents}
+                                            {param user: $user /}
+                                            {param editableGroups: $editableGroups /}
+                                        {/call}
+                                    {/param}
+                                {/call}
+                                {foreach $webItem in $webItems}
+                                    {call widget.aui.tabPane}
+                                        {param id: substring($webItem.url, 1) /} // Convert #blah urls to blah ids
+                                        {param content}
+                                            {foreach $webPanel in getWebPanels($webItem.moduleKey, [ 'user' : $user ])}
+                                                {$webPanel|noAutoescape}
+                                            {/foreach}
+                                        {/param}
+                                    {/call}
+                                {/foreach}
+                            {/param}
+                        {/call}
+                    {else}
+                        {call .groupsPaneContents}
+                            {param user: $user /}
+                            {param editableGroups: $editableGroups /}
+                        {/call}
+                    {/if}
+                {/param}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param user
+ * @param editableGroups
+ **/
+{template .groupsPaneContents}
+<header class="aui-page-header">
+    <div class="aui-page-header-inner">
+        <div class="aui-page-header-main">
+            <h2>{{stash_i18n('stash.web.users.group.membership', 'Groups')}}</h2>
+        </div>
+    </div>
+</header>
+
+{call stash.feature.user.userGroupsTable}
+    {param id: 'user-groups-table' /}
+    {param editable: $editableGroups /}
+    {param user: $user /}
+{/call}
+{/template}

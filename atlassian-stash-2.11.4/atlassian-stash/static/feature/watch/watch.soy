@@ -1,0 +1,46 @@
+{namespace stash.feature.watch}
+
+/**
+ * @param isWatching
+ * @param type
+ */
+{template .summaryPanel}
+    {call stash.widget.summaryPanel.linkWebPanel}
+        {param extraClasses: 'watch' /}
+        {param iconClass : 'aui-iconfont-view' /}
+        {param linkContent}
+            {if $type == 'commit'}
+                {call .commitLabel}
+                    {param isWatching: $isWatching /}
+                {/call}
+            {else}
+                {call .pullRequestLabel}
+                    {param isWatching: $isWatching /}
+                {/call}
+
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param isWatching
+ */
+{template .pullRequestLabel}
+    {if $isWatching}
+        {{stash_i18n('stash.web.pull-request.unwatch', '{0}Unwatch{1} this pull request', '<strong>', '</strong>')|noAutoescape}}</a>
+    {else}
+        {{stash_i18n('stash.web.pull-request.watch', '{0}Watch{1} this pull request', '<strong>', '</strong>')|noAutoescape}}</a>
+    {/if}
+{/template}
+
+/**
+ * @param isWatching
+ */
+{template .commitLabel}
+    {if $isWatching}
+        {{stash_i18n('stash.web.commit.unwatch', '{0}Unwatch{1} this commit', '<strong>', '</strong>')|noAutoescape}}</a>
+    {else}
+        {{stash_i18n('stash.web.commit.watch', '{0}Watch{1} this commit', '<strong>', '</strong>')|noAutoescape}}</a>
+    {/if}
+{/template}

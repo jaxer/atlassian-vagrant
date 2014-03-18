@@ -1,0 +1,1 @@
+define("widget/quick-copy-text",["jquery","exports"],function(B,A){var C=true;A.onReady=function(){if(C){C=false;B(document).on("click",".quick-copy-text",function(D){this.focus();this.select()})}}});

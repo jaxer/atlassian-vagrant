@@ -1,0 +1,99 @@
+{namespace stash.auth}
+
+/**
+ * @param allowSignUp
+ * @param showCaptcha
+ * @param? nextUrl
+ * @param? error
+ * @param? lastUsername
+ * @param? wasSuccessfulSignedUp
+ */
+{template .login}
+{webResourceManager_requireResourcesForContext('stash.page.login')}
+{call stash.layout.focused}
+    {{param windowTitle: stash_i18n('stash.web.login.title', 'Log in') /}}
+    {param hideLoginLink: true /}
+    {param bodyClass: 'user-login'/}
+    {param focusedPageSize: 'small' /}
+    {{param contentTitle: stash_i18n('stash.web.login.header', 'Welcome to {0}', $ij.instanceName) /}}
+    {param content}
+        {if $error}
+            {call widget.aui.message.error}
+                {param content}
+                    {$error}
+                {/param}
+            {/call}
+        {/if}
+        {if $wasSuccessfulSignedUp}
+            {call widget.aui.message.success}
+                {param extraClasses: 'successful-signup'/}
+                {param content}
+                    {stash_i18n('stash.web.signup.success', 'Congratulations! You have successfully signed up')}
+                {/param}
+            {/call}
+        {/if}
+        {call widget.aui.form.form}
+            {param action}{nav_security_check()}{/param}
+            {param topLabels: true /}
+            {param content}
+                {call widget.aui.form.text}
+                    {param id: 'j_username' /}
+                    {param accessKey: 'u'/}
+                    {param autofocus: $lastUsername ? false : true /}
+                    {param labelContent: stash_i18n('stash.web.login.username.html', 'Username') /}
+                    {param initialValue: $lastUsername /}
+                    {param sizeClass: 'long' /}
+                {/call}
+                {call widget.aui.form.password}
+                    {param id: 'j_password' /}
+                    {param autofocus: $lastUsername ? true : false /}
+                    {param accessKey: 'p'/}
+                    {param labelContent: stash_i18n('stash.web.login.password.html', 'Password') /}
+                    {param sizeClass: 'long' /}
+                {/call}
+                {if $showCaptcha}
+                    {call stash.widget.captcha.field}
+                        {param required: false /}
+                        {param labelContent: stash_i18n('stash.web.signup.captcha.html', 'User verification') /}
+                        {param description: stash_i18n('stash.web.signup.captcha', 'Please enter the word shown below') /}
+                    {/call}
+                    {call stash.widget.captcha.container /}
+                {/if}
+                {call widget.aui.form.checkbox}
+                    {param id: '_spring_security_remember_me' /}
+                    {param accessKey: 'r' /}
+                    {param labelContent: stash_i18n('stash.web.login.remember.me.html', 'Remember my login on this computer') /}
+                {/call}
+                {if $allowSignUp}
+                    {call widget.aui.form.description}
+                        {param content}
+                            {{stash_i18n('stash.web.login.signup.html', 'Not a member? <a href="{0}">Sign up</a> for an account', nav_signup()) |noAutoescape}}
+                        {/param}
+                    {/call}
+                {/if}
+                {if $nextUrl}
+                <input name="next" type="hidden" value="{$nextUrl}"/>
+                {/if}
+                {call widget.aui.form.buttons}
+                    {param content}
+                        {call widget.aui.form.submit}
+                            {param id: 'submit' /}
+                            {param accessKey: 's' /}
+                            {param isPrimary: true /}
+                            {param label: stash_i18n('stash.web.login.submit', 'Log in') /}
+                        {/call}
+                        {call widget.aui.form.linkButton}
+                            {param id: 'forgot' /}
+                            {param href: nav_password_reset() /}
+                            {param text: stash_i18n('stash.web.login.forgot', 'Can\'\'t access your account?') /}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+{/call}
+<script type="text/javascript">
+    require('widget/captcha').initialise('#captcha-image', '#captcha-reload');
+</script>
+{/template}

@@ -1,0 +1,32 @@
+{namespace stash.widget}
+
+/**
+ * @param url
+ * @param linkText
+ * @param? styleClass
+ * @param? description
+ * @param? tooltip
+ * @param? hasIcon
+ * @param? iconUrl
+ * @param? iconWidth
+ * @param? iconHeight
+ * @param? params
+ */
+{template .adminWebItem}
+    {call stash.widget.webItem data="all"}
+        {param styleClass: $hasIcon or $params['stashIconClass'] ? ('has-icon ' + $styleClass) : $styleClass /}
+        {param content}
+            {if $hasIcon}
+                <span class="icon">
+                    <img src="{$iconUrl}" width="{$iconWidth}" height="{$iconHeight}"/>
+                </span>
+                {$linkText}
+            {elseif $params['stashIconClass']}
+                <span class="aui-icon {$params['stashIconClass']}">{$linkText}</span>
+            {/if}
+            {$linkText}
+        {/param}
+    {/call}
+    {if $description}<span class="description">{$description}</span>
+    {elseif $tooltip}<span class="description">{$tooltip}</span>{/if}
+{/template}

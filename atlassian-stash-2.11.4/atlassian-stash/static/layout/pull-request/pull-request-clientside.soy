@@ -1,0 +1,18 @@
+{namespace stash.layout.pullRequest}
+
+/**
+ * @param? extraClasses
+ * @param participantRoles
+ * @param participantRoleHeading
+ * @param participantMenuId
+ */
+{template .participantsSection private="true"}
+    <div{if $extraClasses} class="{$extraClasses}"{/if} data-overflow-menu-id="{$participantMenuId}">
+        <h4><strong>{length($participantRoles)}</strong>{sp}{$participantRoleHeading}</h4>
+        {call stash.widget.avatarList.participantList}
+            {param participants: $participantRoles /}
+            {param menuId: $participantMenuId /}
+            {param maxOpen: 5 /}
+        {/call}
+    </div>
+{/template}

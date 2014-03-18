@@ -1,0 +1,1 @@
+define("util/focus-snapshot",["jquery"],function(A){return(function(){var B,C;return{save:function(){var D=document.activeElement;if(D){B=A(D);if(B.is(":text, textarea")){C=B.getSelection()}}},restore:function(){if(B){B.focus();if(C){B.setSelection(C.start,C.end)}}}}})()});

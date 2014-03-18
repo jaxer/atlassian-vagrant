@@ -1,0 +1,441 @@
+{namespace stash.feature.pullRequest}
+
+/**
+ * @param id
+ * @param currentUser
+ * @param? commentTips
+ * @param? extraClasses
+ */
+{template .activity}
+    <div class="pull-request-activity-content">
+        <ol {if $id} id="{$id}"{/if} class="pull-request-activity comment-container{if $extraClasses} {$extraClasses}{/if}">
+            {call stash.feature.commentFormListItem}
+                 {param tips: $commentTips /}
+                 {param extraFormClasses: 'general-comment-form collapsed' /}
+                 {param currentUser: $currentUser /}
+            {/call}
+        </ol>
+    </div>
+{/template}
+
+
+/**
+ * @param user
+ * @param activityDate
+ * @param summaryContent a sentence describing the action being taken, marked up in HTML
+ * @param? detailContent the HTML details of the action
+ * @param? isNew
+ * @param? isFocused
+ * @param? extraClasses
+ * @param? id
+ */
+{template .activityListItemContainer private="true"}
+<li class="activity-item{if $extraClasses} {$extraClasses}{/if}{if $isNew} new{/if}{if $isFocused} focused{/if}"{if $id} data-activityid="{$id}"{/if}>
+    <div class="activity-item-content">
+        <div class="avatar">
+            {call stash.widget.avatar}
+                {param size: 'medium' /}
+                {param person: $user /}
+            {/call}
+        </div>
+        <div class="action">
+            <span class="summary">
+                {$summaryContent|noAutoescape}
+                {call widget.date.shortAge}{param date: $activityDate /}{/call}
+            </span>
+            <div class="detail">
+                {if $detailContent}
+                    {$detailContent|noAutoescape}
+                {/if}
+            </div>
+        </div>
+    </div>
+</li>
+{/template}
+
+/**
+ * @param activity
+ * @param pullRequest
+ * @param commitRange
+ * @param currentUser
+ * @param? isNew
+ */
+{template .activityListItem}
+{if $activity.action == 'COMMENTED'}
+    {call .activityCommentListItem data="$activity"}
+        {param currentUser: $currentUser /}
+        {param commitRange: $commitRange /}
+        {param pullRequest: $pullRequest /}
+    {/call}
+{elseif $activity.action == 'APPROVED' or $activity.action == 'UNAPPROVED'}
+    {call .activityApprovalListItem}
+        {param user: $activity.user /}
+        {param isFocused: $activity.isFocused /}
+        {param action: $activity.action /}
+        {param activityDate: $activity.createdDate /}
+    {/call}
+{elseif $activity.action == 'RESCOPED'}
+    {if ($activity.added and $activity.added.total) or ($activity.removed and $activity.removed.total)}
+        {call .activityRescopeListItem}
+            {param user: $activity.user /}
+            {param isFocused: $activity.isFocused /}
+            {param action : $activity.action /}
+            {param activityDate: $activity.createdDate /}
+            {param activityRepository : $pullRequest.toRef.repository /}
+            {param added: $activity.added /}
+            {param removed: $activity.removed /}
+        {/call}
+    //{else} ignore - TODO: filter this server-side to fix paging
+    {/if}
+{else}
+    {call .activityListItemContainer}
+        {param isNew: $isNew /}
+        {param isFocused: $activity.isFocused /}
+        {param user: $activity.user /}
+        {param activityDate: $activity.createdDate /}
+        {param summaryContent}
+            {call .activityActionString}
+                {param activityAction: $activity.action /}
+                {param user: $activity.user /}
+                {param sourceBranchContent}
+                    {if $activity.action == 'MERGED'}
+                        {call stash.feature.repository.refLozenge}
+                            {param repository: $pullRequest.fromRef.repository.id == $pullRequest.toRef.repository.id ?
+                                null :
+                                $pullRequest.fromRef.repository /}
+                            {param ref: $pullRequest.fromRef /}
+                        {/call}
+                    {/if}
+                {/param}
+                {param targetBranchContent}
+                    {if $activity.action == 'MERGED'}
+                        {call stash.feature.repository.refLozenge}
+                            {param ref: $pullRequest.toRef /}
+                        {/call}
+                    {/if}
+                {/param}
+                {param mergeCommitContent}
+                    {if $activity.action == 'MERGED' and $activity.changeset}
+                        {call stash.feature.changeset.link}
+                            {param repository: $pullRequest.toRef.repository /}
+                            {param changeset: $activity.changeset /}
+                        {/call}
+                    {/if}
+                {/param}
+            {/call}
+        {/param}
+    {/call}
+    </li>
+{/if}
+{/template}
+
+/**
+ * @param user
+ * @param action
+ * @param activityDate
+ * @param? isFocused
+ */
+{template .activityApprovalListItem}
+    {call .activityListItemContainer}
+        {param user: $user /}
+        {param isFocused: $isFocused /}
+        {param activityDate: $activityDate /}
+        {param summaryContent}
+            {call .activityActionString}
+                {param activityAction: $action /}
+                {param user: $user /}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param user
+ * @param action
+ * @param activityDate
+ * @param activityRepository
+ * @param added
+ * @param removed
+ * @param? isFocused
+ */
+{template .activityRescopeListItem private="true"}
+    {if $added.total or $removed.total}
+    {call .activityListItemContainer}
+        {param user: $user /}
+        {param isFocused: $isFocused /}
+        {param activityDate: $activityDate /}
+        {param extraClasses : 'rescope' /}
+        {param summaryContent}
+            {call .activityActionString}
+                {param activityAction: $action /}
+                {param user: $user /}
+                {param numCommitsAdded: $added.total /}
+                {param numCommitsRemoved: $removed.total /}
+            {/call}
+        {/param}
+        {param detailContent}
+            {if ($added.changesets and length($added.changesets)) or ($removed.changesets and length($removed.changesets))}
+                {call .rescopeCommitsTable}
+                    {param repository: $activityRepository /}
+                    {param added : $added /}
+                    {param removed : $removed /}
+                {/call}
+                {if 0 < ($added.total - ($added.changesets ? length($added.changesets) : 0)) + ($removed.total - ($removed.changesets ?  length($removed.changesets) : 0))}
+                    <p class="more-commits">
+                        {{stash_i18n('stash.web.pullrequest.activity.commits.and-x-more', '&hellip;and {0} more.',
+                        ($added.total - ($added.changesets ? length($added.changesets) : 0)) + ($removed.total - ($removed.changesets ?  length($removed.changesets) : 0)))|noAutoescape}}
+                    </p>
+                {/if}
+            {/if}
+        {/param}
+    {/call}
+    {/if}
+{/template}
+
+/**
+ * @param lozengeContent
+ * @param userDisplayNameContent
+ * @param numCommitsAdded
+ * @param numCommitsRemoved
+ */
+{template .rescopeActionStringImpl private="true"}
+    {if $numCommitsAdded and $numCommitsRemoved}
+        {if $numCommitsAdded == 1 and $numCommitsRemoved == 1}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.added.singular.removed.singular', '{0} {1} the pull request by adding {2} commit and removing {3} commit', $userDisplayNameContent, $lozengeContent, $numCommitsAdded, $numCommitsRemoved)|noAutoescape}}
+        {elseif $numCommitsAdded == 1}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.added.singular.removed.plural', '{0} {1} the pull request by adding {2} commit and removing {3} commits', $userDisplayNameContent, $lozengeContent, $numCommitsAdded, $numCommitsRemoved)|noAutoescape}}
+        {elseif $numCommitsRemoved == 1}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.added.plural.removed.singular', '{0} {1} the pull request by adding {2} commits and removing {3} commit', $userDisplayNameContent, $lozengeContent, $numCommitsAdded, $numCommitsRemoved)|noAutoescape}}
+        {else}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.added.plural.removed.plural', '{0} {1} the pull request by adding {2} commits and removing {3} commits', $userDisplayNameContent, $lozengeContent, $numCommitsAdded, $numCommitsRemoved)|noAutoescape}}
+        {/if}
+    {elseif $numCommitsAdded}
+        {if $numCommitsAdded == 1}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.added.singular', '{0} {1} the pull request by adding {2} commit', $userDisplayNameContent, $lozengeContent, $numCommitsAdded)|noAutoescape}}
+        {else}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.added.plural', '{0} {1} the pull request by adding {2} commits', $userDisplayNameContent, $lozengeContent, $numCommitsAdded)|noAutoescape}}
+        {/if}
+    {elseif $numCommitsRemoved}
+        {if $numCommitsRemoved == 1}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.removed.singular', '{0} {1} the pull request by removing {2} commit', $userDisplayNameContent, $lozengeContent, $numCommitsRemoved)|noAutoescape}}
+        {else}
+            {{stash_i18n('stash.web.pullrequest.activity.commits.removed.plural', '{0} {1} the pull request by removing {2} commits', $userDisplayNameContent, $lozengeContent, $numCommitsRemoved)|noAutoescape}}
+        {/if}
+    {/if}
+{/template}
+
+/**
+ * @param repository
+ * @param? added
+ * @param? removed
+ */
+{template .rescopeCommitsTable private="true"}
+    {call widget.aui.table}
+        {param dataAttributes: [ 'lastpage' : true ] /}
+        {param extraClasses: 'commits-table show-merges' /}
+        {param content}
+            {if $added.changesets and length($added.changesets)}
+                {foreach $changeset in $added.changesets}
+                    {call stash.feature.commits.commitsTableRow}
+                        {param changeset: $changeset /}
+                        {param cellsContent}
+                            {call stash.feature.commits.commitsTableCells}
+                                {param repository: $repository /}
+                                {param changeset: $changeset /}
+                            {/call}
+                            <td class="status">
+                                {call stash.widget.lozenge.lozenge}
+                                    {param htmlElement: 'span' /}
+                                    {param extraClasses: 'aui-lozenge-subtle aui-lozenge-success' /}
+                                    {param text: stash_i18n('stash.web.pull-request.commits.added', 'ADDED') /}
+                                {/call}
+                            </td>
+                        {/param}
+                    {/call}
+                {/foreach}
+            {/if}
+            {if $removed.changesets and length($removed.changesets)}
+                {foreach $changeset in $removed.changesets}
+                    {call stash.feature.commits.commitsTableRow}
+                        {param changeset: $changeset /}
+                        {param cellsContent}
+                            {call stash.feature.commits.commitsTableCells}
+                                {param repository: $repository /}
+                                {param changeset: $changeset /}
+                            {/call}
+                            <td class="status">
+                                {call stash.widget.lozenge.lozenge}
+                                    {param htmlElement: 'span' /}
+                                    {param extraClasses: 'aui-lozenge-subtle aui-lozenge-error' /}
+                                    {param text: stash_i18n('stash.web.pull-request.commits.removed', 'REMOVED') /}
+                                {/call}
+                            </td>
+                        {/param}
+                    {/call}
+                {/foreach}
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param id
+ * @param createdDate
+ * @param commentAction
+ * @param? commentAnchor
+ * @param? diff
+ * @param comment
+ * @param user
+ * @param currentUser
+ * @param pullRequest
+ * @param commitRange
+ * @param? isFocused
+ */
+{template .activityCommentListItem}
+{if $commentAction == 'ADDED'}
+    {if $commentAnchor}
+        {call .activityListItemContainer}
+            {param extraClasses: $diff ? 'diff-comment-activity' : 'file-comment-activity' /}
+            {param id: $id /}
+            {param user: $user /}
+            {param activityDate: $createdDate /}
+            {param isNew: false /} // isNew is currently handled in the diff comment
+            {param isFocused: $isFocused /}
+            {param summaryContent}
+                {call .activityCommentActionString}
+                    {param activityAction: $commentAction /}
+                    {param user: $user /}
+                {/call}
+            {/param}
+            {param detailContent}
+                {if $diff}
+                    // Inline comments are appended later in js
+                {else}
+                    // Is file comment
+                    <div class="file-comment-container">
+                        {call stash.feature.file.fileToolbar}
+                            {param fileIcon: true /}
+                            {param breadcrumbs: true /}
+                            {param secondaryToolbarContent}
+                                {if $commentAnchor.orphaned}
+                                    {call stash.widget.lozenge.lozenge}
+                                        {param text: stash_i18n('stash.web.pull-request.activity.status.outdated', 'Outdated') /}
+                                        {param htmlElement: 'span' /}
+                                        {param extraClasses: 'aui-lozenge-current aui-lozenge-subtle pull-request-diff-outdated-lozenge' /}
+                                        {param tooltip: stash_i18n('stash.web.pull-request.activity.status.outdated.tooltip', 'This diff has changed in more recent commits') /}
+                                    {/call}
+                                {/if}
+                            {/param}
+                        {/call}
+                        {call stash.feature.fileComments}
+                            {param comments: [ $comment ] /}
+                            {param commitRange: $commitRange /}
+                        {/call}
+                    </div>
+                {/if}
+            {/param}
+        {/call}
+    {else}
+        {call stash.feature.comment}
+            {param comment: $comment /}
+            {param pullRequest: $pullRequest /}
+            {param currentUser: $currentUser /}
+            {param numOfAncestors: 0 /}
+            {param extraClasses: 'general-comment-activity' /}
+        {/call}
+    {/if}
+//{else} ignore REPLIED, EDITED, DELETED for now
+{/if}
+{/template}
+
+/**
+ * @param activityAction
+ * @param user
+ */
+{template .activityCommentActionString}
+    {call .activityActionString data="all"}
+        {param activityAction: 'COMMENT_' + $activityAction /}
+    {/call}
+{/template}
+
+/**
+ * @param activityAction
+ * @param user
+ * @param? sourceBranchContent
+ * @param? targetBranchContent
+ * @param? mergeCommitContent
+ * @param? numCommitsAdded
+ * @param? numCommitsRemoved
+ */
+{template .activityActionString}
+    {call .activityActionStringImpl data="all"}
+        {param userDisplayNameContent}
+            <h4>
+                {call stash.widget.userLink}
+                    {param user: $user /}
+                    {param extraClasses: 'user-name' /}
+                {/call}
+            </h4>
+        {/param}
+        {param lozengeContent}
+            {call stash.widget.lozenge.pullRequestState}
+                {param state: $activityAction /}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param activityAction
+ * @param lozengeContent
+ * @param userDisplayNameContent
+ * @param? sourceBranchContent
+ * @param? targetBranchContent
+ * @param? mergeCommitContent
+ * @param? numCommitsAdded
+ * @param? numCommitsRemoved
+ */
+{template .activityActionStringImpl private="true"}
+{switch $activityAction}
+    {case 'COMMENT_ADDED'}
+        {{stash_i18n('stash.web.pullrequest.diff.comment', '{0} commented on a file', $userDisplayNameContent)|noAutoescape}}
+    {case 'COMMENT_REPLIED'}
+        {{stash_i18n('stash.web.pullrequest.', '{0} replied to a comment', $userDisplayNameContent)|noAutoescape}}
+    {case 'OPENED'}
+        {{stash_i18n('stash.web.pullrequest.activity.opened', '{0} {1} the pull request', $userDisplayNameContent, $lozengeContent)|noAutoescape}}
+    {case 'DECLINED'}
+        {{stash_i18n('stash.web.pullrequest.activity.declined', '{0} {1} the pull request', $userDisplayNameContent, $lozengeContent)|noAutoescape}}
+    {case 'MERGED'}
+        {if $mergeCommitContent}
+            {{stash_i18n('stash.web.pullrequest.activity.merged', '{0} {1} {2} to {3} in commit {4}', $userDisplayNameContent, $lozengeContent, $sourceBranchContent, $targetBranchContent, $mergeCommitContent)|noAutoescape}}
+        {else}
+            {{stash_i18n('stash.web.pullrequest.activity.automerged', '{0} remotely merged the pull request from {1} to {2}', $userDisplayNameContent, $sourceBranchContent, $targetBranchContent)|noAutoescape}}
+        {/if}
+    {case 'REOPENED'}
+        {{stash_i18n('stash.web.pullrequest.activity.reopened', '{0} {1} the pull request', $userDisplayNameContent, $lozengeContent)|noAutoescape}}
+    {case 'RESCOPED'}
+        {call .rescopeActionStringImpl}
+            {param numCommitsAdded: $numCommitsAdded /}
+            {param numCommitsRemoved: $numCommitsRemoved /}
+            {param lozengeContent: $lozengeContent /}
+            {param userDisplayNameContent: $userDisplayNameContent /}
+        {/call}
+    {case 'UPDATED'}
+        {{stash_i18n('stash.web.pullrequest.activity.updated', '{0} {1} the pull request', $userDisplayNameContent, $lozengeContent)|noAutoescape}}
+    {case 'APPROVED'}
+        {{stash_i18n('stash.web.pullrequest.activity.approved', '{0} {1} the pull request', $userDisplayNameContent, $lozengeContent)|noAutoescape}}
+    {case 'UNAPPROVED'}
+        {{stash_i18n('stash.web.pullrequest.activity.unapproved', '{0} {1} the pull request', $userDisplayNameContent, $lozengeContent)|noAutoescape}}
+    {default}
+        {$activityAction}
+{/switch}
+{/template}
+
+/**
+ *
+ */
+{template .loadPreviousActivities}
+    <li class="activity-load-new">
+        <a href="#">{{stash_i18n('stash.web.pullrequest.activity.loadnew', 'Load new activity')}}</a>
+    </li>
+{/template}

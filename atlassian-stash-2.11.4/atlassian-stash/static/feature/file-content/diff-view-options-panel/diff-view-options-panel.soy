@@ -1,0 +1,124 @@
+{namespace stash.feature.fileContent.diffViewOptionsPanel}
+
+/**
+ * @param? displayType The type of view
+ * @param? fileChange
+ */
+{template .main private="true"}
+    {call stash.buttons.button}
+        {param id: 'diff-options-dropdown-trigger' /}
+        {param buttonText: '' /}
+        {param extraClasses: 'aui-dropdown2-trigger aui-button-subtle aui-dropdown2-trigger-arrowless' /}
+        {param extraAttributes: 'data-container=".diff-view-secondary-panel" aria-owns="diff-options-dropdown" aria-haspopup="true"' /}
+        {param iconType: 'aui' /}
+        {param iconText: stash_i18n('stash.web.diffview.options', 'Diff options') /}
+        {param iconClass: 'aui-icon-small aui-iconfont-more' /}
+    {/call}
+    <div id="diff-options-dropdown-container">
+        {call aui.dropdown2.contents}
+            {param id: 'diff-options-dropdown' /}
+            {param extraClasses: 'aui-style-default diff-options-dropdown' /}
+            {param content}
+                <div id="diff-options-core">
+                    {call aui.dropdown2.section}
+                        {param extraClasses: 'binary-options' /}
+                        {param content}
+                            <ul>
+                                {call .item}
+                                    {param key: 'ignoreWhitespace' /}
+                                    {param extraClasses: 'aui-dropdown2-checkbox diff-options-ignore-whitespace' /}
+                                    {param tooltipContent: stash_i18n('stash.web.diffview.options.ignoreWhitespace.tooltip', 'Ignore whitespace for all diffs. (Type &#39;Shift + w&#39;)') /}
+                                    {param content}
+                                        {stash_i18n('stash.web.diffview.options.ignoreWhitespace', 'Ignore whitespace')}
+                                        <span class="assistive">{stash_i18n('stash.web.diffview.options.ignoreWhitespace.tooltip', 'Ignore whitespace for all diffs. (Type &#39;Shift + w&#39;)')}</span>
+                                    {/param}
+                                {/call}
+                            </ul>
+                        {/param}
+                    {/call}
+                    {call aui.dropdown2.section}
+                        {param extraClasses: 'diff-type-options' /}
+                        {param content}
+                            <ul>
+                                {call .item}
+                                    {param key: 'diffType' /}
+                                    {param checked: true /}
+                                    {param extraClasses: 'aui-dropdown2-radio' /}
+                                    {param extraAttributes: ['data-value': 'unified'] /}
+                                    {param tooltipContent: stash_i18n('stash.web.diffview.options.unified-diff.tooltip', 'Show diffs in one continuous column. (Type &#39;Shift + d&#39;)') /}
+                                    {param content}
+                                        {stash_i18n('stash.web.diffview.options.unified-diff', 'Unified diff')}
+                                        <span class="assistive">{stash_i18n('stash.web.diffview.options.unified.diff.tooltip', 'Show diffs in one continuous column. (Type &#39;Shift + d&#39;)')}</span>
+                                    {/param}
+                                {/call}
+                                {call .item}
+                                    {param key: 'diffType' /}
+                                    {param disabled: true /}
+                                    {param extraClasses: 'aui-dropdown2-radio' /}
+                                    {param extraAttributes: [
+                                        'data-value': 'side-by-side',
+                                        'data-ie8-compatibility': stash_i18n('stash.web.diffview.options.side-by-side-diff.ie8-compatibility',
+                                            'Side-by-side diff is not available in Internet Explorer 8'),
+                                        'data-file-type-compatibility': stash_i18n('stash.web.diffview.options.side-by-side-diff.file-type-compatibility',
+                                            'Side-by-side diff is not available for added or deleted files')
+                                    ] /}
+                                    {param tooltipContent: stash_i18n('stash.web.diffview.options.side-by-side-diff.tooltip', 'Show diffs split into two columns. (Type &#39;Shift + d&#39;)') /}
+                                    {param content}
+                                        {stash_i18n('stash.web.diffview.options.side-by-side-diff', 'Side-by-side diff')}
+                                        <span class="assistive">{stash_i18n('stash.web.diffview.options.side-by-side-diff.tooltip', 'Show diffs split into two columns. (Type &#39;Shift + d&#39;)')}</span>
+                                    {/param}
+                                {/call}
+                            </ul>
+                        {/param}
+                    {/call}
+                </div>
+
+                {call aui.dropdown2.section}
+                    {param id: 'diff-options-pluggable' /}
+                    {param content}
+                        {let $webItemsDiffViewOptions: getWebItems('stash.file-content.diff-view.options', [
+                            'displayType': $displayType,
+                            'fileChange': $fileChange
+                        ])/}
+
+                        {if length($webItemsDiffViewOptions) > 0}
+                            <ul>
+                            {foreach $item in $webItemsDiffViewOptions}
+                                <li>
+                                    {call stash.widget.webItemDropdownItem data="$item"/}
+                                </li>
+                            {/foreach}
+                            </ul>
+                        {/if}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param key The key that will be added as a data-key attribute
+ * @param? checked whether the item is checked if it's a checkbox or radio type dropdown item
+ * @param? disabled disables the menu item (only visually, behaviour still needs to be disabled in JS)
+ * @param content
+ * @param? tooltipContent the tooltip text
+ * @param? extraClasses
+ * @param? extraAttributes
+ */
+{template .item private="true"}
+    <li>
+        <a data-key="{$key}"
+            /*
+             @TODO The noAutoescape shouldn't be necessary, but there is currently a bug in the regex that parses this.
+              The regex prevents a single-quote before a closing parentheses.
+              @see JavascriptI18NWebResourceTransformer.java
+            */
+            {if $tooltipContent}title="{$tooltipContent|noAutoescape}"{/if}
+            class="{call aui.renderExtraClasses data="all" /}{$checked ? ' checked' : ''}{$disabled ? ' disabled' : ''}"
+            {call aui.renderExtraAttributes data="all" /}>
+            {$content|noAutoescape}
+            <span class="assistive">{stash_i18n('stash.web.diffview.options.ignoreWhitespace.tooltip', 'Ignore whitespace for all diffs. (Type &#39;Shift + w&#39;)')}</span>
+        </a>
+    </li>
+{/template}

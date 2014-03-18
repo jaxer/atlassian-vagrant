@@ -1,0 +1,92 @@
+{namespace stash.layout}
+
+/**
+ * @param windowTitle
+ * @param? bodyClass
+ * @param? theme
+ * @param content
+ * @param? globalPrimaryContent
+ * @param? globalSecondaryContent
+ * @param? headContent
+ * @param? footerContent
+ * @param? pageBottomContent
+ * @param? dataAttributes
+ * @param? useAdminContext
+ * @param? pageType Default: default (full width). Options: default, focused, fixed, hybrid, generic (no class applied).
+ * @param? focusedPageSize Default: xlarge. Options: small, medium, large, xlarge.
+ */
+{template .aui}
+{call aui.page.document data="all"}
+    {param windowTitle: $windowTitle /}
+    {param extraClasses}{$theme}{if $bodyClass} {$bodyClass}{/if}{/param}
+    {param headContent}
+        {webResourceManager_requireResourcesForContext($useAdminContext ? 'atl.admin' : 'atl.general')}
+        {webResourceManager_includeResources()}
+        {if $headContent}
+            {$headContent|noAutoescape}
+        {/if}
+    {/param}
+    {param content}
+    <div id="page">
+        <!-- start #header -->
+        {if $globalPrimaryContent or $globalSecondaryContent}
+            <header id="header" role="banner">
+
+                <nav class="aui-header aui-dropdown2-trigger-group" role="navigation">
+                    <div class="aui-header-inner">
+                        {if $globalPrimaryContent}
+                            <div class="aui-header-primary">
+                                {$globalPrimaryContent |noAutoescape}
+                            </div>
+                        {/if}
+                        {if $globalSecondaryContent}
+                            <div class="aui-header-secondary">
+                                {$globalSecondaryContent |noAutoescape}
+                            </div>
+                        {/if}
+                    </div> <!-- End .aui-header-inner -->
+                </nav> <!-- End .aui-header -->
+
+                <section class="notifications">
+                    {foreach $webPanel in getWebPanels('stash.notification.banner.header')}
+                        {$webPanel|noAutoescape}
+                    {/foreach}
+                </section>
+            </header>
+        {/if}
+        <!-- End #header -->
+
+        <!-- Start #content -->
+        <section id="content" role="main" {if $ij.timezone or $ij.timezone == 0}data-timezone="{$ij.timezone}" {/if}
+        {call stash.util.dataAttributes}
+            {param data: $dataAttributes/}
+        {/call}
+        >
+            {$content |noAutoescape}
+        </section>
+        <!-- End #content -->
+
+        <!-- Start #footer -->
+        {if $footerContent}
+            <footer id="footer" role="contentinfo">
+                <section class="notifications">
+                    {foreach $webPanel in getWebPanels('stash.notification.banner.footer')}
+                        {$webPanel|noAutoescape}
+                    {/foreach}
+                </section>
+
+                <section class="footer-body">
+                    {$footerContent |noAutoescape}
+                    <div id="footer-logo"><a href="http://www.atlassian.com/" target="_blank">Atlassian</a></div>
+                </section>
+            </footer>
+        {/if}
+        <!-- End #footer -->
+    </div>
+    {includePageData()|noAutoescape}
+    {if $pageBottomContent}
+        {$pageBottomContent |noAutoescape}
+    {/if}
+    {/param}
+{/call}
+{/template}

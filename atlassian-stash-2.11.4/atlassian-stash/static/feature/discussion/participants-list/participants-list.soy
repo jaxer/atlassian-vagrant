@@ -1,0 +1,49 @@
+{namespace stash.feature.discussion}
+
+/**
+ * @param participants
+ */
+{template .participants}
+    {call stash.widget.summaryPanel.relatedEntitiesWebPanel}
+        {param iconClass: 'aui-icon-small aui-iconfont-user' /}
+        {param linkText}
+            {if length($participants) > 1}
+                {stash_i18n('stash.web.pull-request.participants.label.plural', 'Participants')}
+            {else}
+                {stash_i18n('stash.web.pull-request.participants.label.singular', 'Participant')}
+            {/if}
+        {/param}
+        {param linkClass: 'participants-trigger aui-dropdown2-trigger' /}
+        {param linkExtraAttributes: 'aria-owns=participants-dropdown aria-haspopup=true' /}
+        {param count: length($participants) /}
+        {param extraClasses}
+            participants{if not length($participants)} hidden{/if}
+        {/param}
+        {param extraContent}
+            {call aui.dropdown2.contents}
+                {param id: 'participants-dropdown' /}
+                {param extraClasses: 'aui-style-default aui-dropdown2-tailed avatar-dropdown participants-dropdown' /}
+                {param content}
+                    <ul class="aui-list-truncate">
+                        {foreach $participant in $participants}
+                            <li>
+                                {call stash.widget.avatarList.participantAvatar}
+                                    {param participant: $participant /}
+                                    {param extraClasses : 'participant-item' /}
+                                    {param withName : true /}
+                                {/call}
+                            </li>
+                        {/foreach}
+                    </ul>
+                {/param}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param count
+ */
+{template .participantCount}
+    <strong class="count">{$count}</strong>{sp}
+{/template}

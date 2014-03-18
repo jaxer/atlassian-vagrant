@@ -1,0 +1,16 @@
+{namespace stash.feature.pullRequest}
+
+/**
+ * @param conflicted
+ * @param vetoes
+ */
+{template .mergeDisabledIcon}
+    <a class="merge-disabled" href="#" title="
+    {if $conflicted and length($vetoes) == 0}
+        {stash_i18n('stash.web.pull-request.merge.conflict.tooltip', 'You will need to resolve conflicts to be able to merge.')}
+    {elseif length($vetoes) == 1 and not $conflicted}
+        {$vetoes[0].detailedMessage}
+    {else}
+        {stash_i18n('stash.web.pull-request.merge.issue.tooltip', 'This pull request can\'\'t be merged automatically.')}
+    {/if}"></a>
+{/template}

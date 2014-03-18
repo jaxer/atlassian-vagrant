@@ -1,0 +1,29 @@
+{namespace stash.maintenance}
+
+/**
+ * @param status
+ */
+{template .lock}
+{webResourceManager_requireResourcesForContext('stash.page.maintenance.lock')}
+{call stash.layout.maintenance}
+    {param status: $status /}
+    {param heading: stash_i18n('stash.web.maintenance.lock.title', 'Performing Maintenance') /}
+    {param description: stash_i18n('stash.web.maintenance.lock.description', 'System maintenance is currently underway and shouldn\'\'t take long.') /}
+    {param hideCancel: true /}
+    {param hideProgress: true /}
+    {param cancelButtonText: stash_i18n('stash.web.maintenance.button.unlock', 'Unlock') /}
+    {param cancelExtraContent}
+        {call widget.aui.message.warning}
+            {param content}
+                {stash_i18n('stash.web.maintenance.lock.warning',
+                'Unlocking Stash may interfere with in progress maintenance tasks. Overriding this lock is not recommended and may result in unforeseen consequences.')}
+            {/param}
+        {/call}
+    {/param}
+    {param pageBottomContent}
+        <script>
+            require('page/maintenance/lock').onReady(false);
+        </script>
+    {/param}
+{/call}
+{/template}

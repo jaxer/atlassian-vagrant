@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<groups xmlns="http://www.isdc.ro/wro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.isdc.ro/wro wro.xsd">
+
+    <group name='core'>
+        <css>/static/*.css</css>
+        <css>/static/feature/**.css</css>
+        <css>/static/layout/**.css</css>
+        <css>/static/widget/**.css</css>
+        <css>/static/page/**.css</css>
+        <css>/static/util/**.css</css>
+        <!--not /lib-->
+        
+        <js>/static/*.js</js>
+        <js>/static/feature/**.js</js>
+        <js>/static/layout/**.js</js>
+        <js>/static/widget/**.js</js>
+        <js>/static/page/**.js</js>
+        <js>/static/util/**.js</js>
+        <!--not /lib-->
+
+    </group>
+</groups>

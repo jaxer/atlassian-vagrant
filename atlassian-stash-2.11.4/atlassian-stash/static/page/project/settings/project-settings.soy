@@ -1,0 +1,63 @@
+{namespace stash.project}
+
+/**
+* @param project
+* @param? projectForm
+* @param? fieldErrors
+* @param? formErrors
+* @param? isEditSuccess
+* @param? dataAttributes
+* @param? detailedErrors
+*/
+{template .projectSettings}
+    {webResourceManager_requireResourcesForContext('stash.page.project.generalSettings')}
+    {call stash.layout.projectSettings}
+        {{param windowTitle: stash_i18n('stash.web.project.settings.window.title', '{0} Project Details', $project.name) /}}
+        {param project: $project /}
+        {param dataAttributes: $dataAttributes /}
+        {param activeNav: 'project-general-settings' /}
+        {param content}
+            <header class="aui-page-header">
+                <div class="aui-page-header-inner">
+                    <div class="aui-page-header-main">
+                        <h2>{stash_i18n('stash.web.project.edit.settings', 'Project details')}</h2>
+                    </div>
+                    <div class="aui-page-header-actions">
+                        {foreach $webItem in getWebItems('stash.project.settings.action',  [ 'project' : $project ])}
+                            {call stash.widget.webItemButton data="$webItem" /}
+                        {/foreach}
+                    </div>
+                </div>
+            </header>
+
+            {call widget.aui.group.group}
+                {param content}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {if $isEditSuccess}
+                                {call widget.aui.message.success}
+                                    {param content}
+                                        {stash_i18n('stash.web.changes.saved', 'Your changes have been saved.')}
+                                    {/param}
+                                {/call}
+                            {/if}
+                            {call stash.feature.project.settingsForm}
+                                {param project: $project /}
+                                {param projectForm: $projectForm /}
+                                {param fieldErrors: $fieldErrors /}
+                                {param formErrors: $formErrors /}
+                                {param detailedErrors: $detailedErrors /}
+                            {/call}
+                            {foreach $webPanel in getWebPanels('stash.project.settings', [ 'project' : $project ])}
+                                {$webPanel|noAutoescape}
+                            {/foreach}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+        {param pageBottomContent}
+            <script>require('page/project/settings').onReady();</script>
+        {/param}
+    {/call}
+{/template}

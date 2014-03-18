@@ -1,0 +1,9 @@
+.repository-menu-item{}.repository-menu-item .aui-avatar{margin-right:5px;vertical-align:middle;}
+.repository-menu-item .aui-avatar,.repository-menu-item .repository-separator{-ms-flex:none;-webkit-flex:none;flex:none;}
+.repository-menu-item .repository-project-name,.repository-menu-item .repository-name{-ms-flex:0 1 auto;-webkit-flex:0 1 auto;flex:0 1 auto;max-width:150px;}
+.repository-menu-item .repository-project-name{min-width:20px;}
+.repository-menu-item>span{padding:7px 8px 6px;display:block;}
+.repository-menu-item>a>span{margin-right:5px;display:inline-block;vertical-align:middle;-o-text-overflow:ellipsis;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.repository-menu-item .active .repository-project-name,.repository-menu-item .active .repository-separator{color:#ffffff;}
+.repository-menu-item .repository-project-name{color:#999999;margin-right:5px;}
+.repository-menu-item .repository-separator{color:#999999;margin-right:8px;}

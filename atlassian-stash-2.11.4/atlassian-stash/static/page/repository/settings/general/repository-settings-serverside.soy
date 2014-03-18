@@ -1,0 +1,114 @@
+{namespace stash.page}
+
+/**
+ * @param repository
+ * @param repositorySize
+ * @param? repositoryLocation
+ * @param? repositoryForm
+ * @param? isEditSuccess
+ * @param? formErrors
+ * @param? fieldErrors
+ * @param? dataAttributes
+ * @param? detailedErrors
+ */
+{template .repositoryGeneralSettings}
+    {webResourceManager_requireResourcesForContext('stash.page.repository.generalSettings')}
+    {call stash.layout.repositorySettings}
+        {{param windowTitle: stash_i18n('stash.web.repository.settings', 'Settings for {0} / {1}', $repository.project.name, $repository.name) /}}
+        {param repository: $repository /}
+        {param dataAttributes: $dataAttributes /}
+        {param activeSettingsTab: 'repository-settings-general' /}
+        {param content}
+            {call widget.aui.pageHeader}
+                {param content}
+                    <h2>{stash_i18n('stash.web.repository.settings.title', 'Repository details')}</h2>
+                {/param}
+                {param actionListContent}
+                    {foreach $webItem in getWebItems('stash.repository.settings.action',  [ 'repository' : $repository ])}
+                        {call stash.widget.webItemButton data="$webItem" /}
+                    {/foreach}
+                {/param}
+            {/call}
+            {if $isEditSuccess}
+                {call widget.aui.message.success}
+                    {param content}
+                        {stash_i18n('stash.web.changes.saved', 'Your changes have been saved.')}
+                    {/param}
+                {/call}
+            {/if}
+            {call widget.form.xsrfProtectedForm}
+                {param action: '' /}
+                {param errors: $formErrors /}
+                {param detailedErrors: $detailedErrors /}
+                {param extraClass: 'stash-repository-edit-settings-form' /}
+                {param content}
+                    {call widget.aui.form.text}
+                        {param id: 'name' /}
+                        {param initialValue: $repositoryForm ? $repositoryForm.name : $repository.name /}
+                        {param labelContent: stash_i18n('stash.web.repositories.name.update.html', 'Name') /}
+                        {param tooltip: stash_i18n('stash.web.repositories.name.update', 'Name') /}
+                        {param errors: $fieldErrors ? $fieldErrors['name'] : null /}
+                        {param maxLength: 128 /}
+                        {param autocomplete: 'off' /}
+                        {param descriptionContent}
+                            {stash_i18n('stash.web.repositories.name.update.description', 'Changing this repository\'\'s name will change its clone URL. You can update a remote with the following command: git remote set-url <name> <newurl>')}
+                            {call stash.feature.repository.cloneUrlGen /}
+                        {/param}
+                        {param required: true /}
+                        {param autofocus: true /}
+                    {/call}
+                    // The location is _only_ provided for sys admins so only show the fieldValue when it is provided
+                    {if $repositoryLocation}
+                        {call widget.aui.form.fieldValue}
+                            {param id: 'location' /}
+                            {param labelContent: stash_i18n('stash.web.repositories.location.update.html', 'Location on disk') /}
+                            {param valueContent}{$repositoryLocation}{/param}
+                        {/call}
+                    {/if}
+                    {call widget.aui.form.fieldValue}
+                        {param id: 'size' /}
+                        {param labelContent: stash_i18n('stash.web.repositories.size.update.html', 'Size') /}
+                        {param valueContent}{$repositorySize}{/param}
+                    {/call}
+                    {call widget.aui.form.field}
+                        {param id: 'default-branch' /}
+                        {param labelContent: stash_i18n('stash.web.repositories.defaultbranch.update.html', 'Default branch') /}
+                        {param errors: $fieldErrors ? $fieldErrors['defaultBranchId'] : null /}
+                        {{param description: stash_i18n('stash.web.repositories.defaultbranch.description', 'Select the default branch for browsing the repository. By default, Git chooses "{0}"', 'master') /}}
+                        {param input}
+                            {call stash.feature.repository.branchSelectorTriggerWithField}
+                                {param id: 'default-branch' /}
+                                {param fieldName: 'defaultBranchId' /}
+                                {param ref: $repositoryForm ? $repositoryForm.defaultBranch : null /}
+                                {param text: stash_i18n('stash.web.repositories.update.defaultbranch.nospecified', 'Not specified')/}
+                            {/call}
+                        {/param}
+                    {/call}
+                    {call widget.aui.form.checkbox}
+                        {param id: 'forkable' /}
+                        {param labelContent: stash_i18n('stash.web.repositories.forks.enable.label.html', 'Allow forks') /}
+                        {param checked: $repositoryForm ? $repositoryForm.forkable : $repository.forkable /}
+                        {param errors: $fieldErrors ? $fieldErrors.forkable : null /}
+                        {param description: stash_i18n('stash.web.repositories.forks.enable.description', 'Clear the checkbox to prevent forking of this repository') /}
+                    {/call}
+                    {call widget.aui.form.buttons}
+                        {param content}
+                            {call widget.aui.form.submit}
+                                {param id: 'submit' /}
+                                {param isPrimary: true /}
+                                {param accessKey: 's' /}
+                                {param label: stash_i18n('stash.web.button.save', 'Save') /}
+                            {/call}
+                            {call widget.aui.form.cancelButton}
+                                {param href: nav_repo_browse($repository.project, $repository) /}
+                            {/call}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+        {param pageBottomContent}
+            <script>require('page/repositoryGeneralSettings').onReady('.stash-repository-edit-settings-form', '.move-repository-link', '.delete-repository-link');</script>
+        {/param}
+    {/call}
+{/template}

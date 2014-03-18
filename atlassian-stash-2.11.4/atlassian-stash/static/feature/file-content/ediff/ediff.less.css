@@ -1,0 +1,4 @@
+.added.line .ediff-add,.added.line .ediff-change{background-color:#97f295;}
+.removed.line .ediff-change,.removed.line .ediff-delete{background-color:#ffb6ba;}
+.CodeMirror-selectedtext.ediff-change,.CodeMirror-selectedtext.ediff-delete,.CodeMirror-selectedtext.ediff-add{background-color:#dcdcdc;}
+.CodeMirror-focused .CodeMirror-selectedtext.ediff-change,.CodeMirror-focused .CodeMirror-selectedtext.ediff-delete,.CodeMirror-focused .CodeMirror-selectedtext.ediff-add{background-color:#89b2dc;}

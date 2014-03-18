@@ -1,0 +1,54 @@
+@import "../../../global.less";
+
+@imageWidth: 300px;
+@imageHeight: 200px;
+@columnSpacing: @tripleSpacing;
+
+.pull-request-intro {
+    width: 3 * @imageWidth + 2 * @columnSpacing;
+    margin: @tripleSpacing auto;
+    text-align: left;
+
+    .intro-columns {
+        margin-top: @tripleSpacing;
+    }
+
+    .intro-column {
+        width: @imageWidth;
+        display: inline-block;
+        vertical-align: top;
+
+        + .intro-column {
+            margin-left: @columnSpacing;
+        }
+    }
+
+    .intro-title {
+        display: inline-block;
+
+        + .aui-button {
+            margin-left: @doubleSpacing;
+        }
+    }
+
+    .intro-image {
+        .border-radius(3px);
+        border: 1px solid @dividerColor;
+        width: @imageWidth;
+        height: @imageHeight;
+        background-repeat: no-repeat;
+        background-size: @imageWidth @imageHeight;
+
+        &.intro-branch {
+            background-image: url(branch.svg);
+        }
+
+        &.intro-discuss {
+            background-image: url(discuss.svg);
+        }
+
+        &.intro-merge {
+            background-image: url(merge.svg);
+        }
+    }
+}

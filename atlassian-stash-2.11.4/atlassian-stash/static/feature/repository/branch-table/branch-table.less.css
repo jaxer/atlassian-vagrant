@@ -1,0 +1,6 @@
+.branch-table.aui>tbody>tr>td{vertical-align:middle;}
+.branch-table .aui-icon{color:#707070;}.branch-table .aui-icon+a{margin-left:5px;}
+.branch-table .base-branch{background:#f5f5f5;}
+.branch-table .base-branch-lozenge,.branch-table .default-branch-lozenge{margin-left:5px;}
+.branch-table td[headers=branch-name-column]>a{-o-text-overflow:ellipsis;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;display:inline-block;max-width:400px;vertical-align:top;}
+.branch-table #branch-actions-column{width:70px;}

@@ -1,0 +1,186 @@
+<atlassian-plugin key="com.atlassian.stash.stash-client-web-fragments-plugin" name="Client Web Fragments">
+
+    <web-resource-transformer key="client-web-panel-transformer"
+                              name="Client Web Panel Transformer"
+                              class="com.atlassian.stash.internal.plugin.web.fragments.ClientWebPanelTransformer"/>
+
+    <web-resource-transformer key="client-web-section-transformer"
+                              name="Client Web Section Transformer"
+                              class="com.atlassian.stash.internal.plugin.web.fragments.ClientWebSectionTransformer"/>
+
+    <web-resource-transformer key="client-web-item-transformer"
+                              name="Client Web Item Transformer"
+                              class="com.atlassian.stash.internal.plugin.web.fragments.ClientWebItemTransformer"/>
+
+    <web-resource key="web-fragment-manager" name="Client-side Web Fragment Manager">
+        <resource type="download" name="web-fragment-manager.js" location="static/util/web-fragment-manager.js">
+            <param name="source" value="webContextStatic" />
+        </resource>
+        <context>atl.general</context>
+        <context>atl.admin</context>
+        <dependency>com.atlassian.stash.stash-page-data-plugin:page-data-loader</dependency>
+    </web-resource>
+
+    <!-- Empty Repository -->
+    <web-fragment-location key="empty-repository-instructions-location" location="stash.empty.repository.instructions" type="panel" />
+
+    <!-- Branch Layout -->
+
+    <web-fragment-location key="branch-layout-actions-dropdown-location" location="stash.branch.layout.actions.dropdown" type="item" />
+
+    <!-- File content -->
+
+    <web-fragment-location key="file-source-toolbar-primary-location" location="stash.file-content.source.toolbar.primary" type="fragment" />
+    <web-fragment-location key="file-source-toolbar-secondary-location" location="stash.file-content.source.toolbar.secondary" type="fragment" />
+    <web-fragment-location key="file-diff-toolbar-primary-location" location="stash.file-content.diff.toolbar.primary" type="fragment" />
+    <web-fragment-location key="file-diff-toolbar-secondary-location" location="stash.file-content.diff.toolbar.secondary" type="fragment" />
+    <web-fragment-location key="file-content-diff-view-options" location="stash.file-content.diff-view.options" type="item" />
+
+    <!-- Changeset -->
+
+    <web-fragment-location key="changeset-related-entities-panels" location="stash.changeset.related-entities" type="panel" />
+    <web-fragment-location key="changeset-extras-location-sections" location="stash.changeset.extras" type="section" />
+    <web-fragment-location key="changeset-extras-location-panels" location="stash.changeset.extras" type="panel" />
+    <web-fragment-location key="changeset-diff-toolbar-primary-location" location="stash.changeset.diff.toolbar.primary" type="fragment" />
+    <web-fragment-location key="changeset-diff-toolbar-secondary-location" location="stash.changeset.diff.toolbar.secondary" type="fragment" />
+
+    <!-- Comments -->
+
+    <web-fragment-location key="comments-action-links" location="stash.comments.actions" type="item" />
+    <web-fragment-location key="comments-info-panels" location="stash.comments.info" type="panel" />
+
+    <!-- Pull Request -->
+
+    <web-fragment-location key="pull-request-related-entities-location" location="stash.pull-request.related-entities" type="panel" />
+    <web-fragment-location key="pull-request-links-location" location="stash.pull-request.links" type="panel" />
+    <web-fragment-location key="pull-request-overview-location" location="stash.pull-request.overview.sections" type="section" />
+
+    <web-fragment-location key="pull-request-activity-diff-toolbar-primary-location" location="stash.pull-request.activity.diff.toolbar.primary" type="fragment" />
+    <web-fragment-location key="pull-request-activity-diff-toolbar-secondary-location" location="stash.pull-request.activity.diff.toolbar.secondary" type="fragment" />
+
+    <web-fragment-location key="pull-request-diff-toolbar-primary-location" location="stash.pull-request.diff.toolbar.primary" type="fragment" />
+    <web-fragment-location key="pull-request-diff-toolbar-secondary-location" location="stash.pull-request.diff.toolbar.secondary" type="fragment" />
+
+    <web-fragment-location key="pull-request-merge-dialog-footer-hint" location="internal.stash.pull-request.merge-dialog.footer.hint" type="panel" />
+
+    <!-- Branch list -->
+
+    <web-fragment-location key="branch-list-extras-location-sections" location="stash.branches.extras" type="section" />
+    <web-fragment-location key="branch-list-extras-location" location="stash.branches.extras" type="item" />
+    <web-fragment-location key="branch-list-actions-dropdown-location" location="stash.branch.list.actions.dropdown" type="item" />
+
+
+    <!-- Fragments -->
+
+    <!-- File content -->
+    <client-web-item key="pull-request-add-file-comment" section="stash.pull-request.diff.toolbar.secondary" weight="10">
+        <styleClass>aui-button-subtle add-file-comment-trigger</styleClass>
+        <param name="stashIconClass">aui-icon aui-icon-small aui-iconfont-add-comment</param>
+        <client-condition>function(ctx) { return ctx.commentMode === 'create-new' }</client-condition>
+        <tooltip key="stash.web.comments.filecomments.add">Add a file comment (Type ''m'')</tooltip>
+    </client-web-item>
+
+    <client-web-item key="changeset-add-file-comment" section="stash.changeset.diff.toolbar.secondary" weight="10">
+        <styleClass>aui-button-subtle add-file-comment-trigger</styleClass>
+        <param name="stashIconClass">aui-icon aui-icon-small aui-iconfont-add-comment</param>
+        <client-condition>function(ctx) { return ctx.commentMode === 'create-new' }</client-condition>
+        <tooltip key="stash.web.comments.filecomments.add">Add a file comment (Type ''m'')</tooltip>
+    </client-web-item>
+
+
+    <client-web-item key="source-file-blame" section="stash.file-content.source.toolbar.secondary" weight="10">
+        <label key="stash.filecontent.sourceview.showblame">Blame</label>
+        <styleClass>file-blame</styleClass>
+    </client-web-item>
+
+    <!-- Changeset -->
+
+    <!-- On branch 10 -->
+    <!-- Changeset parents 20 -->
+    <!-- Build status 30 -->
+    <!-- JIRA issue 40 -->
+    <client-web-panel key="commit-participants" location="stash.changeset.related-entities" weight="50">
+        <client-context-provider>{ participants : require('model/page-state').getCommitParticipants().toJSON() }</client-context-provider>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:pull-request-overview-plugin-templates/stash.feature.discussion.participants" />
+        <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+    </client-web-panel>
+
+    <client-web-panel key="changeset-watch" location="stash.changeset.related-entities" weight="60">
+        <client-context-provider>
+        function() {
+            return {
+                isWatching : require('model/page-state').getIsWatching(),
+                type : require('feature/watch').type.COMMIT
+            }
+        }
+        </client-context-provider>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:discussion-plugin-templates/stash.feature.watch.summaryPanel" />
+        <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+    </client-web-panel>
+
+
+    <!-- Pull Request -->
+
+    <client-web-panel key="pull-request-participants" location="stash.pull-request.related-entities" weight="10">
+        <client-context-provider>{ participants : ctx['pullRequest'].participants }</client-context-provider>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:pull-request-overview-plugin-templates/stash.feature.discussion.participants" />
+    </client-web-panel>
+
+    <client-web-panel key="pull-request-watch" location="stash.pull-request.links" weight="10">
+        <client-context-provider>
+            function() {
+                return {
+                    isWatching : require('model/page-state').getIsWatching(),
+                    type : require('feature/watch').type.PULL_REQUEST
+                }
+            }
+        </client-context-provider>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:pull-request-overview-plugin-templates/stash.feature.watch.summaryPanel" />
+    </client-web-panel>
+
+    <client-web-panel key="pull-request-learnmore" location="stash.pull-request.links" weight="20">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:pull-request-overview-plugin-templates/stash.feature.pullRequest.overview.plugins.learnMore" />
+    </client-web-panel>
+
+    <!-- Branch List - Actions -->
+
+    <!-- Copy branch name = 10 -->
+
+    <!-- Check out in SourceTree = 20 -->
+
+    <client-web-item key="create-pr-branch-list" name="Create PR action" section="stash.branch.list.actions.dropdown" weight="30">
+        <label key="stash.branch.actions.create.pullrequest">Create pull request</label>
+        <link type="js">
+            function(ctx) {
+            return require('util/navbuilder').project(ctx.repository.project).repo(ctx.repository).createPullRequest()
+                                             .sourceBranch(ctx.branch.id).targetBranch(ctx.baseRef.id).build();
+            }
+        </link>
+        <dependency>com.atlassian.stash.stash-web-plugin:navbuilder</dependency>
+        <styleClass>create-pull-request</styleClass>
+        <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+            <param name="permission">REPO_READ</param>
+        </condition>
+    </client-web-item>
+
+    <!-- Edit permissions = 40 -->
+
+    <!-- Delete = 50 -->
+
+    <!-- Branch List - Columns -->
+
+    <client-web-section key="pull-requests-column" name="Pull requests column" weight="250" location="stash.branches.extras">
+        <label key="stash.web.repository.branches.col.pull.requests">Pull requests</label>
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">LICENSED_USER</param>
+        </condition>
+    </client-web-section>
+
+    <client-web-panel key="pull-requests-cell" name="Outgoing pull requests cell" location="pull-requests-column" weight="10">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:branch-table-pull-requests/stash.feature.repository.branch.table.pullRequests"/>
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">LICENSED_USER</param>
+        </condition>
+    </client-web-panel>
+
+</atlassian-plugin>

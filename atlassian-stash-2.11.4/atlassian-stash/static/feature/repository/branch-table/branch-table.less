@@ -1,0 +1,42 @@
+@import "/static/global.less";
+
+.branch-table {
+
+    &.aui > tbody > tr > td {
+        vertical-align: middle;
+    }
+
+    .aui-icon {
+        color: @secondaryTextColor;
+
+        + a {
+            margin-left: @halfSpacing;
+        }
+    }
+
+    // Base and default branch styles
+
+    .base-branch {
+        background: @primaryHighlight;
+    }
+
+    .base-branch-lozenge,
+    .default-branch-lozenge {
+        margin-left: @halfSpacing;
+    }
+
+    // Column widths + overflow logic
+    td[headers=branch-name-column] > a {
+        .text-overflow();
+
+        display: inline-block;
+        max-width: 400px;
+        vertical-align: top; // Assuming the td has vertical-align: middle; this will work
+    }
+
+    #branch-actions-column {
+        width: 70px;
+    }
+
+
+}

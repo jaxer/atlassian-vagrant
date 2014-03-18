@@ -1,0 +1,83 @@
+{namespace widget.aui.message}
+
+/** Usage:
+ * 1. if it's just a single line message, do NOT put <p> tags around the message.
+ * 2. if there's a title (that will be rendered in bold text), use the title param, and put subsequent text in <p> tags. Other HTML (eg <UL> is also ok)
+ * 3. if there's NO title, but is a multi-line message, do NOT wrap it in a <p> tag, use <br /> to insert line breaks, or <p> on each line after the first
+ *
+ * @param? closeable
+ * @param? title
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param extraClasses
+ */
+{template .info}
+    {call .message data="all"}
+        {param type: 'info' /}
+    {/call}
+{/template}
+
+/**
+ * @param? closeable
+ * @param? title
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param extraClasses
+ */
+{template .warning}
+    {call .message data="all"}
+        {param type: 'warning' /}
+    {/call}
+{/template}
+
+/**
+ * @param? closeable
+ * @param? title
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param extraClasses
+ */
+{template .error}
+    {call .message data="all"}
+        {param type: 'error' /}
+    {/call}
+{/template}
+
+/**
+ * @param? closeable
+ * @param? title
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param extraClasses
+ */
+{template .success}
+    {call .message data="all"}
+        {param type: 'success' /}
+    {/call}
+{/template}
+
+/**
+ * @param? type
+ * @param? closeable
+ * @param? title
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param extraClasses
+ */
+{template .message private="true"}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+    <div class="aui-message {$type ? $type : 'generic'}{if $closeable} closeable{/if}{if $extraClasses} {$extraClasses}{/if}">
+        {if $title}
+            <p class="title">
+                <strong>{$title}</strong>
+            </p>
+        {/if}
+        {$content|noAutoescape}
+        <span class="aui-icon{if $type} icon-{$type}{/if}"></span>
+        {if $closeable}
+            <span class="aui-icon icon-close" role="button" tabindex="0"></span>
+        {/if}
+    </div>
+{/template}

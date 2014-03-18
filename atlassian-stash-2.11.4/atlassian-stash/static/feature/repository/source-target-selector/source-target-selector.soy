@@ -1,0 +1,117 @@
+{namespace stash.feature.repository}
+
+/**
+ * @param? id
+ * @param? extraClasses
+ * @param? sourceTitle
+ * @param sourceRepository
+ * @param? sourceBranch
+ * @param sourceHeadChangeset
+ * @param? sourceRepositoryFieldName
+ * @param? sourceBranchFieldName
+ * @param? targetTitle
+ * @param targetRepository
+ * @param targetBranch
+ * @param targetHeadChangeset
+ * @param? targetRepositoryFieldName
+ * @param? targetBranchFieldName
+ **/
+{template .sourceTargetSelector}
+    {call widget.aui.group.group}
+        {param id: $id /}
+        {param extraClasses: 'source-target-selector ' + ($extraClasses ? $extraClasses : '') /}
+        {param content}
+            {call .branchItem}
+                {param header: $sourceTitle /}
+                {param context: 'source' /}
+                {param serverContextName: 'from' /}
+                {param repository: $sourceRepository /}
+                {param branch: $sourceBranch ? hydrate_ref_from_id($sourceBranch, null, null, $sourceHeadChangeset.id) : null /}
+                {param headChangeset: $sourceHeadChangeset /}
+                {param autofocusRepoSelector: true /}
+                {param repositoryFieldName: $sourceRepositoryFieldName /}
+                {param branchFieldName: $sourceBranchFieldName /}
+            {/call}
+            {call widget.aui.group.item}
+                {param extraClasses: 'icon-right-arrow'/}
+                {param content}
+                    {call aui.icons.icon}
+                        {param useIconFont: true /}
+                        {param iconFontSet: 'devtools' /}
+                        {param icon: 'arrow-right' /}
+                    {/call}
+                {/param}
+            {/call}
+            {call .branchItem}
+                {param header: $targetTitle /}
+                {param context: 'target' /}
+                {param serverContextName: 'to' /}
+                {param repository: $targetRepository /}
+                {param branch: $targetBranch ? hydrate_ref_from_id($targetBranch, null, null, $targetHeadChangeset.id) : null /}
+                {param headChangeset: $targetHeadChangeset /}
+                {param repositoryFieldName: $targetRepositoryFieldName /}
+                {param branchFieldName: $targetBranchFieldName /}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+
+/**
+ * @param? header
+ * @param context
+ * @param serverContextName fields on server use from and to instead of source and target
+ * @param repository
+ * @param branch
+ * @param? headChangeset
+ * @param? autofocusRepoSelector
+ * @param? repositoryFieldName
+ * @param? branchFieldName
+ */
+{template .branchItem}
+    {call widget.aui.group.item}
+        {param content}
+            {call .featureBox}
+                {param context: $context + '-selector' /}
+                {param header: $header /}
+                {param content}
+                    {call stash.feature.repository.relatedRepositorySelectorTriggerWithField}
+                        {param id: $context + 'Repo' /}
+                        {param extraClasses: $context + 'Repo' /}
+                        {param fieldName: $repositoryFieldName ? $repositoryFieldName : $serverContextName + 'RepoId' /}
+                        {param repository: $repository /}
+                        {param autofocus: $autofocusRepoSelector /}
+                    {/call}
+                    {call stash.feature.repository.branchSelectorTriggerWithField}
+                        {param id: $context + 'Branch' /}
+                        {param extraClasses: $context + 'Branch' /}
+                        {param fieldName: $branchFieldName ? $branchFieldName : $serverContextName + 'Branch' /}
+                        {param ref: $branch /}
+                    {/call}
+                    <div class='changeset-badge-detailed'>
+                        {if $headChangeset}
+                            {call stash.feature.changeset.changesetBadge.detailed}
+                                {param changeset: $headChangeset /}
+                                {param repository: $repository /}
+                            {/call}
+                        {/if}
+                    </div>
+                {/param}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param? header
+ * @param context
+ * @param content
+ */
+{template .featureBox private="true"}
+<div class="feature-box {$context}">
+    {if $header}
+        <h2>{$header}</h2>
+    {/if}
+    <div>{$content|noAutoescape}</div>
+</div>
+{/template}

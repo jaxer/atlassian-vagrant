@@ -1,0 +1,7 @@
+/*
+ * jQuery imagesLoaded plugin v2.1.2
+ * http://github.com/desandro/imagesloaded
+ *
+ * MIT License. by Paul Irish et al.
+ */
+(function(A,B){var C="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";A.fn.imagesLoaded=function(L){var I=this,N=A.isFunction(A.Deferred)?A.Deferred():0,M=A.isFunction(N.notify),F=I.find("img").add(I.filter("img")),G=[],K=[],H=[];if(A.isPlainObject(L)){A.each(L,function(O,P){if(O==="callback"){L=P}else{if(N){N[O](P)}}})}function J(){var O=A(K),P=A(H);if(N){if(H.length){N.reject(F,O,P)}else{N.resolve(F)}}if(A.isFunction(L)){L.call(I,F,O,P)}}function E(O){D(O.target,O.type==="error")}function D(O,P){if(O.src===C||A.inArray(O,G)!==-1){return }G.push(O);if(P){H.push(O)}else{K.push(O)}A.data(O,"imagesLoaded",{isBroken:P,src:O.src});if(M){N.notifyWith(A(O),[P,F,A(K),A(H)])}if(F.length===G.length){setTimeout(J);F.unbind(".imagesLoaded",E)}}if(!F.length){J()}else{F.bind("load.imagesLoaded error.imagesLoaded",E).each(function(O,Q){var R=Q.src;var P=A.data(Q,"imagesLoaded");if(P&&P.src===R){D(Q,P.isBroken);return }if(Q.complete&&Q.naturalWidth!==B){D(Q,Q.naturalWidth===0||Q.naturalHeight===0);return }if(Q.readyState||Q.complete){Q.src=C;Q.src=R}})}return N?N.promise(I):I}})(jQuery);

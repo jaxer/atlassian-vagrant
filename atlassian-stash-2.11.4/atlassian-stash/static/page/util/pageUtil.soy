@@ -1,0 +1,9 @@
+{namespace stash.util}
+/**
+ * @param data
+ */
+{template .dataAttributes}
+    {if $data}
+        {foreach $attributeKey in keys($data)}{sp}data-{$attributeKey}="{$data[$attributeKey]}"{/foreach}
+    {/if}
+{/template}

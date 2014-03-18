@@ -1,0 +1,81 @@
+{namespace stash.feature.fileContent}
+
+/**
+ * @param changeType
+ * @param? previousPath
+ */
+{template .fileChangeTypeLozenge}
+    {call stash.widget.lozenge.lozenge}
+        {param htmlElement: 'span' /}
+        {param extraClasses}
+            change-type-lozenge change-type-{$changeType}{sp}
+            {switch $changeType}
+                {case 'ADD'}
+                    aui-lozenge-success
+                {case 'COPY'}
+                    aui-lozenge-current
+                {case 'DELETE'}
+                    aui-lozenge-error
+                {case 'MOVE', 'RENAME'}
+                    aui-lozenge-moved
+                {default} //MODIFY, UNKNOWN, something invalid
+                    aui-lozenge-complete
+            {/switch}
+        {/param}
+        {param tooltip}
+            {if $previousPath}
+                {switch $changeType}
+                    // not autoescaping because escaped by the lozenge
+                    {case 'MOVE'}
+                        {{stash_i18n('stash.web.file.moved.previous.path', 'Moved from \'\'{0}\'\'', $previousPath)|noAutoescape}}
+                    {case 'RENAME'}
+                        {{stash_i18n('stash.web.file.renamed.previous.path', 'Renamed from \'\'{0}\'\'', $previousPath)|noAutoescape}}
+                    {case 'COPY'}
+                        {{stash_i18n('stash.web.file.copied.previous.path', 'Copied from \'\'{0}\'\'', $previousPath)|noAutoescape}}
+                {/switch}
+            {/if}
+        {/param}
+        {param text}
+            {switch $changeType}
+                {case 'ADD'}
+                    {stash_i18n('stash.web.file.change.type.added', 'Added')}
+                {case 'COPY'}
+                    {stash_i18n('stash.web.file.change.type.copied', 'Copied')}
+                {case 'DELETE'}
+                    {stash_i18n('stash.web.file.change.type.deleted', 'Deleted')}
+                {case 'MOVE'}
+                    {stash_i18n('stash.web.file.change.type.moved', 'Moved')}
+                {case 'RENAME'}
+                    {stash_i18n('stash.web.file.change.type.renamed', 'Renamed')}
+                {default} //MODIFY, UNKNOWN, something invalid
+                    {stash_i18n('stash.web.file.change.type.modified', 'Modified')}
+            {/switch}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param added if true, exec bit has been added, otherwise it has been removed
+ */
+{template .fileChangeModeLozenge}
+    {call stash.widget.lozenge.lozenge}
+        {param htmlElement: 'span' /}
+        {param extraClasses}
+            change-mode-lozenge change-mode-{$added ? 'added aui-lozenge-success' : 'removed aui-lozenge-error'}
+        {/param}
+        {param tooltip}
+            {if $added}
+                {stash_i18n('stash.web.file.change.mode.added.tooltip', 'This file is now executable')}
+            {else}
+                {stash_i18n('stash.web.file.change.mode.removed.tooltip', 'This file is no longer executable')}
+            {/if}
+        {/param}
+        {param text}
+            {if $added}
+                {stash_i18n('stash.web.file.change.mode.added', '+x')}
+            {else}
+                {stash_i18n('stash.web.file.change.mode.removed', '-x')}
+            {/if}
+        {/param}
+    {/call}
+{/template}

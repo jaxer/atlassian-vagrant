@@ -1,0 +1,46 @@
+{namespace stash.layout}
+
+/**
+ * From the ADG: Focused task pages allow users to focus on specific tasks in a distraction-free environment,
+ * sometimes over several screens at a time. Examples include creating a project or installing a product
+ * ADG docs: https://developer.atlassian.com/design/focused-tasks.html
+ * AUI docs: https://developer.atlassian.com/display/AUI/Page#Page-SettingPagelayout
+ *
+ * This layout just creates a basic focused layout page where the main content panel is centered, and has a fixed width
+ * depending on the focusedPageSize param - small (400px), medium (600px), large (800px) and xlarge (980px, default).
+ *
+ * For specific uses of the focused page layout that involves markup changes, consider making a new template
+ * rather than adding conditional statements or switch cases to the .focused template.
+ *
+ * @param windowTitle
+ * @param? bodyClass
+ * @param? headContent
+ * @param activeHeaderNav
+ * @param contentTitle
+ * @param content
+ * @param? pageBottomContent
+ * @param? hideLoginLink only really used on the login page itself
+ * @param? dataAttributes
+ * @param? focusedPageSize Default: xlarge. Options: small, medium, large, xlarge.
+ */
+{template .focused}
+{webResourceManager_requireResourcesForContext('stash.layout.form')} // Deprecated, use stash.layout.focused instead
+{webResourceManager_requireResourcesForContext('stash.layout.focused')}
+{call stash.layout.base data="all"}
+    {param pageType: 'focused' /}
+    {param content}
+        {call widget.aui.panel}
+            {param content}
+                {call aui.page.pagePanelContent}
+                    {param content}
+                        {if $contentTitle}
+                            <h2>{$contentTitle}</h2>
+                        {/if}
+                        {$content |noAutoescape}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+{/call}
+{/template}

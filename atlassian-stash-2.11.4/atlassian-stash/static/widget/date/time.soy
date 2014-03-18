@@ -1,0 +1,49 @@
+{namespace widget.date}
+
+/**
+ * @param date
+ * @param? title
+ * @param? extraClasses
+ **/
+{template .shortAge}
+    {call .time}
+        {param date: $date /}
+        {param title: $title /}
+        {param extraClasses : $extraClasses /}
+        {param type: 'shortAge' /}
+    {/call}
+{/template}
+
+/**
+ * @param date
+ * @param? title
+ * @param? extraClasses
+ **/
+{template .short}
+    {call .time}
+        {param date: $date /}
+        {param title: $title /}
+        {param extraClasses : $extraClasses /}
+        {param type: 'short' /}
+    {/call}
+{/template}
+
+/**
+ * @param date
+ * @param type
+ * @param? title
+ * @param? extraClasses
+ **/
+{template .time}
+    {if $date}
+        <time title="{$title ? $title : format_date($date, 'full')}" datetime="{format_date($date, 'timestamp')}"
+            {if $extraClasses} class="{$extraClasses}"{/if}>
+
+            {format_date($date, $type)}
+        </time>
+    {else}
+        <time{if $extraClasses} class="{$extraClasses}"{/if}>
+            {stash_i18n('stash.web.date.unknown', 'Unknown Date')}
+        </time>
+    {/if}
+{/template}

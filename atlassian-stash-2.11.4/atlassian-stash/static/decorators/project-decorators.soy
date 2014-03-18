@@ -1,0 +1,38 @@
+{namespace stash.decorators.project}
+
+/**
+ * @param title The window title
+ * @param project project
+ * @param body The plugin html content body
+ * @param properties meta properties
+ * @param? dataAttributes
+ */
+{template .general}
+    {call stash.layout.project}
+        {param windowTitle: $title /}
+        {param project: $project /}
+        {param dataAttributes: $dataAttributes /}
+        {param activeNav: $properties.meta ? $properties.meta.activeTab : '' /}
+        {param content: $body /}
+    {/call}
+{/template}
+
+
+
+/**
+ * @param title The window title
+ * @param project project
+ * @param body The plugin html content body
+ * @param properties meta properties
+ * @param? dataAttributes
+ */
+{template .settings}
+    {call stash.layout.projectSettings}
+        {param windowTitle: $title /}
+        {param project: $project /}
+        {param dataAttributes: $dataAttributes /}
+        {param activeNav: $properties.meta ? $properties.meta.activeTab : '' /}
+        {param content: $body /}
+    {/call}
+{/template}
+

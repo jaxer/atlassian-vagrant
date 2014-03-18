@@ -1,0 +1,14 @@
+{namespace stash.notification.banner.header}
+/**
+ * @param database
+ * @param helpTitle
+ * @param helpUrl
+ */
+{template .stashNotificationUnsupportedDatabase}
+    {call aui.message.warning}
+        {param content}
+            {{stash_i18n('stash.unsupporteddatabase.message', 'The current database, {0} {1}, is unsupported. See <a href="{2}" target="_blank">{3}</a>', $database.name, $database.version, $helpUrl, $helpTitle)|noAutoescape}}
+        {/param}
+        {param extraAttributes : [ 'title' : stash_i18n('stash.unsupporteddatabase.title', 'The database in use is not supported')] /}
+    {/call}
+{/template}

@@ -1,0 +1,3 @@
+.stash-theme #header>.notifications>div,.stash-theme #footer>.notifications>div{clear:both;}
+.stash-theme #header>.notifications>div+div,.stash-theme #footer>.notifications>div+div{border-top:0;}
+.stash-theme #footer>.notifications>div{margin-bottom:4px;}

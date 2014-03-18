@@ -1,0 +1,30 @@
+{namespace stash.feature.commits}
+/**
+ */
+/**
+ * @param repository
+ * @param? changesetPage
+ * @param? tableId
+ * @param? extraClasses
+ */
+{template .commitsTable}
+    {call stash.feature.commits.commitsTableImpl data="all"}
+        {param webSections : getWebSections('stash.commits.extras', [ 'repository' : $repository ]) /}
+    {/call}
+{/template}
+
+/**
+ * @param webSections
+ * @param repository
+ * @param changeset
+ */
+{template .commitsRowExtras private="true"}
+    {foreach $webSection in $webSections}
+        <td class="{$webSection.key}">
+            {foreach $webPanel in getWebPanels($webSection.key, [ 'repository' : $repository, 'changeset' : $changeset ])}
+                {$webPanel|noAutoescape}
+            {/foreach}
+        </td>
+    {/foreach}
+{/template}
+

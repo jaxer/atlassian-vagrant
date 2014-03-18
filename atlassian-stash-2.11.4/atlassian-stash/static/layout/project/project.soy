@@ -1,0 +1,38 @@
+{namespace stash.layout}
+
+/**
+ * @param windowTitle
+ * @param content
+ * @param? bodyClass
+ * @param? headContent
+ * @param? project
+ * @param? entityHeaderRightItems
+ * @param? activeNav
+ * @param? pageBottomContent
+ * @param? panelClass
+ * @param? dataAttributes
+ */
+{template .project}
+    {webResourceManager_requireResourcesForContext('stash.layout.project')}
+    {call .entity data="all"}
+        {param panelClass: $panelClass /}
+        {param entityName: $project.name /}
+        {param entityNav: getWebItems('atl.project.nav', [ 'project' : $project ] ) /}
+        {param activeHeaderNav: 'projects-menu' /}
+        {param headerImageContent}
+            {call stash.feature.project.avatar}
+                {param size: 'xlarge' /}
+                {param project: $project /}
+            {/call}
+        {/param}
+        {param actionWebItems: getWebItems('stash.project.overview.actions', [ 'project' : $project ] ) /}
+        {param pageBottomContent}
+            <script>require('layout/project').onReady({to_json($project)|noAutoescape});</script>
+            {if $pageBottomContent}
+                {$pageBottomContent|noAutoescape}
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+

@@ -1,0 +1,26 @@
+@import "../../global.less";
+
+.monospace-lozenge {
+    font-family: @monospaceFontStack;
+}
+
+.merge-lozenge {
+    cursor: default;
+}
+
+.pull-request-state-lozenge {
+    cursor: default;
+}
+
+.lozenge-enabled,
+.lozenge-disabled {
+    color: @lozengeTextColor;
+}
+.lozenge-enabled {
+    border-color: @lozengeAddedColor;
+    background-color: @lozengeAddedColor;
+}
+.lozenge-disabled {
+    border-color: @lozengeRemovedColor;
+    background-color: @lozengeRemovedColor;
+}

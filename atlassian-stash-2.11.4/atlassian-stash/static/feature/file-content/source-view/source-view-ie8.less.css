@@ -1,0 +1,6 @@
+.syntax-highlight-warning{margin-left:20px;display:inline-block;line-height:30px;}.syntax-highlight-warning.hidden{display:none;}
+.syntax-highlight-warning .icon-warning{border:none;height:16px;width:16px;background:transparent url('../com.atlassian.auiplugin:ajs-gadgets-base/aui-message-icon-sprite.png') no-repeat -144px 0;}
+.syntax-highlight-warning .warning-text{margin-left:0.5em;}
+.syntax-highlight-warning .dialog-trigger{cursor:pointer;}
+.syntax-highlight-warning-dialog{color:#333;}
+.code pre{margin-top:0;}

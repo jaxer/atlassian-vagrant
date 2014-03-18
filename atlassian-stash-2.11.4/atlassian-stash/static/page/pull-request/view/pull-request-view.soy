@@ -1,0 +1,31 @@
+{namespace stash.page.pullRequest}
+
+/**
+ * @param repository
+ * @param pullRequest
+ * @param? startingTabKey
+ * @param? maxChanges
+ * @param? relevantContextLines
+ * @param unwatched
+ * @param? dataAttributes
+ */
+{template .view}
+{webResourceManager_requireResourcesForContext('stash.page.pullRequest.view')}
+{webResourceManager_requireResourcesForContext('internal.unified-diff-view')} // included for faster startup
+{webResourceManager_requireResourcesForContext('internal.side-by-side-diff-view')} // included for faster startup
+{webResourceManager_requireResourcesForContext('stash.feature.files.fileHandlers')}
+    {call stash.layout.pullRequest}
+        {param repository: $repository /}
+        {param pullRequest: $pullRequest /}
+        {param dataAttributes: $dataAttributes /}
+        {param activeTab: $startingTabKey ? $startingTabKey : 'stash.pull-request.nav.overview' /}
+        {param content}/* loaded client-side */{/param}
+        {param maxChanges: $maxChanges /}
+        {param relevantContextLines: $relevantContextLines /}
+        {param pageBottomContent}
+            <script>
+                require('page/pull-request/pull-request-view').onReady({if $unwatched}{$unwatched}{else}false{/if});
+            </script>
+        {/param}
+    {/call}
+{/template}

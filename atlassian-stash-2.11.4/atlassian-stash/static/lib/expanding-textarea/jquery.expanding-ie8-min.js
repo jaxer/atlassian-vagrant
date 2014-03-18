@@ -1,0 +1,1 @@
+(function(A){A.fn.expandingTextarea=function(){return this}})(jQuery);

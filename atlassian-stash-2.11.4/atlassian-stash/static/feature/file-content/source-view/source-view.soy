@@ -1,0 +1,38 @@
+{namespace stash.feature.fileContent}
+
+/**
+ * @param? id
+ * @param? extraClasses
+ */
+{template .sourceView}
+    <div{if hasData() and $id} id="{$id}"{/if} class="content-view source-view{if hasData() and $extraClasses} {$extraClasses}{/if}">
+        <div class="line-numbers">
+            <div class="numbers"></div>
+        </div>
+        <div class="source-container">
+            <pre class="code">
+            </pre>
+        </div>
+        <div class="binary-container">
+        </div>
+    </div>
+{/template}
+
+/**
+ */
+{template .syntaxHighlightToolbarWarning}
+    <div class="syntax-highlight-warning">
+        <span class="aui-icon icon-warning">{stash_i18n('stash.web.warning', 'Warning')}</span>
+        <span class="warning-text">{{stash_i18n('stash.web.sourceview.warning.nosyntaxhighlight', '{0}Syntax highlighting{1} is disabled.', '<a class="dialog-trigger">', '</a>')|noAutoescape}}</span>
+    </div>
+{/template}
+
+/**
+ */
+{template .emptyFile}
+    {call stash.widget.focusMessage.message}
+        {param iconClass: 'icon-empty-file' /}
+        {param accessibilityText: stash_i18n('stash.web.source.empty.icon', 'Empty file') /}
+        {param title: stash_i18n('stash.web.source.empty', 'This file is empty') /}
+    {/call}
+{/template}

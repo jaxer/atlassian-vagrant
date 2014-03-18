@@ -1,0 +1,1 @@
+define("page/repository/noDefaultBranch",["util/events","util/navbuilder","exports"],function(C,B,A){A.onReady=function(){C.on("stash.feature.repository.revisionReferenceSelector.revisionRefChanged",function(E){var D=B.parse(location.href);D.addQueryParam("at",E.getId());location.href=D.toString()})}});

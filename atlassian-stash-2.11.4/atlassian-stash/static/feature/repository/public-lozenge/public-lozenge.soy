@@ -1,0 +1,10 @@
+{namespace stash.feature.repository}
+
+/**
+ * @param repository
+ */
+{template .publicLozenge}
+{if isFeatureEnabled('public.access') and ($repository.public or $repository.project.public)}
+     <div class="public-lozenge aui-lozenge aui-lozenge-subtle">{stash_i18n('stash.web.repository.public.lozenge', 'Public')}</div>
+{/if}
+{/template}

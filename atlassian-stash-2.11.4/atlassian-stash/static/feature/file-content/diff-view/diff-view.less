@@ -1,0 +1,215 @@
+@import "/static/global.less";
+@import "/static/feature/file-content/file-content-variables.less";
+
+.diff-view {
+    .tab-width(4);
+
+    .CodeMirror-cursor {
+        display: none;
+    }
+
+    .CodeMirror-sizer {
+        padding-bottom: (@codeLineHeight + @codeLineBorderWidth) * 2;
+    }
+
+    &.full-window-scrolling {
+        .CodeMirror-scroll {
+            overflow-y: hidden;
+        }
+
+        .CodeMirror-scrollbar-filler,
+        .CodeMirror-vscrollbar {
+            display: none !important;
+        }
+
+        .CodeMirror-hscrollbar {
+            left: 0 !important;
+            right: 0 !important;
+        }
+    }
+
+    .line,
+    .line .CodeMirror-gutter-elt > * {
+        background-color: @contentBackgroundColor;
+    }
+
+
+    .expanded {
+        pre,
+        .line-number,
+        .line-number-marker {
+            color: @secondaryTextColor;
+        }
+    }
+
+    .line-number,
+    .line-number-marker {
+        .user-select(none);
+        height: 100%;
+        font-family: monospace;
+        font-size: @font-size-small;
+        z-index: 1;
+        color: @bodyTextColor;
+    }
+
+    .line-number-from,
+    .line-number-to {
+        width: @lineNumberWidth;
+        display: inline-block;
+        text-align: right;
+        vertical-align: top;
+    }
+
+    .line-number-marker {
+        border-right: @gutterBorderWidth solid transparent;
+        width: @doubleSpacing;
+        text-align: center;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .line-number-from {
+        z-index: 2;
+    }
+
+    .line-number-to {
+        z-index: 1;
+    }
+
+    .source {
+        padding-left: @columnPadding;
+        white-space: pre;
+        color: #000;
+        line-height: @codeLineHeight;
+    }
+
+    .commented.line,
+    .commented.line .line-number,
+    .commented.line .line-number-marker,
+    .commented.line .comment-box,
+    .commented.line .add-comment-trigger,
+    .commented.line .dummy-comment-trigger {
+        border-top-color: @feintGreyColor;
+        background-color: @feintGreyColor;
+    }
+
+    .added.line,
+    .added.segment-connector,
+    .added.line .line-number,
+    .added.line .line-number-marker,
+    .added.line .comment-box,
+    .added.line .add-comment-trigger,
+    .added.line .dummy-comment-trigger {
+        border-top-color: @addedLineBackgroundColor;
+        background-color: @addedLineBackgroundColor;
+    }
+
+    .removed.line,
+    .removed.segment-connector,
+    .removed.line .line-number,
+    .removed.line .line-number-marker,
+    .removed.line .comment-box,
+    .removed.line .add-comment-trigger,
+    .removed.line .dummy-comment-trigger {
+        border-top-color: @deletedLineBackgroundColor;
+        background-color: @deletedLineBackgroundColor;
+    }
+    .truncated .ellipsis {
+        color: #666;
+    }
+
+    // text colour is the same for all three conflicted line types
+    .conflict-marker,
+    .conflict-ours,
+    .conflict-theirs {
+        color: @conflictLineTextColor;
+
+        .add-comment-trigger,
+        .dummy-comment-trigger,
+        .line-number,
+        .line-number-marker,
+        .comment-box,
+        > code.source > span {
+            color: @conflictLineTextColor;
+        }
+    }
+
+    .line,
+    .segment-connector {
+        // the conflict markers have a darker yellow background
+        &.conflict-marker {
+            border-top-color: @conflictMarkerColor;
+            background-color: @conflictMarkerColor;
+
+            .add-comment-trigger,
+            .dummy-comment-trigger,
+            .line-number,
+            .line-number-marker,
+            .comment-box,
+            > code.source > span {
+                border-top-color: @conflictMarkerColor;
+                background-color: @conflictMarkerColor;
+            }
+        }
+
+        // the conflicted code lines are a lighter yellow
+        &.conflict-ours,
+        &.conflict-theirs {
+            border-top-color: @conflictLineBackgroundColor;
+            background-color: @conflictLineBackgroundColor;
+
+            .add-comment-trigger,
+            .dummy-comment-trigger,
+            .line-number,
+            .line-number-marker,
+            .comment-box,
+            > code.source > span {
+                border-top-color: @conflictLineBackgroundColor;
+                background-color: @conflictLineBackgroundColor;
+            }
+        }
+    }
+
+    .hunk-above,
+    .hunk-below {
+        background-image : url(diff-torn-edge.png);
+        height: @codeLineHeight;
+    }
+
+    .hunk-above {
+        background-position: left 10%;
+        margin-bottom: 0;
+    }
+
+    .hunk-below {
+        background-position: left 90%;
+    }
+
+} //.diff-view
+
+.diff-view-message,
+.diff-view-no-change-message {
+    margin: 30px auto;
+}
+
+.diff-view-message {
+    max-width: 600px;
+}
+
+.diff-view-no-change-message {
+    max-width: 300px;
+}
+
+.binary-container {
+    .since-revision.binary img {
+        border: 1px solid #d04437;
+    }
+
+    .until-revision.binary img {
+        border: 1px solid #14972b;
+    }
+
+    .binary h5 {
+        margin-top: 0;
+    }
+}

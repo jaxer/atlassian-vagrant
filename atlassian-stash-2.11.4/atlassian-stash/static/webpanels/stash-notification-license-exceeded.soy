@@ -1,0 +1,12 @@
+{namespace stash.notification.banner.header}
+/**
+ * @param licenseStatus
+ */
+{template .stashNotificationLicenseExceeded}
+    {call aui.message.error}
+        {param content}
+            {$licenseStatus.localisedMessage} {{stash_i18n('stash.scm.push.disabled.purchase.license', 'Pushing is disabled - <a href="{0}" target="_blank">purchase a license</a> today', 'https://my.atlassian.com/purchase/product/stash')|noAutoescape}}
+        {/param}
+        {param extraAttributes : [ 'title' : stash_i18n('stash.scm.push.disabled.purchase.license', 'Users will not be able to push code to repositories hosted on Stash')] /}
+    {/call}
+{/template}

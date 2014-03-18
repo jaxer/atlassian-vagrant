@@ -1,0 +1,5 @@
+#pull-request-merge-dialog .aui-message .errors{padding-left:0;list-style-position:inside;}
+#pull-request-merge-dialog .aui-message+.commit-message-container{margin-top:20px;}
+#pull-request-merge-dialog .commit-message-container{display:table;width:100%;padding-bottom:20px;margin-bottom:10px;border-bottom:1px solid #cccccc;}#pull-request-merge-dialog .commit-message-container .committer-avatar{display:table-cell;vertical-align:top;}#pull-request-merge-dialog .commit-message-container .committer-avatar .aui-avatar{vertical-align:top;margin-right:10px;}
+#pull-request-merge-dialog .commit-message-container .default-commit-message{display:table-cell;vertical-align:top;}#pull-request-merge-dialog .commit-message-container .default-commit-message pre{white-space:normal;}
+#pull-request-merge-dialog .branch-diagram{margin-bottom:0;}

@@ -1,0 +1,137 @@
+{namespace stash.admin.users}
+
+/**
+* @param form
+* @param? fieldErrors
+* @param? formErrors
+* @param userCount
+* @param userLimit
+* @param userLimitReached
+* @param canNotify
+*/
+{template .create}
+    {webResourceManager_requireResourcesForContext('stash.page.admin.users.create')}
+    {call .createInternal data="all"}
+        {param notify: $canNotify and $form.notify and not ($fieldErrors.password or $fieldErrors.confirmPassword) /}
+    {/call}
+{/template}
+
+/**
+* @param form
+* @param? fieldErrors
+* @param? formErrors
+* @param userCount
+* @param userLimit
+* @param userLimitReached
+* @param notify
+* @param canNotify
+*/
+{template .createInternal private="true"}
+{call stash.layout.focused}
+    {param windowTitle: stash_i18n('stash.web.users.create.header', 'Create User') /}
+    {param contentTitle: stash_i18n('stash.web.users.create.header', 'Create User') /}
+    {param focusedPageSize: 'medium' /}
+    {param content}
+        {if $userLimit >= 0}
+            {if not $userLimitReached}
+                {if $userLimit - $userCount == 1}                
+                    {{stash_i18n('stash.web.users.created.singular', 'There is <b>{0}</b> user remaining on your <b>{1}</b> user license', $userLimit - $userCount, $userLimit)|noAutoescape}}
+                {else}
+                    {{stash_i18n('stash.web.users.created', 'There are <b>{0}</b> users remaining on your <b>{1}</b> user license', $userLimit - $userCount, $userLimit)|noAutoescape}}
+                {/if}
+            {else}
+                {call widget.aui.message.error}
+                    {param extraClasses: 'at-limit'/}
+                    {param content}
+                        {{stash_i18n('stash.web.license.atlimit',
+                            'You have reached your license limit of {0} users. To add more users, <a href="{1}">restrict your existing licensed users</a> or <a href="{2}">upgrade your license</a>.',
+                            $userLimit, nav_admin_global_perms(), 'http://my.atlassian.com')|noAutoescape}}
+                    {/param}
+                {/call}
+            {/if}
+        {/if}
+        {call widget.form.xsrfProtectedForm}
+            {param action: nav_admin_user_create() /}
+            {param errors: $formErrors /}
+            {param extraClass: $userLimitReached ? 'disabled' : '' /}
+            {param autocomplete: 'off' /}
+            {param content}
+                {call widget.aui.form.text}
+                    {param id: 'username' /}
+                    {param autofocus: true /}
+                    {param required: true /}
+                    {param labelContent: stash_i18n('stash.web.users.username.html', 'Username') /} // reuse the login page's i18n keys, so that both text is the same
+                    {param initialValue: $form.username /}
+                    {param maxLength: 255 /}
+                    {param errors: $fieldErrors ? $fieldErrors.username : null /}
+                    {param disabled: $userLimitReached/}
+                {/call}
+                {call widget.aui.form.text}
+                    {param id: 'fullname' /}
+                    {param labelContent: stash_i18n('stash.web.users.fullname.html', 'Full name') /}
+                    {param initialValue: $form.fullname /}
+                    {param maxLength: 255 /}
+                    {param errors: $fieldErrors ? $fieldErrors.fullname : null /}
+                    {param required: true /}
+                    {param disabled: $userLimitReached/}
+                {/call}
+                {call widget.aui.form.text}
+                    {param id: 'email' /}
+                    {param labelContent: stash_i18n('stash.web.users.email.html', 'Email address') /}
+                    {param initialValue: $form.email /}
+                    {param maxLength: 255 /}
+                    {param errors: $fieldErrors ? $fieldErrors.email : null /}
+                    {param required: true /}
+                    {param disabled: $userLimitReached/}
+                {/call}
+                {call widget.aui.form.checkbox}
+                    {param id: 'notify' /}
+                    {param labelContent: stash_i18n('stash.web.users.create.email', 'Email a link to the user to set their password') /}
+                    {param checked: $notify /}
+                    {param errors: $fieldErrors ? $fieldErrors.notify : null /}
+                    {param disabled: not $canNotify or $userLimitReached /}
+                    {{param descriptionContent: $canNotify ? '' : stash_i18n('stash.web.users.create.cantnotify.description',
+                             'Your {0}email server{1} needs to be configured to use this option',
+                             '<a href="' + nav_admin_mail_server() + '">', '</a>') /}}
+                {/call}
+                {call widget.aui.form.password}
+                    {param id: 'password' /}
+                    {param labelContent: stash_i18n('stash.web.users.password.html', 'Password') /}
+                    {param initialValue: '' /}
+                    {param maxLength: 255 /}
+                    {param errors: $fieldErrors ? $fieldErrors.password : null /}
+                    {param fieldGroupClass: $notify ? 'hidden' : null /}
+                    {param required: not $notify /}
+                    {param disabled: $userLimitReached/}
+                {/call}
+                {call widget.aui.form.password}
+                    {param id: 'confirmPassword' /}
+                    {param labelContent: stash_i18n('stash.web.users.confirmpassword.html', 'Confirm password') /}
+                    {param initialValue: '' /}
+                    {param maxLength: 255 /}
+                    {param errors: $fieldErrors ? $fieldErrors.confirmPassword : null /}
+                    {param fieldGroupClass: $notify ? 'hidden' : null /}
+                    {param required: not $notify /}
+                    {param disabled: $userLimitReached/}
+                {/call}
+                {call widget.aui.form.buttons}
+                    {param content}
+                        {call widget.aui.form.submit}
+                            {param id: 'submit' /}
+                            {param label: stash_i18n('stash.web.button.create.user', 'Create user') /}
+                            {param isPrimary: true /}
+                            {param disabled: $userLimitReached /}
+                        {/call}
+                        {call widget.aui.form.cancelButton}
+                            {param href: nav_admin_users() /}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+    {param pageBottomContent}
+        <script>require('page/admin/userCreate').onReady();</script>
+    {/param}
+{/call}
+{/template}

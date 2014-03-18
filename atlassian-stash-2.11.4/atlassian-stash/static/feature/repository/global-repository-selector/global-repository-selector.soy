@@ -1,0 +1,27 @@
+{namespace stash.feature.repository}
+
+/**
+ * @param? id
+ * @param? repository  // Either $repository (object) or plain $text must be provided
+ * @param? text
+ * @param? autofocus
+ * @param? extraClasses
+ * @param? extraAttributes
+ */
+{template .globalRepositorySelectorTrigger}
+    {call stash.feature.repository.baseRepositorySelectorTrigger data="all"/}
+{/template}
+
+/**
+ * @param fieldName     // Name for form field
+ * @param? id
+ * @param? repository    // Either $repository (object) or plain $text must be provided
+ * @param? text
+ * @param? fieldId     // Id for form field
+ * @param? autofocus
+ * @param? extraClasses
+ * @param? extraAttributes
+ */
+{template .globalRepositorySelectorTriggerWithField}
+    {call stash.feature.repository.baseRepositorySelectorTriggerWithField data="all"/}
+{/template}

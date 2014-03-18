@@ -1,0 +1,40 @@
+{namespace stash.layout}
+
+/**
+ * @param step
+ * @param content
+ * @param? pageBottomContent
+ */
+{template .setup}
+{webResourceManager_requireResourcesForContext('stash.layout.setup')}
+{call stash.layout.base data="all"}
+    {param windowTitle: stash_i18n('stash.web.setup.title', 'Setup') /}
+    {param bodyClass: 'setup-layout' /}
+    {param pageType: 'focused' /}
+    {param focusedPageSize: 'large' /}
+    {param content}
+        {call widget.aui.pageHeader}
+            {param extraClasses: 'setup-header' /}
+            {param content}
+                <h1>{$ij.instanceName} {stash_i18n('stash.web.setup.installer', 'Installer')}</h1>
+            {/param}
+        {/call}
+        {call widget.aui.panel}
+            {param extraClasses: 'step' /}
+            {param content}
+                {call aui.page.pagePanelContent}
+                    {param content}
+                        {call widget.aui.pageHeader}
+                            {param extraClasses: 'setup-header' /}
+                            {param content}
+                                <h2>{$step}</h2>
+                            {/param}
+                        {/call}
+                        {$content |noAutoescape}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+{/call}
+{/template}

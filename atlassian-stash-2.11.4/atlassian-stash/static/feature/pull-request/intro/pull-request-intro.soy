@@ -1,0 +1,49 @@
+{namespace stash.feature.pullRequest}
+
+/**
+ * @param repository
+ */
+{template .pullRequestIntro}
+    <div class="pull-request-intro">
+        <h1 class="intro-title">{stash_i18n('stash.web.pull-requests.intro.title', 'Getting started with pull requests')}</h1>
+        {call aui.buttons.button}
+            {param text: stash_i18n('stash.web.pull-request.intro.create.button', 'Create a pull request')/}
+            {param extraClasses: 'intro-create-pull-request' /}
+            {param type: 'primary' /}
+            {param tagName: 'a'/}
+            // TODO: Change to href param when upgrading to AUI v5.2.1
+            {param extraAttributes: [ 'href' : nav_create_pull($repository.project.key, $repository.slug) ] /}
+        {/call}
+        <div class="intro-columns">
+            {call .introColumn}
+                {param name: stash_i18n('stash.web.pull-request.intro.branch.name', 'Branch') /}
+                {param imageClass: 'intro-branch' /}
+                {param descriptionContent: stash_i18n('stash.web.pull-request.intro.branch.description', 'Develop features on a branch and create a pull request to get changes reviewed.') /}
+            {/call}
+            {call .introColumn}
+                {param name: stash_i18n('stash.web.pull-request.intro.discuss.name', 'Discuss') /}
+                {param imageClass: 'intro-discuss' /}
+                {param descriptionContent: stash_i18n('stash.web.pull-request.intro.discuss.description', 'Discuss and approve code changes related to the pull request.') /}
+            {/call}
+            {call .introColumn}
+                {param name: stash_i18n('stash.web.pull-request.intro.merge.name', 'Merge') /}
+                {param imageClass: 'intro-merge' /}
+                {{param descriptionContent: stash_i18n('stash.web.pull-request.intro.merge.description', 'Merge the branch with the click of a button. {0}Learn about pull requests{1}.',
+                    '<a href="' + cav_help_url('stash.help.pull.request') + '" target="_blank">', '</a>') /}}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param name
+ * @param imageClass
+ * @param descriptionContent
+ */
+{template .introColumn}
+    <div class="intro-column">
+        <div class="intro-image {$imageClass}"></div>
+        <h2>{$name}</h2>
+        <p>{$descriptionContent|noAutoescape}</p>
+    </div>
+{/template}

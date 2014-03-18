@@ -1,0 +1,84 @@
+{namespace stash.feature.pullRequest}
+
+/**
+ * @param sourceBranch
+ * @param targetBranch
+ * @param? sourceRemote
+ * @param? targetRemote
+ * @param conflicted
+ * @param vetoes
+ */
+{template .mergeHelp}
+    {if $conflicted}
+        <div class="merge-help merge-conflicted">
+            <h3 class="aui-icon-warning">{stash_i18n('stash.web.pull-request.merge.conflict.title', 'Merge conflict')}</h3>
+            {call .manualMergeInstructions}
+                {param sourceBranch: $sourceBranch /}
+                {param targetBranch: $targetBranch /}
+                {param sourceRemote: $sourceRemote /}
+                {param targetRemote: $targetRemote /}
+            {/call}
+        </div>
+    {/if}
+    {if $vetoes}
+        {foreach $veto in $vetoes}
+            <div class="merge-help">
+                <h3 class="aui-icon-warning">{$veto.summaryMessage}</h3>
+                <p>{$veto.detailedMessage|noAutoescape}</p>
+            </div>
+        {/foreach}
+    {/if}
+{/template}
+
+/**
+ * @param sourceBranch
+ * @param targetBranch
+ * @param? sourceRemote
+ * @param? targetRemote
+ */
+{template .manualMergeInstructions private="true"}
+    <p>
+        {stash_i18n('stash.web.pull-request.merge.help.introduction', 'This pull request has conflicts. You must resolve the conflicts before you can merge:')}
+    </p>
+
+    <p>
+        <strong>{stash_i18n('stash.web.pull-request.merge.help.step1', 'Step 1:')}</strong>{sp}
+        {if $targetRemote}
+            {stash_i18n('stash.web.pull-request.merge.help.step1.crossrepo.text', 'Fetch changes from the target repository (saving the target branch as FETCH_HEAD).')}
+        {else}
+            {stash_i18n('stash.web.pull-request.merge.help.step1.samerepo.text', 'Fetch the changes (saving the target branch as FETCH_HEAD).')}
+        {/if}
+    </p>
+    {call stash.widget.codeBlock}
+        {param content}
+            git fetch {$targetRemote ? $targetRemote : 'origin'} {$targetBranch}{\n}
+        {/param}
+        {param instructionBlock: true /}
+    {/call}
+    <p>
+        <strong>{stash_i18n('stash.web.pull-request.merge.help.step2', 'Step 2:')}</strong>{sp}
+        {stash_i18n('stash.web.pull-request.merge.help.step2.text', 'Checkout the source branch and merge in the changes from the target branch. Resolve conflicts.')}
+    </p>
+    {call stash.widget.codeBlock}
+        {param content}
+            git checkout {$sourceBranch} {\n}
+            git merge FETCH_HEAD
+        {/param}
+        {param instructionBlock: true /}
+    {/call}
+    <p>
+        <strong>{stash_i18n('stash.web.pull-request.merge.help.step3', 'Step 3:')}</strong>{sp}
+        {stash_i18n('stash.web.pull-request.merge.help.step3.text', 'After the merge conflicts are resolved, stage the changes accordingly, commit the changes and push.')}
+    </p>
+    {call stash.widget.codeBlock}
+        {param content}
+            git commit{\n}
+            git push {$sourceRemote ? $sourceRemote : 'origin'} HEAD
+        {/param}
+        {param instructionBlock: true /}
+    {/call}
+    <p>
+        <strong>{stash_i18n('stash.web.pull-request.merge.help.step4', 'Step 4:')}</strong>{sp}
+        {stash_i18n('stash.web.pull-request.merge.help.step4.text', 'Merge the updated pull request.')}
+    </p>
+{/template}

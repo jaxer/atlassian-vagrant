@@ -1,0 +1,73 @@
+{namespace stash.page}
+
+/**
+ * @param project
+ * @param? repositoryForm
+ * @param? formErrors
+ * @param? detailedErrors
+ * @param? fieldErrors
+ * @param? dataAttributes
+ */
+{template .createRepo}
+{webResourceManager_requireResourcesForContext('stash.page.repository.create')}
+{call stash.layout.focused}
+    {param windowTitle: stash_i18n('stash.web.repository.create.title', 'Create Repository') /}
+    {{param contentTitle: $project.type == 'PERSONAL' ?
+                            stash_i18n('stash.web.repository.create.personal.repository', 'Create a personal repository') :
+                            stash_i18n('stash.web.repository.create.repository', 'Create a repository in {0}', $project.name)/}}
+    {param bodyClass: 'repository-create'/}
+    {param activeHeaderNav: 'repositories-menu' /}
+    {param focusedPageSize: 'medium' /}
+    {param dataAttributes: $dataAttributes /}
+    {param content}
+        {call widget.form.xsrfProtectedForm}
+            {param action: '' /}
+            {param errors: $formErrors /}
+            {param detailedErrors: $detailedErrors /}
+            {param extraClass: 'stash-repository-create-form' /}
+            {param content}
+                {foreach $webPanel in getWebPanels('stash.web.repository.create.beforefields', [ 'project' : $project ])}
+                    {$webPanel|noAutoescape}
+                {/foreach}
+                {call widget.aui.form.text}
+                    {param id: 'name' /}
+                    {param labelContent: stash_i18n('stash.web.repository.create.name', 'Name') /}
+                    {param initialValue: $repositoryForm ? $repositoryForm.name : null /}
+                    {param errors: $fieldErrors ? $fieldErrors.name : null /}
+                    {param required: true /}
+                    {param autofocus: true /}
+                    {param autocomplete: 'off' /}
+                    {param maxLength: 128 /}
+                    {param descriptionContent}
+                        {stash_i18n('stash.web.repository.create.description', 'The repository\'\'s name will be used to create its URL')}
+                        {call stash.feature.repository.cloneUrlGen /}
+                    {/param}
+                {/call}
+                {call widget.aui.form.input}
+                    {param id: 'forkable' /}
+                    {param initialValue: 'true' /}
+                    {param type: 'hidden'/}
+                {/call}
+                {foreach $webPanel in getWebPanels('stash.web.repository.create.afterfields', [ 'project' : $project ])}
+                    {$webPanel|noAutoescape}
+                {/foreach}
+                {call widget.aui.form.buttons}
+                    {param content}
+                        {call widget.aui.form.submit}
+                            {param id: 'submit' /}
+                            {param isPrimary: true /}
+                            {param label: stash_i18n('stash.web.button.create.repository', 'Create repository') /}
+                        {/call}
+                        {call widget.aui.form.cancelButton}
+                            {param href: $project.owner ? nav_user($project.owner) : nav_project($project) /}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+    {param pageBottomContent}
+        <script>require('page/repository-create').onReady({to_json($project)|noAutoescape});</script>
+    {/param}
+{/call}
+{/template}

@@ -1,0 +1,3 @@
+table#list-users{table-layout:fixed;}table#list-users td{white-space:nowrap;overflow:hidden;}table#list-users td[headers=fullname] a{max-width:none;word-wrap:break-word;}
+table#list-users td[headers=username] div{max-width:none;}
+table#list-users td[headers=email] div{max-width:none;}

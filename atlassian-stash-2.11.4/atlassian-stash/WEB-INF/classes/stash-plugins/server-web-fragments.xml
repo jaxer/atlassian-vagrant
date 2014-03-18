@@ -1,0 +1,910 @@
+<atlassian-plugin key="com.atlassian.stash.stash-server-web-fragments" name="System Server Side Web Fragments">
+
+    <!-- Logo -->
+
+    <web-panel key="home-link" name="Stash SVG Logo WebPanel" weight="10" location="header.global.primary">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/header.global.primary.homeLink"/>
+    </web-panel>
+
+    <!-- Global Primary Navigation -->
+
+    <web-item key="projects-menu" name="Projects Global web item" weight="20" section="header.global.primary">
+        <label key="stash.web.menu.projects">Projects</label>
+        <link>${navBuilder.allProjects().buildRelNoContext()}</link>
+        <styleClass>projects-link</styleClass>
+        <conditions type="OR">
+            <conditions type="AND">
+                <condition class="com.atlassian.stash.web.conditions.IsFeatureEnabledCondition">
+                    <param name="key" value="public.access"/>
+                </condition>
+                <condition class="com.atlassian.stash.web.conditions.IsAuthenticationOrMaintenancePageCondition" invert="true" />
+            </conditions>
+            <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+        </conditions>
+    </web-item>
+
+    <web-item key="repositories-menu" name="Repositories Global web item" weight="30" section="header.global.primary">
+        <label key="stash.web.menu.repositories">Repositories</label>
+        <link linkId="repositories-menu-trigger">/</link>
+        <styleClass>recent-repositories</styleClass>
+        <conditions type="OR">
+            <conditions type="AND">
+                <condition class="com.atlassian.stash.web.conditions.IsFeatureEnabledCondition">
+                    <param name="key" value="public.access"/>
+                </condition>
+                <condition class="com.atlassian.stash.web.conditions.IsAuthenticationOrMaintenancePageCondition" invert="true" />
+            </conditions>
+            <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+        </conditions>
+    </web-item>
+
+    <web-panel key="repository-search-input" name="Repository search web item" weight="10" location="header.global.secondary.search">
+        <conditions type="OR">
+            <conditions type="AND">
+                <condition class="com.atlassian.stash.web.conditions.IsFeatureEnabledCondition">
+                    <param name="key" value="public.access"/>
+                </condition>
+                <condition class="com.atlassian.stash.web.conditions.IsAuthenticationOrMaintenancePageCondition" invert="true" />
+            </conditions>
+            <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.feature.repository.repositorySearch"/>
+    </web-panel>
+
+    <web-item key="help-menu" name="Help Global web item" weight="5" section="header.global.secondary">
+        <label key="stash.web.menu.help">Help</label>
+        <tooltip key="stash.web.menu.help">Help</tooltip>
+        <styleClass>help-link</styleClass>
+        <param name="stashIconClass">aui-icon-small aui-iconfont-help</param>
+        <link>${helpPathService.getPageUrl('stash.help.default')}</link>
+    </web-item>
+
+    <web-item key="administration-menu" name="Administration Global web item" weight="10" section="header.global.secondary">
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">ADMIN</param>
+        </condition>
+        <styleClass>admin-link</styleClass>
+        <param name="stashIconClass">aui-icon-small aui-iconfont-configure</param>
+        <label key="stash.web.menu.administration">Administration</label>
+        <tooltip key="stash.web.menu.administration">Administration</tooltip>
+        <link>${navBuilder.admin().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Repository clone URL -->
+
+    <web-item key="git-http-clone-url" name="Git HTTP clone URL" weight="100" section="stash.web.repository.clone">
+        <label key="stash.web.repository.clone.http">HTTP</label>
+        <link absolute="true" linkId="git-http-clone-url">${navBuilder.repo($repository).clone($repository.scmId).buildAbsolute()}</link>
+    </web-item>
+
+    <web-item key="repository-pull-request" name="Pull request create button" section="stash.web.repository.header.buttons/repository-branch-actions" weight="10">
+        <conditions type="and">
+            <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+                <param name="permission">REPO_READ</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.RepositoryNotEmptyCondition"/>
+        </conditions>
+        <label key="stash.web.repository.create.pull-request">Pull Request</label>
+        <link>#set($builder = $navBuilder.repo($repository).createPullRequest())#if( $atRevisionRef &amp;&amp; !$atRevisionRef.isDefault &amp;&amp; $atRevisionRef.type.id == "branch" )#set($builder = $builder.sourceBranch($atRevisionRef.id))#end#set($urlAsHtml = $builder.buildRelNoContext())$urlAsHtml</link>
+        <tooltip key="stash.web.repository.create.pull-request.title">Create a new pull request</tooltip>
+        <styleClass>create-pull-request</styleClass>
+        <param name="stashIconClass" value="aui-icon aui-icon-small aui-iconfont-devtools-pull-request"/>
+    </web-item>
+
+    <web-section key="repository-branch-actions" name="Repository branch and pull request" location="stash.web.repository.header.buttons" weight="90">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-section key="repository-actions" name="Repository clone and fork button group" location="stash.web.repository.header.buttons" weight="100">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-item key="repository-fork" name="Repository fork button" section="stash.web.repository.header.buttons/repository-actions" weight="110">
+        <label key="stash.web.repository.fork">Fork</label>
+        <link>${navBuilder.repo($repository).fork().buildRelNoContext()}</link>
+        <tooltip key="stash.web.repository.fork.button.title">Fork this repository</tooltip>
+        <styleClass>fork-repo</styleClass>
+        <param name="stashIconClass" value="aui-icon aui-icon-small aui-iconfont-devtools-fork"/>
+
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+                <param name="permission">REPO_READ</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.IsForkingEnabledCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.IsRepositoryForkableCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.RepositoryNotEmptyCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.IsPersonalRepositoryCondition" invert="true">
+                <param name="onlyMine">true</param>
+            </condition>
+        </conditions>
+    </web-item>
+
+    <web-item key="repository-clone" name="Repository clone button" section="stash.web.repository.header.buttons/repository-actions" weight="120">
+        <label key="stash.web.repository.clone">Clone</label>
+        <link linkId="clone-repo-button">${navBuilder.repo($repository).clone($repository.getScmId()).buildAbsolute()}</link>
+        <tooltip key="stash.web.repository.clone.button.title">Clone this repository</tooltip>
+        <styleClass>clone-repo</styleClass>
+        <param name="stashIconClass" value="aui-icon aui-icon-small aui-iconfont-devtools-clone"/>
+    </web-item>
+
+    <web-panel key="repository-clone-dialog-content" name="Repository clone inline dialog content" location="stash.web.repository.header" weight="10">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.layout.repositoryCloneDialog"/>
+    </web-panel>
+
+    <!-- Repositories dropdown -->
+
+    <web-section key="recent-repositories-section" name="Recent Repositories menu Section" weight="110" location="repositories-menu">
+        <label key="stash.web.menu.repositories.recentlyviewed">Recently viewed</label>
+        <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+    </web-section>
+
+    <web-panel key="repositories-menu-contents" weight="10" location="stash.web.pageBottom">
+        <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+        <resource name="view" type="static">
+            <![CDATA[
+                <script type="text/javascript">require('layout/base/menu/recent-repos').initMenu('repositories-menu-trigger');</script>
+            ]]>
+        </resource>
+    </web-panel>
+
+    <web-section key="public-repo-list-link-section" name="Public repositories list menu section" weight="210" location="repositories-menu">
+        <label/> <!-- no label so this section on the menu has no title -->
+        <condition class="com.atlassian.stash.web.conditions.IsFeatureEnabledCondition">
+            <param name="key" value="public.access"/>
+        </condition>
+    </web-section>
+
+    <web-item key="public-repo-list-link" name="Public repositories list menu item" weight="10" section="repositories-menu/public-repo-list-link-section">
+        <label key="stash.web.menu.public.repo.list">View all public repositories</label>
+        <tooltip key="stash.web.menu.public.repo.list.tooltip">View all publicly accessible repositories in Stash</tooltip>
+        <link>${navBuilder.allRepos().publicVisibility().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Help dropdown -->
+
+    <web-section key="help-items-section" name="General help items" weight="110" location="help-menu" />
+
+    <web-item key="general-help" name="General Stash Help" weight="10" section="help-menu/help-items-section">
+        <label key="stash.web.menu.onlinehelp">Online help</label>
+        <tooltip key="stash.web.menu.onlinehelp.tooltip">Go to the online documentation for Stash</tooltip>
+        <link>${helpPathService.getPageUrl('stash.help.default')}</link>
+    </web-item>
+
+    <web-item key="keyboard-shortcuts-help-link" name="Keyboard Shortcuts" weight="20" section="help-menu/help-items-section">
+        <label key="stash.web.keyboardshortcuts.header">Keyboard shortcuts</label>
+        <tooltip key="stash.web.keyboardshortcuts.tooltip">Discover keyboard shortcuts in Stash</tooltip>
+        <styleClass>keyboard-shortcut-link</styleClass>
+        <link>/#set( $H = '#' )$H</link>
+    </web-item>
+
+    <!-- User dropdown -->
+
+    <web-section key="user-settings-section" name="User Settings Web Section" weight="110" location="header.global.secondary.user">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-item key="profile-menu-item" name="User profile web item" weight="10" section="user-settings-section">
+        <label key="stash.web.menu.profile">View profile</label>
+        <link>${navBuilder.profile().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="account-menu-item" name="User account web item" weight="11" section="user-settings-section">
+        <label key="stash.web.menu.account">Manage account</label>
+        <link>${navBuilder.account().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-section key="user-logout-section" name="User Logout Web Section" weight="210" location="header.global.secondary.user">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-item key="logout-menu-item" name="Logout web item" weight="10" section="user-logout-section">
+        <label key="stash.web.menu.logout">Log out</label>
+        <styleClass>logout-link</styleClass>
+        <link>${navBuilder.logout().buildRelNoContext()}</link>
+    </web-item>
+
+
+    <!-- Project tabs -->
+
+    <web-item key="projects-repositories-tab" name="Project repositories tab web item" weight="10" section="atl.project.nav">
+        <label key="stash.web.project.tabs.repositories">Repositories</label>
+        <link>${navBuilder.project($project).buildRelNoContext()}</link>
+    </web-item>
+
+    <!--weight is set to 5000 to make it trivial to keep the settings tab at the back-->
+    <web-item key="projects-settings-tab" name="Project settings tab web item" weight="5000" section="atl.project.nav">
+        <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition">
+            <param name="permission">PROJECT_ADMIN</param>
+        </condition>
+        <condition class="com.atlassian.stash.web.conditions.IsPersonalProjectCondition" invert="true"/>
+        <label key="stash.web.project.tabs.settings">Settings</label>
+        <link>${navBuilder.project($project).settings().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Project settings -->
+    <web-section key="project-settings-section" name="Project settings section" weight="10" location="stash.project.settings.panel">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-item key="project-general-settings" name="Project settings item" weight="10" section="stash.project.settings.panel/project-settings-section">
+        <label key="stash.web.project.settings.tab.settings">Project details</label>
+        <tooltip key="stash.web.project.settings.tab.settings.tooltip">Configure the details for this project</tooltip>
+        <link>${navBuilder.project($project).settings().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="projects-settings-permissions-tab" name="Project tab permissions section web item" weight="30" section="stash.project.settings.panel/project-settings-section">
+        <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition">
+            <param name="permission">PROJECT_ADMIN</param>
+        </condition>
+        <condition class="com.atlassian.stash.web.conditions.IsPersonalProjectCondition" invert="true"/>
+        <label key="stash.web.project.settings.tab.permissions">Permissions</label>
+        <tooltip key="stash.web.project.settings.tab.permissions.tooltip">Configure project-level permissions for this repository</tooltip>
+        <link>${navBuilder.project($project).permissions().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-section key="project-settings-addons-section" name="Project addons section" weight="30" location="stash.project.settings.panel">
+        <label key="stash.web.project.settings.tab.addons.section">Add-Ons</label>
+    </web-section>
+
+    <!-- Repository settings -->
+    <web-section key="repository-settings-section" name="Repository settings section" weight="10" location="stash.repository.settings.panel">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-item key="repository-settings-general" name="Repository details tab" weight="10" section="stash.repository.settings.panel/repository-settings-section">
+        <label key="stash.web.repository.settings.tab.settings">Repository details</label>
+        <tooltip key="stash.web.repository.settings.tab.settings.tooltip">Configure the details for this repository</tooltip>
+        <link>${navBuilder.repo($repository).settings().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="repository-settings-hooks" name="Repository hook settings tab" weight="20" section="stash.repository.settings.panel/repository-settings-section">
+        <label key="stash.web.repository.settings.tab.hooks">Hooks</label>
+        <tooltip key="stash.web.repository.settings.tab.hooks.tooltip">Configure hooks for this repository</tooltip>
+        <link>${navBuilder.repo($repository).hooks().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="repository-settings-pull-requests" name="Pull Request settings tab" weight="30" section="stash.repository.settings.panel/repository-settings-section">
+        <condition class="com.atlassian.stash.web.conditions.HasFormFragments">
+            <param name="formKey">stash.page.repository.settings.pullRequests</param>
+        </condition>
+        <label key="stash.web.repository.settings.tab.pullRequests">Pull requests</label>
+        <tooltip key="stash.web.repository.settings.tab.pullRequests.tooltip">Configure default pull request settings for this repository</tooltip>
+        <link>${navBuilder.repo($repository).settings().pullRequests().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-section key="repository-permissions-section" name="Repository permissions section" weight="20" location="stash.repository.settings.panel">
+        <label key="stash.web.repository.settings.tab.permissions.section">Permissions</label>
+    </web-section>
+
+    <web-item key="repository-settings-repository-permissions" name="Repository permissions tab" weight="10" section="stash.repository.settings.panel/repository-permissions-section">
+        <label key="stash.web.repository.settings.tab.permissions">Repository</label>
+        <tooltip key="stash.web.repository.settings.tab.permissions.tooltip">Configure repository-level permissions for this repository</tooltip>
+        <link>${navBuilder.repo($repository).permissions().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-section key="repository-settings-addons-section" name="Repository addons section" weight="30" location="stash.repository.settings.panel">
+        <label key="stash.web.repository.settings.tab.addons.section">Add-Ons</label>
+    </web-section>
+
+    <!-- Project details action buttons -->
+
+    <web-item key="projects-settings-delete-button" name="Project delete button web item" weight="10" section="stash.project.settings.action">
+        <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition">
+            <param name="permission">PROJECT_ADMIN</param>
+        </condition>
+        <label key="stash.web.project.delete">Delete project</label>
+        <link linkId="projects-settings-delete-button">${navBuilder.project($project).delete().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Project list actions -->
+    <web-item key="projects-actions-create-button" name="Create project button" weight="10" section="stash.project.list.actions">
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">PROJECT_CREATE</param>
+        </condition>
+        <label key="stash.web.project.list.createproject.link">Create project</label>
+        <styleClass>create-project-link</styleClass>
+        <link>${navBuilder.createProject().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Project overview actions -->
+    <web-item key="project-overview-actions-create-repo" name="Create repository button" weight="10" section="stash.project.overview.actions">
+        <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition">
+            <param name="permission">PROJECT_ADMIN</param>
+        </condition>
+        <label key="stash.web.project.overview.createrepo.link">Create repository</label>
+        <styleClass>create-repository-link</styleClass>
+        <link>${navBuilder.project($project).createRepo().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Project List sidebar -->
+
+    <web-item key="project-list-sidebar-getting-started-help" name="Project List Getting Started Web Item" section="stash.project.list.sidebar.items" weight="10">
+        <label key="stash.web.project.help.getting.started.title">Getting started</label>
+        <link>${helpPathService.getPageUrl('stash.help.default')}</link>
+        <styleClass>getting-started</styleClass>
+        <tooltip key="stash.web.project.help.getting.started.desc">All the information you need to get started in Stash.</tooltip>
+    </web-item>
+
+    <web-item key="project-list-sidebar-workflows-help" name="Project List Workflows Web Item" section="stash.project.list.sidebar.items" weight="20">
+        <label key="stash.web.project.help.workflows.title">Branching and forking</label>
+        <link>${helpPathService.getPageUrl('stash.help.workflow.strategies')}</link>
+        <styleClass>workflows</styleClass>
+        <tooltip key="stash.web.project.help.workflows.desc">Learn about Git workflows for Enterprise teams.</tooltip>
+    </web-item>
+
+    <web-item key="project-list-sidebar-development-help" name="Project List Development Web Item" section="stash.project.list.sidebar.items" weight="30">
+        <label key="stash.web.project.help.development.title">API</label>
+        <link>https://developer.atlassian.com/stash/docs/latest/</link>
+        <styleClass>development</styleClass>
+        <tooltip key="stash.web.project.help.development.desc">Customise Stash via the API and plugin framework.</tooltip>
+    </web-item>
+
+    <web-item key="project-list-sidebar-administration-help" name="Project List Administration Web Item" section="stash.project.list.sidebar.items" weight="40">
+        <label key="stash.web.project.help.administration.title">Administering Stash</label>
+        <link>${helpPathService.getPageUrl('stash.help.admin.guide')}</link>
+        <styleClass>administration</styleClass>
+        <tooltip key="stash.web.project.help.administration.desc">Configure Stash for your Enterprise teams.</tooltip>
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">ADMIN</param>
+        </condition>
+    </web-item>
+
+    <!-- User Account Tabs -->
+
+    <web-item key="account-settings-section" name="Account Settings tab web item" weight="10" section="stash.user.account.nav">
+        <label key="stash.web.user.account.tabs.settings">Account settings</label>
+        <link>${navBuilder.account().settings().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="account-password-section" name="Change Password tab web item" weight="20" section="stash.user.account.nav">
+        <label key="stash.web.user.account.tabs.settings">Change password</label>
+        <link>${navBuilder.account().password().buildRelNoContext()}</link>
+    </web-item>
+
+
+    <!-- Administration -->
+
+    <web-item key="atl.admin.nav.overview" name="Administration Tabs Overview web item" weight="10" section="atl.admin.nav">
+        <label key="stash.web.admin.nav.overview">Overview</label>
+        <link>${navBuilder.admin().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Accounts -->
+
+    <web-section key="admin-general-section" name="Administration Web Section" weight="110" location="atl.admin">
+        <label key="stash.web.admin.general">Accounts</label>
+    </web-section>
+
+    <web-item key="admin-general-users" name="Stash Admin Users web item" weight="10" section="atl.admin/admin-general-section">
+        <label key="stash.web.admin.general.users">Users</label>
+        <link>${navBuilder.admin().users().buildRelNoContext()}</link>
+        <styleClass>icon-admin-users</styleClass>
+        <description key="stash.web.admin.general.users.description">Edit individual user details, passwords and groups membership.</description>
+    </web-item>
+
+    <web-item key="admin-general-groups" name="Stash Admin Groups web item" weight="20" section="atl.admin/admin-general-section">
+        <label key="stash.web.admin.general.groups">Groups</label>
+        <styleClass>icon-admin-groups</styleClass>
+        <link>${navBuilder.admin().groups().buildRelNoContext()}</link>
+        <description key="stash.web.admin.general.groups.description">Create groups and manage the users within each group.</description>
+    </web-item>
+
+    <web-item key="admin-general-permissions" name="Admin Permissions web item" weight="30" section="atl.admin/admin-general-section">
+        <label key="stash.web.admin.general.permissions">Global permissions</label>
+        <styleClass>icon-admin-permissions</styleClass>
+        <link>${navBuilder.admin().permissions().buildRelNoContext()}</link>
+        <description key="stash.web.admin.general.permissions.description">Configure global user permissions.</description>
+    </web-item>
+
+    <web-item key="admin-security-authentication" name="Security Authentication web item" weight="35" section="atl.admin/admin-general-section">
+        <label key="stash.web.admin.security.authentication">Authentication</label>
+        <styleClass>icon-admin-authentication</styleClass>
+        <link>${navBuilder.admin().authentication().buildRelNoContext()}</link>
+        <description key="stash.web.admin.security.authentication.description">Configure access, privacy and spam prevention settings.</description>
+    </web-item>
+
+    <web-item key="admin-general-avatars" name="Admin Avatars web item" weight="40" section="atl.admin/admin-general-section">
+        <label key="stash.web.admin.general.avatars">Avatars</label>
+        <styleClass>icon-admin-avatars</styleClass>
+        <link>${navBuilder.admin().avatars().buildRelNoContext()}</link>
+        <description key="stash.web.admin.general.avatars.description">Configure user avatar settings.</description>
+    </web-item>
+
+    <!-- Settings -->
+
+    <web-section key="admin-settings-section" name="Settings Web Section" weight="120" location="atl.admin">
+        <label key="stash.web.admin.settings">Settings</label>
+    </web-section>
+
+    <web-item key="admin-settings-server-settings" name="Settings Server settings web item" weight="10" section="atl.admin/admin-settings-section">
+        <label key="stash.web.admin.settings.serversettings">Server settings</label>
+        <styleClass>icon-admin-serversettings</styleClass>
+        <link>${navBuilder.admin().serverSettings().buildRelNoContext()}</link>
+        <description key="stash.web.admin.settings.serversettings.sysadmin.description">Configure SSH and other server settings.</description>
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">SYS_ADMIN</param>
+        </condition>
+    </web-item>
+
+
+    <web-item key="admin-settings-database" name="Settings Server settings web item" weight="20" section="atl.admin/admin-settings-section">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasDatabaseOfTypeCondition" invert="true">
+                <param name="type">HSQLDB</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">SYS_ADMIN</param>
+            </condition>
+        </conditions>
+        <label key="stash.web.admin.settings.database">Database</label>
+        <styleClass>icon-admin-database</styleClass>
+        <link>${navBuilder.admin().database().buildRelNoContext()}</link>
+        <tooltip key="stash.web.admin.settings.database.description">View and migrate database configurations.</tooltip>
+    </web-item>
+
+    <web-item key="admin-settings-database-hsqldb" name="Settings Server settings web item" weight="20" section="atl.admin/admin-settings-section">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasDatabaseOfTypeCondition">
+                <param name="type">HSQLDB</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">SYS_ADMIN</param>
+            </condition>
+        </conditions>
+        <label key="stash.web.admin.settings.database">Database</label>
+        <styleClass>icon-admin-database admin-database-hsqldb</styleClass>
+        <link>${navBuilder.admin().database().buildRelNoContext()}</link>
+        <tooltip key="stash.web.admin.settings.database.hsqldb.description">We recommend migrating to an external database for production use.</tooltip>
+    </web-item>
+
+    <web-item key="admin-settings-mail-server" name="Settings Mail server web item" weight="30" section="atl.admin/admin-settings-section">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.IsMailServerConfiguredCondition" />
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">SYS_ADMIN</param>
+            </condition>
+        </conditions>
+        <label key="stash.web.admin.settings.mailserver">Mail server</label>
+        <styleClass>icon-admin-mailserver</styleClass>
+        <link>${navBuilder.admin().mailServer().buildRelNoContext()}</link>
+        <description key="stash.web.admin.settings.mailserver.description">Configure the SMTP server used to send notification emails.</description>
+    </web-item>
+
+    <web-item key="admin-settings-mail-server-unconfigured" name="Settings Mail server web item" weight="30" section="atl.admin/admin-settings-section">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.IsMailServerConfiguredCondition" invert="true"/>
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">SYS_ADMIN</param>
+            </condition>
+        </conditions>
+        <label key="stash.web.admin.settings.mailserver">Mail server</label>
+        <styleClass>icon-admin-mailserver admin-mailserver-unconfigured</styleClass>
+        <link>${navBuilder.admin().mailServer().buildRelNoContext()}</link>
+        <description key="stash.web.admin.settings.mailserver.description">No mail server is configured. Notifications will not be sent.</description>
+    </web-item>
+
+    <web-item key="admin-settings-licensing" name="Settings licensing web item" weight="40" section="atl.admin/admin-settings-section">
+        <label key="stash.web.admin.settings.licensing">Licensing</label>
+        <styleClass>icon-admin-licensing</styleClass>
+        <link>${navBuilder.admin().licensing().buildRelNoContext()}</link>
+        <description key="stash.web.admin.settings.licensing.description">View and configure license information.</description>
+    </web-item>
+
+    <!-- Add-ons -->
+
+    <web-section key="admin-plugins-section" name="Add-ons Web Section" weight="130" location="atl.admin">
+        <label key="stash.web.admin.addons">Add-ons</label>
+    </web-section>
+
+    <!-- Support -->
+
+    <web-section key="admin-support-section" name="Support Section" weight="140" location="atl.admin">
+        <label key="stash.web.admin.support">Support</label>
+    </web-section>
+
+    <web-item key="admin-support-logging" name="Support logging web item" weight="30" section="atl.admin/admin-support-section">
+        <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+            <param name="permission">SYS_ADMIN</param>
+        </condition>
+        <label key="stash.web.admin.support.profiling">Logging and profiling</label>
+        <link>${navBuilder.admin().logging().buildRelNoContext()}</link>
+        <description key="stash.web.admin.support.logging.description">Configure logging and profiling.</description>
+    </web-item>
+
+    <!-- User list actions -->
+    <web-item key="users-actions-create-button" name="Create user button" weight="10" section="stash.user.list.actions">
+        <condition class="com.atlassian.stash.web.conditions.CanCreateUsersCondition"/>
+        <label key="stash.web.users.create">Create user</label>
+        <styleClass>create-user-link</styleClass>
+        <link>${navBuilder.admin().users().create().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Group list actions -->
+    <web-item key="groups-actions-create-button" name="Create group button" weight="10" section="stash.group.list.actions">
+        <condition class="com.atlassian.stash.web.conditions.CanCreateGroupsCondition"/>
+        <label key="stash.web.groups.create">Create group</label>
+        <styleClass>create-group-link</styleClass>
+        <link>${navBuilder.admin().groups().create().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Repository clone help info -->
+    <web-panel key="stash.repository.panel.gettingstarted" name="Repository getting started panel" weight="10" location="stash.web.repository.clone.dialog.help.info">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.repository.gettingStartedInfo"/>
+    </web-panel>
+
+    <web-panel key="stash.repository.panel.readonly" name="Repository readonly panel" weight="20" location="stash.web.repository.clone.dialog.help.info">
+        <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition" invert="true">
+            <param name="permission">REPO_WRITE</param>
+        </condition>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.repository.readOnlyInfo"/>
+    </web-panel>
+
+    <!-- Repository Navigation Tabs -->
+
+    <web-item key="stash.repository.nav.files" name="Repository files web item" weight="10" section="stash.repository.nav">
+        <label key="stash.web.repository.nav.files">Files</label>
+        <link linkId="repository-nav-files">${navBuilder.repo($repository).browse().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="stash.repository.nav.commits" name="Repository commits web item" weight="20" section="stash.repository.nav">
+        <condition class="com.atlassian.stash.web.conditions.RepositoryNotEmptyCondition"/>
+        <label key="stash.web.repository.nav.commits">Commits</label>
+        <link linkId="repository-nav-commits">${navBuilder.repo($repository).commits().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="stash.repository.nav.branches" name="Repository branches web item" weight="30"
+              section="stash.repository.nav">
+        <condition class="com.atlassian.stash.web.conditions.RepositoryNotEmptyCondition"/>
+        <label key="stash.web.repository.nav.branches">Branches</label>
+        <link linkId="repository-nav-branches">${navBuilder.repo($repository).branches().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="stash.repository.nav.pull-requests" name="Repository pull requests web item" weight="40" section="stash.repository.nav">
+        <conditions type="AND">
+            <!-- Pull requests are only visible to logged-in users -->
+            <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+                <param name="permission">REPO_READ</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.RepositoryNotEmptyCondition"/>
+        </conditions>
+        <label key="stash.web.repository.nav.pull-requests">Pull requests</label>
+        <link linkId="repository-nav-pull-requests">${navBuilder.repo($repository).pullRequests().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Count lozenge within the Open tab web-item -->
+    <web-panel key="stash.repository.nav.pull-requests.count" name="Pull Requests List Open Count web panel" weight="10" location="stash.repository.nav.pull-requests.badge">
+        <context-provider class="com.atlassian.stash.internal.web.fragments.PullRequestCountContextProvider">
+            <param name="state">OPEN</param>
+        </context-provider>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.widget.badges.pullRequestCount"/>
+    </web-panel>
+
+    <!--weight is set to 5000 to make it trivial to keep the settings tab at the back-->
+    <web-item key="stash.repository.nav.settings" name="Repository settings web item" weight="5000" section="stash.repository.nav">
+        <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+            <param name="permission">REPO_ADMIN</param>
+        </condition>
+        <label key="stash.web.repository.nav.settings">Settings</label>
+        <link>${navBuilder.repo($repository).settings().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Repository Settings Actions -->
+
+    <web-item key="repository-settings-move-button" name="Move Repository web item" weight="10" section="stash.repository.settings.action">
+        <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+            <param name="permission">REPO_ADMIN</param>
+        </condition>
+        <styleClass>move-repository-link</styleClass>
+        <label key="stash.web.repositories.move.repository">Move repository</label>
+        <tooltip key="stash.web.repositories.move.repository.tooltip">Move repository</tooltip>
+        <link linkId="repository-settings-move-button">#set( $H = '#' )$H</link>
+    </web-item>
+
+    <web-item key="repository-settings-delete-button" name="Delete Repository web item" weight="20" section="stash.repository.settings.action">
+        <condition class="com.atlassian.stash.web.conditions.HasRepositoryPermissionCondition">
+            <param name="permission">REPO_ADMIN</param>
+        </condition>
+        <styleClass>delete-repository-link</styleClass>
+        <label key="stash.web.repositories.delete.repository">Delete repository</label>
+        <tooltip key="stash.web.repositories.delete.repository.tooltip">Delete repository</tooltip>
+        <link linkId="repository-settings-delete-button">${navBuilder.repo($repository).delete().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Pull Requests Tabs-->
+
+    <web-item key="stash.pull-request.nav.overview" name="Pull Request Overview web item" weight="10" section="stash.pull-request.nav">
+        <label key="stash.web.pull-request.nav.overview">Overview</label>
+        <link>${navBuilder.repo($repository).pullRequest($pullRequest).overview().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="stash.pull-request.nav.diff" name="Pull Request Diff web item" weight="20" section="stash.pull-request.nav">
+        <label key="stash.web.pull-request.nav.diff">Diff</label>
+        <link>${navBuilder.repo($repository).pullRequest($pullRequest).diff().buildRelNoContext()}</link>
+    </web-item>
+
+    <web-item key="stash.pull-request.nav.commits" name="Pull Request Commits web item" weight="30" section="stash.pull-request.nav">
+        <label key="stash.web.pull-request.nav.commits">Commits</label>
+        <link>${navBuilder.repo($repository).pullRequest($pullRequest).commits().buildRelNoContext()}</link>
+    </web-item>
+
+    <!-- Pull Requests List Tabs-->
+
+    <web-item key="stash.pull-requests.list.nav.open" name="Pull Requests List Open web item" weight="10" section="stash.pull-requests.list.nav">
+        <label key="stash.web.pull-requests.list.nav.open">Open</label>
+        <link linkId="open-pull-requests-tab-link">${navBuilder.repo($repository).pullRequests().open().buildRelNoContext()}</link>
+        <tooltip key="stash.web.pull-request.list.open">Incoming pull requests that are still open</tooltip>
+    </web-item>
+
+    <web-item key="stash.pull-requests.list.nav.merged" name="Pull Requests List Merged web item" weight="20" section="stash.pull-requests.list.nav">
+        <label key="stash.web.pull-requests.list.nav.merged">Merged</label>
+        <link>${navBuilder.repo($repository).pullRequests().merged().buildRelNoContext()}</link>
+        <tooltip key="stash.web.pull-request.list.merged">Incoming pull requests that have been merged</tooltip>
+    </web-item>
+
+    <web-item key="stash.pull-requests.list.nav.declined" name="Pull Request List Declined web item" weight="30" section="stash.pull-requests.list.nav">
+        <label key="stash.web.pull-requests.list.nav.declined">Declined</label>
+        <link>${navBuilder.repo($repository).pullRequests().declined().buildRelNoContext()}</link>
+        <tooltip key="stash.web.pull-request.list.declined">Incoming pull requests that have been declined</tooltip>
+    </web-item>
+
+    <!-- Pull Request Toolbar -->
+
+    <web-section key="stash.pull-request.toolbar.actions" name="Pull Request Actions Toolbar" weight="110" location="stash.pull-request.toolbar">
+        <label/> <!-- no label so this section on the menu has no title -->
+    </web-section>
+
+    <web-item key="stash.pull-request.merge" name="Merge Pull Request" weight="10" section="stash.pull-request.toolbar.actions">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.PullRequestInState">
+                <param name="state">OPEN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.CanMergePullRequestCondition"/>
+        </conditions>
+        <param name="stashButtonPrimary" value="true"/>
+        <label key="stash.web.pull-request.toolbar.merge">Merge</label>
+        <tooltip key="stash.web.pull-request.toolbar.merge.tooltip">Merge changes</tooltip>
+        <styleClass>merge-pull-request</styleClass>
+    </web-item>
+
+    <web-item key="stash.pull-request.decline" name="Decline Pull Request" weight="20" section="stash.pull-request.toolbar.actions">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.PullRequestInState">
+                <param name="state">OPEN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.CanDeclinePullRequestCondition"/>
+        </conditions>
+        <label key="stash.web.pull-request.toolbar.decline">Decline</label>
+        <tooltip key="stash.web.pull-request.toolbar.decline.tooltip">Changes will not be automatically merged</tooltip>
+        <styleClass>decline-pull-request</styleClass>
+    </web-item>
+
+    <web-item key="stash.pull-request.reopen" name="Reopen Pull Request" weight="30" section="stash.pull-request.toolbar.actions">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.PullRequestInState">
+                <param name="state">DECLINED</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.CanEditPullRequestCondition"/>
+        </conditions>
+        <param name="stashButtonPrimary" value="true"/>
+        <label key="stash.web.pull-request.toolbar.reopen">Re-open</label>
+        <tooltip key="stash.web.pull-request.toolbar.reopen.tooltip">Re-open for discussion</tooltip>
+        <styleClass>reopen-pull-request</styleClass>
+    </web-item>
+
+    <web-item key="stash.pull-request.edit" name="Edit Pull Request" weight="40" section="stash.pull-request.toolbar.actions">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.PullRequestInState">
+                <param name="state">OPEN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.CanEditPullRequestCondition"/>
+        </conditions>
+        <label key="stash.web.pull-request.toolbar.edit">Edit</label>
+        <tooltip key="stash.web.pull-request.toolbar.edit.tooltip">Edit title, description or reviewers</tooltip>
+        <styleClass>edit-pull-request</styleClass>
+    </web-item>
+
+    <web-item key="stash.difftree.toggle" name="Diff Tree collapsed state toggle button" weight="10" section="stash.repository.difftree.header">
+        <label key="stash.web.difftree.toolbar.toggle"/>
+        <tooltip key="stash.web.difftree.toolbar.toggle.tooltip">Hide/show file tree</tooltip>
+        <styleClass>aui-button-subtle collapse-file-tree</styleClass>
+    </web-item>
+
+    <web-section key="stash.pull-request.toolbar.section.user-actions" name="Pull Request User Actions Toolbar" weight="210" location="stash.pull-request.toolbar">
+        <label/> <!-- no label so this section on the menu has no title -->
+        <condition class="com.atlassian.stash.web.conditions.CanApprovePullRequestCondition"/>
+    </web-section>
+
+    <web-item key="stash.pull-request.approve.approved" name="Hasn't Approved" weight="10" section="stash.pull-request.toolbar.section.user-actions">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.CanApprovePullRequestCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.HasPullRequestApproveCondition" invert="true"/>
+        </conditions>
+        <param name="stashIconClass" value="approve-icon"/>
+        <label key="stash.web.pull-request.toolbar.approve">Approve</label>
+        <tooltip key="stash.web.pull-request.toolbar.approve.tooltip">Approve this pull request</tooltip>
+        <styleClass>approve</styleClass>
+    </web-item>
+
+    <web-item key="stash.pull-request.approve.unapproved" name="Has Approved" weight="10" section="stash.pull-request.toolbar.section.user-actions">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.CanApprovePullRequestCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.HasPullRequestApproveCondition"/>
+        </conditions>
+        <param name="stashButtonActive" value="true"/>
+        <param name="stashIconClass" value="approve-icon"/>
+        <label key="stash.web.pull-request.toolbar.approve">Approve</label>
+        <tooltip key="stash.web.pull-request.toolbar.approved.tooltip">You have approved this pull request</tooltip>
+        <styleClass>approve</styleClass>
+    </web-item>
+
+    <!-- - - - - - - - - -
+        Web Panels
+     - - - - - - - - - - -->
+
+    <web-panel key="stash-welcome-mat-no-projects" weight="10" location="stash.web.project.list.banner">
+        <condition class="com.atlassian.stash.web.conditions.NoProjectsExistCondition" />
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.project.list.banner.stashWelcomeMatNoProjects"/>
+    </web-panel>
+
+    <web-panel key="stash-welcome-mat-create-project" weight="20" location="stash.web.project.list.banner">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">PROJECT_CREATE</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.NoProjectsExistCondition" />
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.project.list.banner.stashWelcomeMatCreateProject"/>
+    </web-panel>
+
+    <web-panel key="stash-welcome-mat-no-permission-to-create-project" weight="20" location="stash.web.project.list.banner">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition" invert="true">
+                <param name="permission">PROJECT_CREATE</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.NoProjectsExistCondition" />
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.project.list.banner.stashWelcomeMatNoPermissionToCreateProject"/>
+    </web-panel>
+
+    <web-panel key="stash-welcome-mat-admin" weight="30" location="stash.web.project.list.banner">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">ADMIN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.NoProjectsExistCondition" />
+            <condition class="com.atlassian.stash.web.conditions.CanCreateUsersCondition"/>
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.project.list.banner.stashWelcomeMatAdmin"/>
+    </web-panel>
+
+    <web-panel key="stash-welcome-mat-no-repositories" weight="10" location="stash.web.project.overview.banner">
+        <condition class="com.atlassian.stash.web.conditions.NoRepositoriesExistForProjectCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.project.overview.banner.stashWelcomeMatNoRepositories"/>
+    </web-panel>
+
+    <web-panel key="stash-welcome-mat-create-repository" weight="20" location="stash.web.project.overview.banner">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition">
+                <param name="permission">PROJECT_ADMIN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.NoRepositoriesExistForProjectCondition"/>
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.project.overview.banner.stashWelcomeMatCreateRepository"/>
+    </web-panel>
+
+    <web-panel key="stash-welcome-mat-no-permission-to-create-repository" weight="20" location="stash.web.project.overview.banner">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition" invert="true">
+                <param name="permission">PROJECT_ADMIN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.NoRepositoriesExistForProjectCondition" />
+        </conditions>
+        <resource name="view" type="static">
+            <![CDATA[
+                <p class="entity-empty-desc"></p>
+            ]]>
+        </resource>
+    </web-panel>
+
+    <web-panel key="stash-notification-license-exceeded" weight="10" location="stash.notification.banner.header">
+        <context-provider class="com.atlassian.stash.internal.web.fragments.LicenseExceededContextProvider"/>
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.HasLicenseStatusCondition"/>
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.notification.banner.header.stashNotificationLicenseExceeded"/>
+    </web-panel>
+
+    <web-panel key="stash-notification-unsupported-database" weight="10" location="stash.notification.banner.header">
+        <context-provider class="com.atlassian.stash.internal.web.fragments.DatabaseContextProvider"/>
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.HasGlobalPermissionCondition">
+                <param name="permission">ADMIN</param>
+            </condition>
+            <condition class="com.atlassian.stash.web.conditions.IsUnsupportedDatabaseCondition"/>
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.notification.banner.header.stashNotificationUnsupportedDatabase"/>
+    </web-panel>
+
+    <web-panel key="stash-scm-service-resource-exhausted" weight="10" location="stash.notification.banner.header">
+        <condition class="com.atlassian.stash.web.conditions.ResourceExhaustedCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.notification.banner.header.stashScmServiceResourceExhausted"/>
+    </web-panel>
+
+    <web-panel key="stash-scm-service-resource-queueing" weight="10" location="stash.notification.banner.header">
+        <conditions type="AND">
+            <condition class="com.atlassian.stash.web.conditions.ResourceQueueingCondition"/>
+            <condition class="com.atlassian.stash.web.conditions.ResourceExhaustedCondition" invert="true"/>
+        </conditions>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.notification.banner.header.stashScmServiceResourceQueueing"/>
+    </web-panel>
+
+    <web-panel key="stash-notification-recovery-mode-on" weight="50" location="stash.notification.banner.header">
+        <context-provider class="com.atlassian.stash.internal.web.fragments.RecoveryModeContextProvider"/>
+        <condition class="com.atlassian.stash.internal.web.conditions.RecoveryModeOnCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.notification.banner.header.stashRecoveryModeOn"/>
+    </web-panel>
+
+    <web-panel key="stash-projects-settings-delete-panel" name="Project delete button web panel" weight="10" location="stash.project.settings">
+        <condition class="com.atlassian.stash.web.conditions.HasProjectPermissionCondition">
+            <param name="permission">PROJECT_ADMIN</param>
+        </condition>
+        <resource name="view" type="static"><![CDATA[
+            <script type="text/javascript">require('page/project/settings').initDeleteButton('#projects-settings-delete-button');</script>
+        ]]></resource>
+    </web-panel>
+
+    <web-panel key="stash-userdetails-gravatar-enabled-panel" weight="10" location="stash.web.userdetails.avatar.caption">
+        <condition class="com.atlassian.stash.web.conditions.HasAvatarServiceEnabledCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.userdetails.avatar.caption.stashGravatarEnabledPanel"/>
+    </web-panel>
+
+    <web-panel key="stash-account-gravatar-enabled-panel" weight="10" location="stash.web.user.account.avatar.caption">
+        <condition class="com.atlassian.stash.web.conditions.HasAvatarServiceEnabledCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.userdetails.avatar.caption.stashGravatarEnabledPanel"/>
+    </web-panel>
+
+    <web-panel key="stash-gravatar-disabled-panel" weight="10" location="stash.web.userdetails.avatar.caption">
+        <condition class="com.atlassian.stash.web.conditions.HasAvatarServiceEnabledCondition" invert="true"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.userdetails.avatar.caption.stashGravatarDisabledPanel"/>
+    </web-panel>
+
+    <web-panel key="stash-global-footer" weight="10" location="stash.web.footer">
+        <context-provider class="com.atlassian.stash.internal.web.fragments.GlobalFooterContextProvider"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.web.footer.globalFooter"/>
+    </web-panel>
+
+    <web-item key="userprofile-repositories-tab" name="Repositories tab for user profile" section="stash.user.profile.secondary.tabs" weight="10">
+        <label key="stash.web.profile.repositories.tab">Repositories</label>
+        <link>${navBuilder.user($profileUser).buildRelNoContext()}</link>
+        <tooltip key="stash.web.profile.repositories.tab.description">View repositories</tooltip>
+    </web-item>
+
+    <web-panel key="userprofile-details-username" name="Profile username details" location="stash.user.profile.header.details" weight="10">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.layout.users.userDetailsUsername"/>
+    </web-panel>
+
+    <web-panel key="userprofile-details-email" name="Profile email details" location="stash.user.profile.header.details" weight="20">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.layout.users.userDetailsEmail"/>
+        <condition class="com.atlassian.stash.web.conditions.IsLoggedInCondition"/>
+    </web-panel>
+
+    <web-panel key="userprofile-repositories-tab-pane" name="Repositories tab pane for user profile" location="userprofile-repositories-tab" weight="10">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.users.profile.repositoriesTabPane"/>
+    </web-panel>
+
+    <web-panel key="userprofile-create-repo-button" name="Create repository button" location="stash.user.profile.header" weight="10">
+        <condition class="com.atlassian.stash.web.conditions.IsCurrentUsersProfileCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.users.profile.createRepositoryButton"/>
+    </web-panel>
+
+    <web-panel key="userprofile-manage-account-button" name="Manage account button" location="stash.user.profile.header" weight="20">
+        <condition class="com.atlassian.stash.web.conditions.IsCurrentUsersProfileCondition"/>
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.users.profile.manageAccountButton"/>
+    </web-panel>
+
+    <web-panel key="account-view-profile-button" name="View profile button" location="stash.user.account.header" weight="10">
+        <resource name="view" type="soy" location="com.atlassian.stash.stash-web-plugin:server-soy-templates/stash.users.account.viewProfileButton"/>
+    </web-panel>
+
+</atlassian-plugin>

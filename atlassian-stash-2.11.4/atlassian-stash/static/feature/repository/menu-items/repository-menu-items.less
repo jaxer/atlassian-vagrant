@@ -1,0 +1,55 @@
+@import "../../../global.less";
+
+.repository-menu-item {
+    .aui-avatar {
+        margin-right: @halfSpacing;
+        vertical-align: middle;
+    }
+
+    .aui-avatar,
+    .repository-separator {
+        .flex(none);
+    }
+
+    .repository-project-name,
+    .repository-name {
+        .flex(0 1 auto);
+        max-width: 150px;
+    }
+
+    .repository-project-name {
+        min-width: 20px;
+    }
+
+    /** for the loading and the error messages displayed in the menu */
+    > span {
+        padding: 7px 8px 6px;
+        display: block;
+    }
+
+    > a > span {
+        margin-right: @halfSpacing;
+        display: inline-block;
+        vertical-align: middle;
+        .text-overflow();
+    }
+
+    /** -- Spacing and colouring -- */
+    .active {
+        .repository-project-name,
+        .repository-separator {
+            color: @invertedBodyTextColor;
+        }
+    }
+
+    .repository-project-name {
+        color: @descriptionTextColor;
+        margin-right: @halfSpacing;
+    }
+
+    .repository-separator {
+        color: @descriptionTextColor;
+        margin-right: 8px; /** extra right padding to balance any space on left caused by ellipses */
+    }
+}
+

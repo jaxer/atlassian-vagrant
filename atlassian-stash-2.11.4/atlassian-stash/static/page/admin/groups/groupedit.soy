@@ -1,0 +1,73 @@
+{namespace stash.admin.groups}
+/**
+* @param group
+* @param exists
+* @param canUpdateGroups
+* @param canDeleteGroups
+*/
+{template .edit}
+{webResourceManager_requireResourcesForContext('stash.page.admin.groups.edit')}
+{call stash.layout.admin}
+    {param activeTab: 'admin-general-groups' /}
+    {param content}
+    {if $exists}
+        <header class="aui-page-header">
+            <div class="aui-page-header-inner">
+                <div class="aui-page-header-main">
+                    <ol class="aui-nav aui-nav-breadcrumbs">
+                        {call stash.widget.breadcrumbs.back}
+                            {param id: 'groups-link' /}
+                            {param href: nav_admin_groups() /}
+                            {param text: stash_i18n('stash.web.groups.back.link', 'Back to Groups') /}
+                        {/call}
+                    </ol>
+                    <h2 id="group-name">{$group}</h2>
+                </div>
+                <div class="aui-page-header-actions">
+                    {if $canDeleteGroups}
+                        {call stash.buttons.button}
+                            {param buttonText: stash_i18n('stash.web.groups.delete', 'Delete Group') /}
+                            {param href: nav_admin_group_delete($group) /}
+                            {param id: 'delete-group' /}
+                        {/call}
+                    {/if}
+                </div>
+            </div>
+        </header>
+        {call widget.aui.group.group}
+            {param extraClasses: 'user-picker' /}
+            {param content}
+                {call widget.aui.group.item}
+                    {param content}
+                        {call stash.feature.user.groupUsersTable}
+                            {param id: 'group-users-table' /}
+                            {param group: $group /}
+                            {param editable: $canUpdateGroups /}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {else}
+        {call widget.aui.group.group}
+            {param content}
+                {call widget.aui.group.item}
+                    {param content}
+                        {call widget.aui.message.error}
+                            {param content}
+                                {{stash_i18n('stash.web.groups.view.notfound', 'The group {0} does not exist', $group)}}
+                            {/param}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/if}
+    {/param}
+    {param pageBottomContent}
+        <script>
+            require('page/admin/groupEdit').onReady({$canUpdateGroups}, '#group-users-table', '#delete-group');
+        </script>
+    {/param}
+{/call}
+{/template}

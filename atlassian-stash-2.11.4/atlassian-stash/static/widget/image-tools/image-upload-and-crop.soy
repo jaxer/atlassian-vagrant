@@ -1,0 +1,26 @@
+{namespace stash.widget.imageTools}
+
+/**
+ * @param? imageSrc Source of image if it's to be supplied initially
+ * @param? description
+ * @param? fallbackDescription Description to use when using the iframe uploader. If it's not supplied, $description will be used.
+ */
+{template .imageUploadAndCrop}
+    <div class="image-upload-and-crop-container">
+        {call .imageExplorer}
+            {param imageSrc: $imageSrc/}
+        {/call}
+        <form class="aui">
+            <input type="file" id="image-upload-and-crop-upload-field" class="image-upload-field" accept="image/jpeg, image/gif, image/png"/>
+            <label for="image-upload-and-crop-upload-field" class="image-upload-field-replacement aui-button">
+                {stash_i18n('stash.web.image.upload.prompt', 'Select an image')}
+            </label>
+            {if $description}
+                <div class="description">{$description}</div>
+            {/if}
+            {if $fallbackDescription or $description}
+                <div class="description fallback">{$fallbackDescription ? $fallbackDescription : $description}</div>
+            {/if}
+        </form>
+    </div>
+{/template}

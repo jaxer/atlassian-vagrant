@@ -1,0 +1,238 @@
+{namespace widget.aui}
+
+/**
+ * @param navItems
+ * @param? isVertical
+ * @param? extraClasses
+ */
+{template .navigation}
+    {call .navGroup data="all"}
+        {param primaryNavContent}
+            <ul class="aui-nav">
+                {foreach $item in $navItems}
+                    {call .navItem data="$item" /}
+                {/foreach}
+            </ul>
+        {/param}
+    {/call}
+{/template}
+
+/** Navigation Group
+ * @param primaryNavItemsHtml deprecated since 2.6 for removal in 3.0. Use the $primaryNavContent param instead.
+ * @param? secondaryNavItemsHtml deprecated since 2.6 for removal in 3.0. Use the $secondaryNavContent param instead.
+ * @param primaryNavContent
+ * @param? secondaryNavContent
+ * @param? isVertical
+ * @param? extraClasses
+ */
+{template .navGroup private="true"}
+{let $primaryNavContent :
+    $primaryNavContent ? $primaryNavContent :
+        ($primaryNavItemsHtml ? $primaryNavItemsHtml : '') /}
+{let $secondaryNavContent :
+    $secondaryNavContent ? $secondaryNavContent :
+        ($secondaryNavItemsHtml ? $secondaryNavItemsHtml : '') /}
+    <nav class="aui-navgroup aui-navgroup-{$isVertical ? 'vertical' : 'horizontal'}{if $extraClasses} {$extraClasses}{/if}" role="navigation">
+        <div class="aui-navgroup-inner">
+            // only add the .aui-navgroup-primary div if it's a horizontal nav AND secondaryNavContent is passed in
+            {if (not $isVertical) and $secondaryNavContent}
+                <div class="aui-navgroup-primary">
+            {/if}
+                    {$primaryNavContent|noAutoescape}
+            {if (not $isVertical) and $secondaryNavContent}
+                </div>
+            {/if}
+            {if $secondaryNavContent}
+                <div class="aui-navgroup-secondary">
+                    {$secondaryNavContent|noAutoescape}
+                </div>
+            {/if}
+        </div>
+    </nav>
+{/template}
+
+/**
+ * @param webFragments
+ * @param? isVertical
+ * @param? extraClasses
+ * @param? activeNavItem
+ * @param? primaryNavItemsHtml deprecated since 2.6 for removal in 3.0. Use the $primaryNavContent param instead.
+ * @param? secondaryNavItemsHtml deprecated since 2.6 for removal in 3.0. Use the $secondaryNavContent param instead.
+ * @param? primaryNavContent
+ * @param? secondaryNavContent
+ * @param? context
+ */
+{template .webFragmentNavigation}
+{let $primaryNavContent :
+    $primaryNavContent ? $primaryNavContent :
+        ($primaryNavItemsHtml ? $primaryNavItemsHtml : '') /}
+{let $secondaryNavContent :
+    $secondaryNavContent ? $secondaryNavContent :
+        ($secondaryNavItemsHtml ? $secondaryNavItemsHtml : '') /}
+    {call .navGroup data="all"}
+        {param primaryNavContent}
+            {if $primaryNavContent}
+                {$primaryNavContent|noAutoescape}
+            {/if}
+            {foreach $fragment in $webFragments}
+                {if $fragment.type == 'ITEM'}
+                    <ul class="aui-nav">
+                        {call .navWebItem}
+                            {param webItem: $fragment /}
+                            {param isActive: $fragment.moduleKey == $activeNavItem /}
+                            {param context: $context /}
+                        {/call}
+                    </ul>
+                {elseif $fragment.type == 'SECTION'}
+                    {call .navWebSection}
+                        {param fragment: $fragment /}
+                        {param activeNavItem: $activeNavItem /}
+                        {param context: $context /}
+                    {/call}
+                {/if}
+            {/foreach}
+        {/param}
+        {param secondaryNavContent}
+            {if $secondaryNavContent}
+                <ul class="aui-nav">
+                    {$secondaryNavContent|noAutoescape}
+                </ul>
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param webItems
+ * @param? isVertical
+ * @param? extraClasses
+ * @param? activeNavItem
+ * @param? primaryNavItemsHtml deprecated since 2.6 for removal in 3.0. Use the $primaryNavContent param instead.
+ * @param? secondaryNavItemsHtml deprecated since 2.6 for removal in 3.0. Use the $secondaryNavContent param instead.
+ * @param? primaryNavContent
+ * @param? secondaryNavContent
+ * @param? context
+ */
+{template .webItemNavigation}
+{let $primaryNavContent :
+    $primaryNavContent ? $primaryNavContent :
+        ($primaryNavItemsHtml ? $primaryNavItemsHtml : '') /}
+{let $secondaryNavContent :
+    $secondaryNavContent ? $secondaryNavContent :
+        ($secondaryNavItemsHtml ? $secondaryNavItemsHtml : '') /}
+    {call .navGroup data="all"}
+        {param primaryNavContent}
+            {if $primaryNavContent}
+                {$primaryNavContent|noAutoescape}
+            {/if}
+            {if length($webItems) > 0}
+            <ul class="aui-nav">
+                {foreach $webItem in $webItems}
+                    {call .navWebItem}
+                        {param webItem: $webItem /}
+                        {param isActive: $webItem.moduleKey == $activeNavItem /}
+                        {param context: $context /}
+                    {/call}
+                {/foreach}
+            </ul>
+            {/if}
+        {/param}
+        {param secondaryNavContent}
+            {if $secondaryNavContent}
+                <ul class="aui-nav">
+                    {$secondaryNavContent|noAutoescape}
+                </ul>
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+
+/**
+ * @param fragment
+ * @param activeNavItem
+ * @param? context
+ */
+{template .navWebSection private="true"}
+    {call .navSectionWithItems}
+        {param heading: $fragment.labelText /}
+        {param activeNavItem: $activeNavItem /}
+        {param webItems: getWebItems($fragment.location + '/' + $fragment.key, $context ? $context : null) /}
+        {param context: $context /}
+    {/call}
+{/template}
+
+/**
+ * @param heading
+ * @param activeNavItem
+ * @param webItems
+ * @param? context
+ */
+{template .navSectionWithItems private="true"}
+    {if length($webItems)}
+        {call .navHeading}
+            {param text: $heading /}
+        {/call}
+        <ul class="aui-nav">
+            {foreach $webItem in $webItems}
+                {call .navWebItem}
+                    {param webItem: $webItem /}
+                    {param isActive: $webItem.moduleKey == $activeNavItem or $webItem.linkId == $activeNavItem /}
+                    {param context: $context /}
+                {/call}
+            {/foreach}
+        </ul>
+    {/if}
+{/template}
+
+/**
+ * @param webItem
+ * @param isActive
+ * @param? context
+ */
+{template .navWebItem private="true"}
+    {call .navItem}
+        {param url: $webItem.url /}
+        {param text: $webItem.linkText /}
+        {param id: $webItem.linkId /}
+        {param extraLinkClasses: $webItem.styleClass /}
+        {param tooltip: $webItem.tooltip /}
+        {param isActive: $isActive /}
+        {param badgeContent}
+            {foreach $badgeContent in getWebPanels($webItem.moduleKey + '.badge', $context ? $context : null)}
+                // The {sp} is needed for separating the webItem label and the badge, not using CSS margins or
+                // pseudo-elements here because screen readers would combine the label and badge text.
+                {sp}{$badgeContent|noAutoescape}
+            {/foreach}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param url
+ * @param text
+ * @param? id
+ * @param? tooltip
+ * @param? isActive
+ * @param? extraClasses
+ * @param? extraLinkClasses
+ * @param? badgeContent
+ */
+{template .navItem private="true"}
+    <li{if $isActive or $extraClasses} class="{if $isActive}aui-nav-selected{/if}{if $extraClasses} {$extraClasses}{/if}"{/if}>
+        <a href="{$url}" {if $id}id="{$id}"{/if} {if $extraLinkClasses}class="{$extraLinkClasses}"{/if}{if $tooltip} title="{$tooltip}"{/if}>
+            {$text}
+            {if $badgeContent}{$badgeContent|noAutoescape}{/if}
+        </a>
+    </li>
+{/template}
+
+/**
+ * @param text
+ * @param? id
+ * @param? tooltip
+ * @param? extraClasses
+ */
+{template .navHeading private="true"}
+    {if $text}<div class="aui-nav-heading{if $extraClasses} {$extraClasses}{/if}"{if $id} id="{$id}"{/if}{if $tooltip} title="{$tooltip}"{/if}><strong>{$text}</strong></div>{/if}
+{/template}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN" "dtds/urlrewrite4.0.dtd">
+
+<urlrewrite decode-using="null"><!-- You don't want to decode the path. It breaks REST due to spaces in the URL (which are invalid) -->
+    <!-- Johnson Error Pages -->
+    <rule>
+        <from>^/unavailable$</from>
+        <to last="true">/unavailable</to>
+    </rule>
+    <!-- Accept /users/slug/repos URLs and transform them to /projects/~slug/repos. Also similarly accept REST urls. -->
+    <rule>
+        <from>^(/|/mvc/|/rest/api/[^/]+/)users/([^/]+)/repos(.*)$</from>
+        <to>$1projects/~$2/repos$3</to>
+    </rule>
+    <rule>
+        <!-- Rewrite file path to query string -->
+        <from>^(/|/mvc/|/rest/api/[^/]+/)projects/([^/]+)/repos/([^/]+)/(browse|history|diff)/([^?]*)$</from>
+        <set type="parameter" name="path">$5</set>
+    </rule>
+    <rule>
+        <!-- Rewrite file path to query string -->
+        <from>^(/|/mvc/|/rest/api/[^/]+/)projects/([^/]+)/repos/([^/]+)/commits/([^?]*)$</from>
+        <set type="parameter" name="commitHash">$4</set>
+    </rule>
+    <rule>
+        <!-- Rewrite home page -->
+        <from>^/(?:index\.html)?($|;.*)</from>
+        <to last="true">/mvc/home$1</to>
+    </rule>
+    <rule>
+        <!-- By default, because this endpoint returns JSON from a SpringMVC controller, it would be rewritten to hit
+             a REST endpoint. This rewrite rule prevents that from happening and explicitly rewrites through mvc. -->
+        <from>^/admin/backups$</from>
+        <to last="true">/mvc/admin/backups</to>
+    </rule>
+    <rule>
+        <!-- By default, because this POST returns JSON from a SpringMVC controller, it would be rewritten to hit a
+             REST endpoint. This rewrite rule prevents that from happening and explicitly rewrites through mvc. -->
+        <condition type="method">POST</condition>
+        <from>^/tmp/avatars$</from>
+        <to last="true">/mvc/tmp/avatars</to>
+    </rule>
+    <rule>
+        <from>^/s/(.*)/_/download/(.*)$</from>
+        <set name="_statichash">$1</set>
+        <run class="com.atlassian.plugin.servlet.ResourceDownloadUtils" method="addCachingHeaders"/>
+        <to last="true">/download/$2</to>
+    </rule>
+    <rule>
+        <!-- rewrite /git/* to /scm/* for backwards compatibility with clones made against Stash 1.0 -->
+        <from>^/git/(.*)$</from>
+        <to last="true">/scm/$1</to>
+    </rule>
+    <rule>
+        <!-- Rewrite things that would normally go to /mvc to /rest/api/latest if they are looking for json. -->
+        <condition type="header" name="Accept" next="or">application/json</condition>
+        <condition type="header" name="Accept" next="or">application/x-json</condition>
+        <condition type="header" name="Accept" next="or">text/json</condition>
+        <condition type="header" name="Accept">text/x-json</condition>
+        <from>^/((?!s/|mvc|rest|plugins|download|status|test|git).+)$</from>
+        <to last="true">/rest/api/1.0/$1</to>
+    </rule>
+    <rule>
+        <!-- If none of our other handlers match, rewrite this to /mvc -->
+        <from>^/((?!s/|mvc|rest|plugins|download|test|scm|status|j_stash_security|admin/uploadplugin\.action|qunit).*)$</from>
+        <to last="true">/mvc/$1</to>
+    </rule>
+    <!-- Prevent Spring Security from redirecting to a /mvc/** path -->
+    <outbound-rule>
+        <!--
+            Ensure browse paths aren't rewritten in any way.
+            e.g. /projects/PRO/repos/rep/browse/src/mvc/myfile.xml should not be rewritten
+        -->
+        <from>^(.*?(?!/projects/[^/]+/repos/[^/]+.*))/mvc/(.*)$</from>
+        <to last="true">$1/$2</to>
+    </outbound-rule>
+</urlrewrite>

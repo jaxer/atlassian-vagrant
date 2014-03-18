@@ -1,0 +1,1 @@
+define("layout/admin",["jquery","exports"],function(C,A){var B=function(){var D=C(".tabs-menu .menu-item");D.children(".aui-dd-trigger").mouseenter(function(){var E=D.filter(".active"),F=C(this);if(E.length>0&&E[0]!==F.parent()[0]){F.click()}})};A.onReady=function(){B()}});

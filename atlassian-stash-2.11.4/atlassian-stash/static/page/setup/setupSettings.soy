@@ -1,0 +1,74 @@
+{namespace stash.page.setup}
+
+/**
+ * @param serverId
+ * @param generateEvalUrl
+ * @param? form
+ * @param? fieldErrors
+ * @param? formErrors
+ */
+{template .settings}
+{webResourceManager_requireResourcesForContext('stash.page.setup.settings')}
+{call stash.layout.setup}
+    {param step: stash_i18n('stash.web.setup.title.settings', 'Licensing & Settings') /}
+    {param extraClass: 'settings'/}
+    {param content}
+        {call widget.form.xsrfProtectedForm}
+            {param action: '' /}
+            {param extraClass: 'license' /}
+            {param longLabels: false /}
+            {param errors: $formErrors == null ? $formErrors : $formErrors /}
+            {param content}
+                <input type='hidden' name='step' value='settings'/>
+
+                {call widget.aui.form.text}
+                    {param id: 'applicationTitle' /}
+                    {param autofocus: true /}
+                    {param required: true /}
+                    {param labelContent: stash_i18n('stash.web.setup.appTitle', 'Application Title') /}
+                    {param tooltip: stash_i18n('stash.web.setup.appTitle.tooltip', 'The application title will be used to name this installation') /}
+                    {param initialValue: $form.applicationTitle ? $form.applicationTitle : 'Stash' /}
+                    {param maxLength: 255 /}
+                    {param errors: $fieldErrors ? $fieldErrors.applicationTitle : null /}
+                {/call}
+
+                {call widget.aui.form.text}
+                    {param id: 'baseUrl' /}
+                    {param required: true /}
+                    {param labelContent: stash_i18n('stash.web.setup.baseUrl', 'Base URL') /}
+                    {param tooltip: stash_i18n('stash.web.setup.baseUrl.tooltip', 'This is the base URL of this installation of Stash. All links created (for emails, etc.) will be prefixed by this URL') /}
+                    {param initialValue: $form.baseUrl ? $form.baseUrl : nav_base_url() /}
+                    {param maxLength: 255 /}
+                    {param description: stash_i18n('stash.web.setup.baseUrl.description', 'All links created by Stash (for emails, etc.) will be prefixed by this URL') /}
+                    {param errors: $fieldErrors ? $fieldErrors.baseUrl : null /}
+                {/call}
+
+                {call widget.form.licenseForm}
+                    {param license: $form.license /}
+                    {param serverId: $serverId /}
+                    {param required: true /}
+                    {param labelContent: stash_i18n('stash.web.setup.license', 'Enter license key')/}
+                    {param tooltipContent: stash_i18n('stash.web.setup.license.toolip', 'Please enter your Stash license key')/}
+                    {param fieldErrors: $fieldErrors /}
+                    {param evalLicenseUrl: $generateEvalUrl /}
+                {/call}
+                {call widget.aui.form.buttons}
+                    {param content}
+                        {call widget.aui.form.submit}
+                            {param id: 'submit' /}
+                            {param isPrimary: true /}
+                            {param label: stash_i18n('stash.web.setup.next', 'Next') /}
+                            {param tooltip: stash_i18n('stash.web.setup.next.tooltip', 'Next') /}
+                        {/call}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+    {param pageBottomContent}
+        <script>
+            require('page/setupSettings').onReady();
+        </script>
+    {/param}
+{/call}
+{/template}

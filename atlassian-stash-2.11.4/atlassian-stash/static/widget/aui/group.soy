@@ -1,0 +1,49 @@
+{namespace widget.aui.group}
+
+/**
+ * @param? id
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param? extraClasses
+ */
+{template .group}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+    <div {if $id}id="{$id}" {/if}class="aui-group{if $extraClasses} {$extraClasses}{/if}">
+        {$content|noAutoescape}
+    </div>
+{/template}
+
+/**
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param? extraClasses
+ * @param? extraAttributes
+ * @param? tagName
+ */
+{template .item}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+    <{$tagName ? $tagName : 'div' } class="aui-item{if $extraClasses} {$extraClasses}{/if}"
+        {call aui.renderExtraAttributes}
+            {param extraAttributes: $extraAttributes /}
+        {/call}>
+        {$content|noAutoescape}
+    </{$tagName ? $tagName : 'div' }>
+{/template}
+
+/**
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param? extraClasses
+ */
+{template .split}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+    <div class="aui-group aui-group-split{if $extraClasses} {$extraClasses}{/if}">
+        {$content|noAutoescape}
+    </div>
+{/template}

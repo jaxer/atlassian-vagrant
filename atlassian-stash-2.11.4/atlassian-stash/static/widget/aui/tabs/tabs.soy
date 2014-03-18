@@ -1,0 +1,128 @@
+{namespace widget.aui}
+
+/**
+ * @param? isVertical
+ * @param? isDisabled tab links will function as normal links, rather than modifying the active tab.
+ * @param? extraClasses
+ * @param tabItems
+ * @param tabPanesHtml deprecated since 2.6 for removal in 3.0. Use the $tabPanesContent param instead.
+ * @param tabPanesContent
+ */
+{template .tabs}
+    {call .tabChrome data="all"}
+        {param tabItemsContent}
+            {foreach $item in $tabItems}
+                {call .tabMenuItem data="$item" /}
+            {/foreach}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param? isVertical
+ * @param? isDisabled tab links will function as normal links, rather than modifying the active tab.
+ * @param? extraClasses
+ * @param? webItems either webItems or location must be provided
+ * @param? location either webItems or location must be provided
+ * @param? context
+ * @param? activeTab
+ * @param? showFirstTab
+ * @param tabPanesHtml deprecated since 2.6 for removal in 3.0. Use the $tabPanesContent param instead.
+ * @param? tabItemsHtml deprecated since 2.6 for removal in 3.0. Use the $tabItemsContent param instead.
+ * @param tabPanesContent
+ * @param? tabItemsContent
+ */
+{template .webItemTabs}
+{let $tabItemsContent :
+    $tabItemsContent ? $tabItemsContent :
+        ($tabItemsHtml ? $tabItemsHtml : '') /}
+    {call .tabChrome data="all"}
+        {param tabItemsContent}
+            {if $tabItemsContent}
+                {$tabItemsContent|noAutoescape}
+            {/if}
+            {foreach $item in $webItems ? $webItems : getWebItems($location, $context ? $context : null)}
+                {call .tabMenuItem}
+                    {param url: $item.url /}
+                    {param text: $item.linkText /}
+                    {param id: $item.linkId /}
+                    {param extraLinkClasses: $item.styleClass /}
+                    {param tooltip: $item.tooltip /}
+                    {param isActive: $showFirstTab ? isFirst($item) : $activeTab ? $item.moduleKey == $activeTab : false /}
+                    {param extraAttributes: ['data-module-key' : $item.moduleKey ] /}
+                    {param extraLinkContent}
+                        {foreach $subPanel in getWebPanels($item.moduleKey + '.meta', $context ? $context : null)}
+                            {$subPanel|noAutoescape}
+                        {/foreach}
+                    {/param}
+                {/call}
+            {/foreach}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param tabItemsHtml deprecated since 2.6 for removal in 3.0. Use the $tabItemsContent param instead.
+ * @param tabPanesHtml deprecated since 2.6 for removal in 3.0. Use the $tabPanesContent param instead.
+ * @param tabItemsContent
+ * @param tabPanesContent
+ * @param? isVertical
+ * @param? isDisabled tab links will function as normal links, rather than modifying the active tab.
+ * @param? extraClasses
+ */
+{template .tabChrome private="true"}
+{let $tabItemsContent :
+    $tabItemsContent ? $tabItemsContent :
+        ($tabItemsHtml ? $tabItemsHtml : '') /}
+{let $tabPanesContent :
+    $tabPanesContent ? $tabPanesContent :
+        ($tabPanesHtml ? $tabPanesHtml : '') /}
+<div class="aui-tabs {$isVertical ? 'vertical-tabs' : 'horizontal-tabs'}{if $isDisabled} aui-tabs-disabled{/if}">
+    <ul class="tabs-menu{if $extraClasses} {$extraClasses}{/if}">
+        {$tabItemsContent|noAutoescape}
+    </ul>
+    {$tabPanesContent|noAutoescape}
+</div>
+{/template}
+
+/**
+ * @param url
+ * @param text
+ * @param? id
+ * @param? tooltip
+ * @param? isActive
+ * @param? extraClasses
+ * @param? extraLinkClasses
+ * @param? extraLinkHtml deprecated since 2.6 for removal in 3.0. Use the $extraLinkContent param instead.
+ * @param? extraLinkContent
+ * @param? extraAttributes
+ */
+{template .tabMenuItem private="true"}
+{let $extraLinkContent :
+    $extraLinkContent ? $extraLinkContent :
+        ($extraLinkHtml ? $extraLinkHtml : '') /}
+    <li class="menu-item{if $isActive} active-tab{/if}{if $extraClasses} {$extraClasses}{/if}"{call aui.renderExtraAttributes data="all" /}>
+        <a href="{$url}" {if $id}id="{$id}"{/if} {if $extraLinkClasses}class="{$extraLinkClasses}"{/if}{if $tooltip} title="{$tooltip}"{/if}>
+            <strong>{$text}</strong>
+            {if $extraLinkContent}{$extraLinkContent|noAutoescape}{/if}
+        </a>
+    </li>
+{/template}
+
+/**
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param? id
+ * @param? isActive
+ * @param? extraClasses
+ * @param? dataAttributes
+ */
+{template .tabPane}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+    <div class="tabs-pane{if $isActive} active-pane{/if}{if $extraClasses} {$extraClasses}{/if}"{if $id} id="{$id}"{/if}
+    {if $dataAttributes}{call stash.util.dataAttributes}{param data: $dataAttributes /}{/call}{/if}>
+        {$content |noAutoescape}
+    </div>
+{/template}

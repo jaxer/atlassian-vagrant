@@ -1,0 +1,26 @@
+{namespace stash.maintenance}
+
+/**
+ * @param? cancelToken
+ * @param? errorTexts
+ * @param status
+ */
+{template .migration}
+{webResourceManager_requireResourcesForContext('stash.page.migration')}
+{call stash.layout.maintenance}
+    {param cancelToken: $cancelToken /}
+    {param status: $status /}
+    {param errorTexts: $errorTexts /}
+    {param heading: stash_i18n('stash.web.maintenance.migration.title', 'Database Migration') /}
+    {param description:
+            $cancelToken ?
+                stash_i18n('stash.web.maintenance.migration.description.admin', 'Database migration is currently underway and shouldn\'\'t take long. If you cancel the migration, Stash will rollback to the previous database.') :
+                stash_i18n('stash.web.maintenance.migration.description', 'Database migration is currently underway and shouldn\'\'t take long.') /}
+    {param cancelButtonText: stash_i18n('stash.web.migration.button.cancel', 'Cancel migration') /}
+    {param pageBottomContent}
+        <script>
+            require('page/maintenance/migration').onReady({if $cancelToken}true{else}false{/if});
+        </script>
+    {/param}
+{/call}
+{/template}

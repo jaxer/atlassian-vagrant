@@ -1,0 +1,34 @@
+@import "/static/global.less";
+@import "/static/feature/file-content/file-content-variables.less";
+
+.added.line {
+    .ediff-add,
+    .ediff-change {
+        background-color: @addedLineColorEdiff;
+    }
+}
+
+.removed.line {
+    .ediff-change,
+    .ediff-delete {
+        background-color: @deletedLineColorEdiff;
+    }
+}
+
+.CodeMirror-selectedtext {
+    &.ediff-change,
+    &.ediff-delete,
+    &.ediff-add {
+        background-color: darken(@feintGreyColor, 10%);
+    }
+}
+
+.CodeMirror-focused {
+    .CodeMirror-selectedtext {
+        &.ediff-change,
+        &.ediff-delete,
+        &.ediff-add {
+            background-color: darken(@commentLineBackgroundColor, 25%);
+        }
+    }
+}

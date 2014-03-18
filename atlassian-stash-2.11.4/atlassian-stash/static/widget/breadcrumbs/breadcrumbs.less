@@ -1,0 +1,32 @@
+@import "../../global.less";
+
+.icon-breadcrumbs-back {
+    margin-right: @halfSpacing;
+    background: transparent url(../com.atlassian.stash.stash-web-plugin:admin-layout/icons/icon-breadcrumbs-back.png) no-repeat 0 50%;
+}
+
+.breadcrumbs {
+    white-space: normal;
+    color: #000;
+    vertical-align: bottom;
+    line-height: @auiToolbarLineHeight;
+
+    .sep {
+        color: #AAA;
+        padding: 0;
+
+        &:before,
+        &:after {
+            content: ' ';
+        }
+    }
+
+    .stub {
+        font-weight: bold;
+    }
+
+    span.stub {
+        color: #333;
+    }
+}
+

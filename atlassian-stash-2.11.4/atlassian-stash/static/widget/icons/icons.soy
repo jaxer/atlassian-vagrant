@@ -1,0 +1,28 @@
+{namespace stash.widget.icons}
+
+/**
+ * @deprecated since 2.5 for removal in 3.0. Use aui.icon.icons instead.
+ *
+ * @param icon the icon class name
+ * @param? size either 'small' or 'large', default is 'small'
+ * @param? id
+ * @param? tagName
+ * @param? accessibilityText not visible on the page
+ * @param? useIconFont true if you want to use an icon font (either the default AUI icon font or an alternative specified by $iconFontSet), false to use image-based icons
+ * @param? iconFontSet use a different icon set (eg. 'devtools' for 'aui-iconfont-devtools-*') instead of the standard aui icon font set ('aui-iconfont-*')
+ * @param? extraClasses Standard option.
+ * @param? extraAttributes Standard option.
+ */
+{template .icon}
+    {call aui.icons.icon}
+        {param icon: $icon /}
+        {param size: $size /}
+        {param id: $id /}
+        {param tagName: $tagName /}
+        {param accessibilityText: $accessibilityText /}
+        {param useIconFont: $useIconFont /}
+        {param iconFontSet: $iconFontSet /}
+        {param extraClasses: $extraClasses /}
+        {param extraAttributes: $extraAttributes /}
+    {/call}
+{/template}

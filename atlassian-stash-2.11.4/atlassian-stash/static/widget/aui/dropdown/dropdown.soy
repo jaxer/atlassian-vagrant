@@ -1,0 +1,73 @@
+{namespace widget.aui}
+
+/**
+ * @param? dropdownText
+ * @param? dropdownContents deprecated since 2.6 for removal in 3.0. Use the $dropdownContent param instead.
+ * @param? dropdownContent
+ * @param? extraClasses
+ */
+{template .dropdownItem}
+{let $dropdownContent :
+    $dropdownContent ? $dropdownContent :
+        ($dropdownContents ? $dropdownContents : '') /}
+    <li class='dropdown-item{if $extraClasses} {$extraClasses}{/if}'>
+        {if $dropdownText}
+            {$dropdownText}
+        {elseif $dropdownContent}
+            {$dropdownContent|noAutoescape}
+        {/if}
+    </li>
+{/template}
+
+/**
+ * @param? triggerClass
+ * @param? id
+ * @param? dropdownClass
+ * @param? ajax
+ * @param? showIcon
+ * @param? rightAligned
+ * @param? tagName
+ * @param? title
+ * @param? triggerText
+ * @param? triggerContent
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ **/
+{template .dropdown}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+<a class="aui-dd-trigger{if $triggerClass} {$triggerClass}{/if}" {if $id}id="{$id}"{/if} {if $title}title="{$title}"{/if}>
+    {if $triggerText}
+        <span class="dropdown-text">
+            {$triggerText}
+        </span>
+    {/if}
+    {if $triggerContent}
+        {$triggerContent|noAutoescape}
+    {/if}
+    {if $showIcon}
+        <span class="icon icon-dropdown"></span>
+    {/if}
+</a>
+<{$tagName ? $tagName : 'ul'} class="aui-dropdown hidden {$rightAligned ? 'aui-dropdown-right' : 'aui-dropdown-left'} {if $dropdownClass}{$dropdownClass}{/if} {$ajax ? 'aui-dropdown-ajax' : ''}">
+    {$content|noAutoescape}
+</{$tagName ? $tagName : 'ul'}>
+{/template}
+
+/**
+ * @param? id
+ * @param? tagName
+ * @param? extraClasses
+ * @param? contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param? content
+ **/
+{template .dropdownParent}
+{let $content :
+    $content ? $content :
+        ($contents ? $contents : '') /}
+<{$tagName ? $tagName : 'div'} {if $id}id="{$id}"{/if} class="aui-dd-parent{if $extraClasses} {$extraClasses}{/if}">
+    {$content|noAutoescape}
+</{$tagName ? $tagName : 'div'}>
+{/template}
+

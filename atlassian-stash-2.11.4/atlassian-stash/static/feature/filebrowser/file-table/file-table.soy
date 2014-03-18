@@ -1,0 +1,151 @@
+{namespace stash.feature.filebrowser}
+
+/**
+ * @param files
+ * @param? isError
+ * @param? errorMessage
+ * @param? parentDirectoryUrl
+ */
+{template .fileTable}
+    {call widget.aui.table}
+        {param id: 'browse-table' /}
+        {param extraClasses: 'filebrowser-table' /}
+        {param content}
+            {if $isError}
+                {call .fileTableError}
+                    {param message: $errorMessage/}
+                {/call}
+            {else}
+                {if $parentDirectoryUrl}
+                    {call .fileTableRow}
+                        {param type: 'DIRECTORY' /}
+                        {param extraClasses: 'browse-up file-row' /}
+                        {param iconClasses: 'browse-up' /}
+                        {param url: $parentDirectoryUrl /}
+                        {param name: '..'  /}
+                        {param contentId: ''  /}
+                    {/call}
+                {/if}
+                {if length($files) == 0}
+                    {call .tableRow}
+                        {param extraClasses: 'message-row' /}
+                        {param content}
+                            <h3 class="entity-empty">{stash_i18n('stash.web.filebrowser.emptydir', 'No files in this directory.')}</h3>
+                        {/param}
+                    {/call}
+                {else}
+                    {foreach $file in $files}
+                        {call .fileTableRow}
+                            {param type: $file.type /}
+                            {param url: $file.url /}
+                            {param name: $file.name  /}
+                            {param repositoryUrl: $file.repositoryUrl /}
+                            {param browseUrl: $file.browseUrl /}
+                            {param contentId: $file.contentId  /}
+                            {param fileExtension: '' /}
+                            {param iconClasses}
+                                {if $file.type == 'DIRECTORY'}folder-closed{elseif $file.type == 'FILE'}file{elseif $file.type == 'SUBMODULE'}submodule{/if}
+                            {/param}
+                            {param extraClasses: 'file-row' /}
+                        {/call}
+                    {/foreach}
+                {/if}
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param type
+ * @param url
+ * @param? repositoryUrl
+ * @param? browseUrl
+ * @param name
+ * @param contentId
+ * @param? fileExtension
+ * @param iconClasses
+ * @param? extraClasses
+ */
+{template .fileTableRow private="true"}
+    {call .tableRow}
+        {param extraClasses}{if $type == 'DIRECTORY'}folder{elseif $type == 'FILE'}file{elseif $type == 'SUBMODULE'}submodule{/if}{if $extraClasses} {$extraClasses}{/if}{/param}
+        {param content}
+            {call aui.icons.icon}
+                {param useIconFont: true /}
+                {param iconFontSet: 'devtools' /}
+                {param icon: $iconClasses /}
+            {/call}
+            {if $type != 'SUBMODULE'}
+                /* tabindex set to -1 since file navigation is handled in filebrowser.js */
+                <a href="{$url}" {if $type != 'DIRECTORY'}{if $fileExtension} class="filetype-{$fileExtension}"{/if} data-contentId="{$contentId}"{/if}>{$name}</a>
+            {else}
+                {call .fileTableSubmodule data="all" /}
+            {/if}
+        {/param}
+     {/call}
+{/template}
+
+/**
+ * @param url
+ * @param? repositoryUrl
+ * @param? browseUrl
+ * @param name
+ * @param contentId
+ */
+{template .fileTableSubmodule private="true"}
+    {if $browseUrl}
+        <a class="submodule-name" href="{$repositoryUrl}" data-contentId="{$contentId}">{$name}</a>
+        <span class="submodule-sep"> @ </span>
+        <a title="{$url} @ {$contentId}" class="changesetid" href="{$browseUrl}">{$contentId|truncate:7,false}</a>
+    {else}
+        <span class="submodule-name" data-contentId="{$contentId}">{$name}</span>
+        <span class="submodule-sep"> @ </span>
+        <span title="{$url} @ {$contentId}" class="changesetid">{$contentId|truncate:7,false}</span>
+    {/if}
+{/template}
+
+/**
+ * @param message
+ * @param? extraClasses
+ */
+{template .fileTableError private="true"}
+    {call .tableRow}
+        {param extraClasses}message-row{if $extraClasses} {$extraClasses}{/if}{/param}
+        {param content}
+            {call widget.aui.message.warning}
+                {param content}
+                    {$message}
+                {/param}
+            {/call}
+        {/param}
+     {/call}
+{/template}
+
+/**
+ * @param extraClasses
+ * @param content
+ */
+{template .tableRow private="true"}
+    <tr class="{$extraClasses}">
+        <td>
+            {$content|noAutoescape}
+        </td>
+    </tr>
+{/template}
+
+/**
+ * @param isTruncated
+ * @param message
+ * @param? extraClasses
+ */
+{template .warnings}
+    <div class="filebrowser-banner{if $extraClasses} {$extraClasses}{/if}">
+        {if $isTruncated}
+            {call widget.aui.message.warning}
+                {param content}
+                    {$message}
+                {/param}
+            {/call}
+        {/if}
+    </div>
+{/template}

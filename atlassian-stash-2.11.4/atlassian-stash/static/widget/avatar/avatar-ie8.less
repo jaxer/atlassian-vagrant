@@ -1,0 +1,31 @@
+@import "../../global.less";
+
+
+.badged-avatar .approved, // .badged-avatar is @deprecated since 2.4. Remove in 3.0
+.aui-avatar-badged .approved {
+    background-image: url(icons/icon-approved.png) !important;
+}
+
+// IE8 does not respect the size of the background image.
+// Use the non retina version instead
+.stash-theme .group-avatar {
+    &.xxxlarge {
+        background: transparent url(group-avatar-128.png) no-repeat 0 0;
+    }
+
+    &.large {
+        background: transparent url(group-avatar-48.png) no-repeat 0 0;
+    }
+
+    &.medium {
+        background: transparent url(group-avatar-32.png) no-repeat 0 0;
+    }
+
+    &.small {
+        background: transparent url(group-avatar-24.png) no-repeat 0 0;
+    }
+
+    &.xsmall {
+        background: transparent url(group-avatar-16.png) no-repeat 0 0;
+    }
+}

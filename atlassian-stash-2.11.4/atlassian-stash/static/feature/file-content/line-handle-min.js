@@ -1,0 +1,1 @@
+define("feature/file-content/line-handle",function(){function A(C,E,B,D){this.fileType=C;this.lineType=E;this.lineNumber=B;this._handle=D}return A});

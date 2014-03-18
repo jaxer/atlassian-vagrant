@@ -1,0 +1,2 @@
+.pull-request-metadata .approve-icon{background-image:url(icons/icon-approved-grey.png) !important;}
+.pull-request-metadata .active .approve-icon{background-image:url(icons/icon-approved.png) !important;}

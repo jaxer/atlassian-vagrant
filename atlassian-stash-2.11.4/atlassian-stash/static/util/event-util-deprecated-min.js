@@ -1,0 +1,1 @@
+define("util/event",["util/deprecation","util/dom-event"],function(B,A){var C={openInSameTab:A.openInSameTab,modifiersPreventScroll:A.modifiersPreventScroll,listenForFontSizeChange:A.listenForFontSizeChange};B.obj(C,"util/event::","util/dom-event::","2.3","3.0");return C});

@@ -1,0 +1,41 @@
+{namespace stash.page}
+
+/**
+ * @param repository
+ **/
+{template .moveRepositoryForm}
+<p>{stash_i18n('stash.web.repository.move.project.warning',
+    'When moved, the repository will inherit the access rights of the new project')}</p>
+{call widget.aui.form.form}
+    {param action: '' /}
+    {param content}
+        {call widget.aui.form.field}
+            {param id: 'moveProject' /}
+            {param labelContent: stash_i18n('stash.web.repository.move.project.label', 'Project') /}
+            {param description: stash_i18n('stash.web.repository.move.project.description', 'You can move the repository into projects you are an administrator of')/}
+            {param required: true /}
+            {param input}
+                {call stash.feature.project.projectSelectorTriggerWithField}
+                    {param id: 'moveProjectSelector' /}
+                    {param fieldName: 'moveProjectId' /}
+                    {param project: $repository.project /}
+                    {param autofocus: true /}
+                {/call}
+            {/param}
+        {/call}
+        {call widget.aui.form.text}
+            {param id: 'moveName' /}
+            {param initialValue: $repository.name /}
+            {param labelContent: stash_i18n('stash.web.repositories.name.update.html', 'Name') /}
+            {param tooltip: stash_i18n('stash.web.repositories.name.update', 'Name') /}
+            {param maxLength: 128 /}
+            {param autocomplete: 'off' /}
+            {param descriptionContent}
+                {stash_i18n('stash.web.repositories.name.update.description', 'Moving this repository will change its clone URL. You can update a remote with the following command: git remote set-url <name> <newurl>')}
+                {call stash.feature.repository.cloneUrlGen /}
+            {/param}
+            {param required: true /}
+        {/call}
+    {/param}
+{/call}
+{/template}

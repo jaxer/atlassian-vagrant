@@ -1,0 +1,31 @@
+{namespace stash.notification.banner.header}
+
+/**
+ * @param recoveryUsername
+ * @param recoveryUserLoggedIn
+ * @param helpUrl
+ * @param helpTitle
+ */
+{template .stashRecoveryModeOn}
+    {if $recoveryUserLoggedIn}
+        {call aui.message.warning}
+            {param content}
+                {{stash_i18n('stash.web.recoverymode.on.restartreminder', 'Stash is running in recovery mode. '
+                + 'Please restart Stash with recovery mode disabled after applying necessary changes to the user configuration. '
+                + 'See <a href="{0}" target="_blank">{1}</a> for more details.', $helpUrl, $helpTitle)
+                |noAutoescape}}
+            {/param}
+            {param extraAttributes : [ 'title' : stash_i18n('stash.web.recoverymode.on.title', 'Stash is running in recovery mode')] /}
+        {/call}
+    {else}
+        {call aui.message.warning}
+            {param content}
+                {{stash_i18n('stash.web.recoverymode.on.details', 'Stash is running in recovery mode. You can log in as '
+                 + '{0}, using the password specified when starting Stash. '
+                 + 'See <a href="{1}" target="_blank">{2}</a> for more details.', $recoveryUsername, $helpUrl, $helpTitle)
+                 |noAutoescape}}
+            {/param}
+            {param extraAttributes : [ 'title' : stash_i18n('stash.web.recoverymode.on.title', 'Stash is running in recovery mode')] /}
+        {/call}
+    {/if}
+{/template}

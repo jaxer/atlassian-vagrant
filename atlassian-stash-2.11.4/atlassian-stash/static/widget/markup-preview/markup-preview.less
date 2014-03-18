@@ -1,0 +1,74 @@
+@import "../../global.less";
+
+.preview-button,
+.preview-help {
+    .square(16px);
+    margin-bottom: @halfSpacing;
+    display: block;
+
+    .aui-icon {
+        color: @secondaryTextColor;
+    }
+}
+
+/* Override for icons in AUI link buttons - alignment is off otherwise. */
+.preview-button.aui-button.aui-button-link,
+.preview-button.aui-button.aui-button-link:visited,
+{
+    padding: 0;
+    border: none;
+}
+
+.preview-markup {
+    .border-radius();
+    .box-sizing();
+    background-color: #FAFAFA;
+    border: 1px solid @dividerColor;
+    cursor: pointer;
+    display: none;
+    min-height: @textareaStartHeight;
+    padding: @halfSpacing;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.preview-spinner {
+    .square(0); // So that it doesn't block click on textarea
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.rendering {
+    .preview-spinner {
+        display: block;
+    }
+
+    textarea {
+        .opacity(0.5);
+    }
+}
+
+.previewing {
+    .expandingText,
+    textarea,
+    textarea.expanding {
+        display: none;
+    }
+
+    .preview-markup {
+        display: block;
+    }
+}
+
+.rendering,
+.previewing {
+    .preview-button {
+        background-position: 0 -64px;
+
+        &:hover {
+            background-position: 0 -96px;
+        }
+    }
+}
+

@@ -1,0 +1,154 @@
+{namespace stash.project}
+
+/**
+* @param project
+* @param allRead
+* @param allWrite
+* @param permissionDataList
+*/
+{template .projectPermissions}
+{webResourceManager_requireResourcesForContext('stash.page.project.permissions')}
+    {let $projectPublic: isFeatureEnabled('public.access') and $project.public /}
+    {let $grantedDefaultPermission}
+        {if $allWrite}
+            write
+        {elseif $allRead}
+            read
+        {else}
+            none
+        {/if}
+    {/let}
+    {call stash.layout.projectSettings}
+        {{param windowTitle: stash_i18n('stash.web.project.permissions.window.title', '{0} Project Permissions', $project.name) /}}
+        {param activeNav: 'projects-settings-permissions-tab' /}
+        {param project: $project /}
+        {param content}
+            {call widget.aui.pageHeader}
+                {param content}
+                    <h2>{{stash_i18n('stash.web.project.edit.permissions', 'Project permissions') }}</h2>
+                {/param}
+                {param actionListContent}
+                    <a href="{cav_help_url('stash.help.project.permissions.guide')}" target="_blank">{stash_i18n('stash.web.project.permissions.learn.more', 'Learn more')}</a>
+                {/param}
+            {/call}
+
+            {call widget.aui.group.group}
+                {param extraClasses: 'default-permissions' /}
+                {param content}
+                    {if isFeatureEnabled('public.access')}
+                        {call widget.aui.group.item}
+                            {param content}
+                                {call aui.form.form}
+                                    {param action: '' /}
+                                    {param extraClasses: 'project-permission-form' /}
+                                    {param content}
+                                        <h3>{stash_i18n('stash.web.project.permission.public', 'Public Access')}</h3>
+                                        {call aui.form.fieldDescription}
+                                            {param message: stash_i18n('stash.web.project.permission.public.desc',
+                                                    'Allow users without a Stash account to clone and browse repositories within this project.')
+                                            /}
+                                        {/call}
+                                        {call aui.form.checkboxField}
+                                            {param id: 'public-access-permission' /}
+                                            {param legendContent: '' /}
+                                            {param fields: [
+                                                [
+                                                    'id': 'public-access-allowed',
+                                                    'labelText': stash_i18n('stash.web.project.permission.public.allow', 'Enable'),
+                                                    'isChecked': $project.public,
+                                                ]
+                                            ] /}
+                                        {/call}
+                                    {/param}
+                                {/call}
+                            {/param}
+                        {/call}
+                    {/if}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {call aui.form.form}
+                                {param action: '' /}
+                                {param extraClasses: 'project-permission-form' /}
+                                {param content}
+                                    <h3>{stash_i18n('stash.web.project.permission.licensedusers', 'Default Permission')}</h3>
+                                    {call aui.form.fieldDescription}
+                                        {param message: stash_i18n('stash.web.project.permission.licensedusers.desc',
+                                                'Specify the default level of access to this project for logged-in users. Override this for specific user and group access below.')
+                                        /}
+                                    {/call}
+                                    {call aui.form.radioField}
+                                        {param id: 'licensed-users-permissions' /}
+                                        {param legendContent: '' /}
+                                        {param extraAttributes: ['data-granted-permission': $grantedDefaultPermission] /}
+                                        {param fields: [
+                                            [
+                                                'id': 'licensed-users-permissions-readwrite',
+                                                'labelText': stash_i18n('stash.web.project.permission.licensedusers.readwrite', 'Write'),
+                                                'value': 'write',
+                                                'isChecked': $grantedDefaultPermission == 'write'
+                                            ],
+                                            [
+                                                'id': 'licensed-users-permissions-read',
+                                                'labelText': stash_i18n('stash.web.project.permission.licensedusers.read', 'Read'),
+                                                'value': 'read',
+                                                'isChecked': $grantedDefaultPermission == 'read' or ($projectPublic and not $allWrite)
+                                            ],
+                                            [
+                                                'id': 'licensed-users-permissions-none',
+                                                'labelText': stash_i18n('stash.web.project.permission.licensedusers.noaccess', 'No access'),
+                                                'value': 'none',
+                                                'isChecked': $grantedDefaultPermission == 'none' and not $projectPublic,
+                                                'isDisabled': $projectPublic,
+                                                'extraAttributes': ['data-disabled-title': stash_i18n('stash.web.project.permission.licensedusers.noaccess.disabledreason',
+                                                    'Cannot prevent access to this project as public access is enabled')]
+                                            ]
+                                        ] /}
+                                    {/call}
+                                {/param}
+                            {/call}
+                        {/param}
+                    {/call}
+                    // add a 3rd column with the same width as the actual permission description column below,
+                    // so the above 2 columns' width is aligned with the permissions table
+                    {call widget.aui.group.item}
+                        {param extraClasses: 'permission-description-column' /}
+                        {param content: '' /}
+                    {/call}
+                {/param}
+            {/call}
+
+            {call widget.aui.group.group}
+                {param content}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {call stash.feature.permission.userPermissionTable}
+                                {param permissionDataList: $permissionDataList /}
+                                {param noResultsText: stash_i18n('stash.web.project.permission.user.noresults', 'No users have been given explicit permissions to this project') /}
+                            {/call}
+                            {call stash.feature.permission.groupPermissionTable}
+                                {param permissionDataList: $permissionDataList /}
+                                {param noResultsText: stash_i18n('stash.web.project.permission.group.noresults', 'No groups have been given explicit permissions to this project') /}
+                            {/call}
+                        {/param}
+                    {/call}
+                    {call widget.aui.group.item}
+                        {param extraClasses: 'permission-description-column' /}
+                        {param content}
+                            {foreach $permissionData in $permissionDataList}
+                                <h4>{$permissionData.i18nName}</h4>
+                                <div class="permission-description">{$permissionData.i18nDescription}</div>
+                            {/foreach}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+        {param pageBottomContent}
+            <script>require('page/project/permissions').onReady([
+            {foreach $permissionData in $permissionDataList}
+                {lb}name : "{$permissionData.permission|escapeJs}", i18nName: "{$permissionData.i18nName|escapeJs}"{rb}{if not isLast($permissionData)},{/if}
+            {/foreach}
+        ]);</script>
+        {/param}
+    {/call}
+{/template}

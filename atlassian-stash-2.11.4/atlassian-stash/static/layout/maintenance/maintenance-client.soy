@@ -1,0 +1,14 @@
+{namespace stash.layout.maintenance}
+
+/**
+ * @param errorTexts
+ */
+{template .tokenInputField}
+    {call aui.form.textField}
+        {param id: 'cancelToken' /}
+        {param name: 'token' /}
+        {param errorTexts: $errorTexts /}
+        {param labelContent: stash_i18n('stash.web.maintenance.token.label', 'Authentication token') /}
+        {param descriptionText: stash_i18n('stash.web.maintenance.token.label', 'To cancel, please enter an authentication token. This can be found in the Stash logs') /}
+    {/call}
+{/template}

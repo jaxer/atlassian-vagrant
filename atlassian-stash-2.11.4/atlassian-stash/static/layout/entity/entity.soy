@@ -1,0 +1,171 @@
+{namespace stash.layout}
+
+/**
+ * @param windowTitle
+ * @param? bodyClass
+ * @param? headContent
+ * @param? headerImageContent
+ * @param entityName
+ * @param? entityParentName
+ * @param? entityParentUrl
+ * @param? entityUrl
+ * @param? entityHeaderRightItems
+ * @param? entityNav
+ * @param? entityContext
+ * @param? navClass
+ * @param? activeHeaderNav
+ * @param? activeNav
+ * @param? entityNotifications
+ * @param content
+ * @param? panelNavContent
+ * @param? panelSidebarContent
+ * @param? pageBottomContent
+ * @param? panelClass
+ * @param? dataAttributes
+ * @param? actionWebItems
+ * @param? secondaryActionWebItems
+ * @param? entitySecondaryActions
+ * @param? isVerticalNav
+ * @param? entityNameExtraContent
+ */
+{template .entity}
+    {webResourceManager_requireResourcesForContext('stash.layout.entity')}
+    {call .base data="all"}
+        {param content}
+            <header class="aui-page-header">
+                <section class="notifications">
+                    {if $entityNotifications}
+                        {$entityNotifications|noAutoescape}
+                    {/if}
+                </section>
+                <div class="aui-page-header-inner">
+                    {if $headerImageContent}
+                        <div class="aui-page-header-image">
+                            {$headerImageContent|noAutoescape}
+                        </div>
+                    {/if}
+                    <div class="aui-page-header-main entity-item">
+                        {if $entityParentName}
+                            <ol class="aui-nav aui-nav-breadcrumbs">
+                                <li>
+                                    {if $entityParentUrl}<a href="{$entityParentUrl}">{/if}
+                                    {$entityParentName}
+                                    {if $entityParentUrl}</a>{/if}
+                                </li>
+                            </ol>
+                        {/if}
+                        <h1>
+                            {if $entityUrl}
+                                <a href="{$entityUrl}" class="entity-name">
+                            {else}
+                                <span class="entity-name">
+                            {/if}
+                                {$entityName}
+                            {if $entityUrl}</a>{else}</span>{/if}
+                        </h1>
+                        {if $entityNameExtraContent}
+                            {$entityNameExtraContent|noAutoescape}
+                        {/if}
+                        {if $actionWebItems}
+                            {foreach $webItem in $actionWebItems}
+                                {call stash.widget.webItemButton data="$webItem" /}
+                            {/foreach}
+                        {/if}
+                    </div>
+                    <div class="aui-page-header-actions">
+                        {if $entityHeaderRightItems}
+                            {$entityHeaderRightItems|noAutoescape}
+                        {/if}
+                    </div>
+                </div>
+            </header>
+            {if $isVerticalNav} // vertical nav
+                {call widget.aui.panel}
+                    {param extraClasses: $panelClass /}
+                    {param content}
+                        {call aui.page.pagePanelNav}
+                            {param content}
+                                {call widget.aui.webFragmentNavigation}
+                                    {param webFragments: $entityNav /}
+                                    {param activeNavItem: $activeNav /}
+                                    {param extraClasses: $navClass /}
+                                    {param context: $entityContext /}
+                                    {param isVertical: true /}
+                                {/call}
+                            {/param}
+                        {/call}
+                        {call aui.page.pagePanelContent}
+                            {param content: $content /}
+                        {/call}
+                        {if $panelSidebarContent}
+                            {call aui.page.pagePanelSidebar}
+                                {param content: $panelSidebarContent /}
+                            {/call}
+                        {/if}
+                    {/param}
+                {/call}
+            {else}
+                {if $entityNav} // horizontal nav
+                    {call widget.aui.webFragmentNavigation}
+                        {param webFragments: $entityNav /}
+                        {param activeNavItem: $activeNav /}
+                        {param extraClasses: $navClass /}
+                        {param context: $entityContext /}
+                        {param secondaryNavContent}
+                            {if $secondaryActionWebItems}
+                                {foreach $webItem in $secondaryActionWebItems}
+                                    {call widget.aui.navWebItem data="$webItem" /}
+                                {/foreach}
+                            {/if}
+                            {if $entitySecondaryActions}
+                                {$entitySecondaryActions|noAutoescape}
+                            {/if}
+                        {/param}
+                    {/call}
+                    {call widget.aui.panel}
+                        {param extraClasses: $panelClass /}
+                        {param content}
+                            {if $panelNavContent}
+                                {call aui.page.pagePanelNav}
+                                    {param content: $panelNavContent /}
+                                {/call}
+                            {/if}
+                            {call aui.page.pagePanelContent}
+                                {param content: $content /}
+                            {/call}
+                            {if $panelSidebarContent}
+                                {call aui.page.pagePanelSidebar}
+                                    {param content: $panelSidebarContent /}
+                                {/call}
+                            {/if}
+                        {/param}
+                    {/call}
+                {else} // no nav
+                    {call widget.aui.panel}
+                        {param extraClasses: $panelClass /}
+                        {param content}
+                            {if $panelNavContent}
+                                {call aui.page.pagePanelNav}
+                                    {param content: $panelNavContent /}
+                                {/call}
+                            {/if}
+                            {call aui.page.pagePanelContent}
+                                {param content: $content /}
+                            {/call}
+                            {if $panelSidebarContent}
+                                {call aui.page.pagePanelSidebar}
+                                    {param content: $panelSidebarContent /}
+                                {/call}
+                            {/if}
+                        {/param}
+                    {/call}
+                {/if}
+            {/if}
+        {/param}
+        {param pageBottomContent}
+            {if $pageBottomContent}
+                {$pageBottomContent|noAutoescape}
+            {/if}
+        {/param}
+    {/call}
+{/template}

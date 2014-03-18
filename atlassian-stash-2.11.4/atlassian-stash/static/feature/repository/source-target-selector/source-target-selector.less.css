@@ -1,0 +1,3 @@
+#content .feature-box h2{border-bottom:none;font-size:20px;margin:10px 0;}
+#content .feature-box>div{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;border:1px solid #cccccc;padding:20px;}
+#content .feature-box p{font-size:16px;margin-bottom:10px;}

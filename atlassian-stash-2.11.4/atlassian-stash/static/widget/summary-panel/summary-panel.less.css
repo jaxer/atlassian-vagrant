@@ -1,0 +1,4 @@
+.plugin-section-primary>.plugin-item:not(.hidden)~.plugin-section-separator{border-bottom:1px solid #cccccc;margin-bottom:10px;}
+.plugin-item{padding-bottom:10px;}.plugin-item .aui-icon{margin-right:10px;color:#707070;}.plugin-item .aui-icon img{width:16px;height:16px;display:block;}
+.plugin-item a{display:inline-block;}
+.plugin-item .item-extra-content{margin-left:10px;display:inline-block;}

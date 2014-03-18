@@ -1,0 +1,1 @@
+define("model/file-content-modes",function(){return{SOURCE:"source",DIFF:"diff"}});

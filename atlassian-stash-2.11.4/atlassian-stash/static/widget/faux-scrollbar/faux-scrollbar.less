@@ -1,0 +1,17 @@
+@import "../../global.less";
+
+// If you update these rules, you MUST update the corresponding rules in faux-scollbar-test.js
+.faux-scrollbar {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 17px;
+    z-index: 100;
+
+    .scrollee {
+        height: 1px;
+    }
+}

@@ -1,0 +1,59 @@
+{namespace stash.widget.dialogMessage}
+
+/**
+ * DEPRECATED in 2.7 for removal in 3.0. Use stash.widget.focusMessage.message instead.
+ *
+ * @param title
+ * @param? text text-only description
+ * @param? content HTML content
+ * @param? extraClasses
+ * @param? extraAttributes
+ * @param? iconClass if you're providing your own icon image, make it at least 64x64px.
+ * @param? accessibilityText
+ */
+{template .message}
+    {call stash.widget.focusMessage.message data="all"}
+        {param extraClasses}
+            dialog-message deprecated{call aui.renderExtraClasses data="all" /}
+        {/param}
+     {/call}
+{/template}
+
+/**
+ * DEPRECATED in 2.7 for removal in 3.0. Use stash.widget.focusMessage.message instead.
+ *
+ * @param? applicationName
+ * @param? content
+ * @param? text
+ * @param? extraClasses
+ */
+{template .authenticate}
+    {call stash.widget.focusMessage.message}
+        {param title}
+            {{$applicationName ? stash_i18n('stash.web.focus.message.title.authenticate.application', 'Authenticate with {0}', $applicationName) :
+                                stash_i18n('stash.web.focus.message.title.authenticate.unknown', 'Authenticate with Remote Application')}}
+        {/param}
+        {param text: $text/}
+        {param content: $content /}
+        {param extraClasses}
+            dialog-message deprecated{call aui.renderExtraClasses data="all" /}
+        {/param}
+        {param iconClass: 'icon-lock' /}
+    {/call}
+{/template}
+
+/**
+ * DEPRECATED in 2.7 for removal in 3.0. Use stash.widget.focusMessage.error instead.
+ *
+ * @param title
+ * @param? text
+ * @param? content
+ * @param? extraClasses
+ */
+{template .error}
+    {call stash.widget.focusMessage.message data="all"}
+        {param extraClasses}
+            dialog-message deprecated{call aui.renderExtraClasses data="all" /}
+        {/param}
+    {/call}
+{/template}

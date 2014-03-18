@@ -1,0 +1,37 @@
+@import "../../global.less";
+
+.avatar-dropdown {
+    width: 220px;
+    margin-top: 10px; /* this is the default for .aui-dropdown2.aui-dropdown2-tailed but we're declaring it explicitly
+                         here so that IE8 gets the same margin because IE8 doesn't get the arrow due to various
+                         implementation issues - https://atlassian.hipchat.com/history/room/82650/2012/07/25/?h=tailed
+                         Not the @baseSpacing LESS var because it's not related to our layout. */
+}
+
+.avatar-dropdown .aui-list-truncate {
+    max-height: 330px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.avatar-dropdown .user-avatar {
+    vertical-align: middle;
+}
+
+.avatar-dropdown .aui-avatar-badged {
+    margin: 7px @baseSpacing; /* top margin prevents the badge from getting clipped off inside the dropdown */
+
+    .user-avatar {
+        margin-right: 0;
+        vertical-align: top;
+    }
+}
+
+/* @aui-override  */
+
+.avatar-dropdown > .aui-list-truncate .participant-item {
+    .text-overflow();
+}
+
+/* end @aui-override  */
+

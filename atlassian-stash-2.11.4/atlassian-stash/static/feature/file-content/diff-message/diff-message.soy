@@ -1,0 +1,96 @@
+{namespace stash.feature.fileContent.diffError}
+
+/**
+ * @param? filePath
+ * @param? revisionId
+ * @param? parentRevisionId
+ * @param? sideBySideDiffEnabled
+ */
+{template .tooLargeDiff}
+{call aui.message.warning}
+    {param extraClasses : 'diff-message' /}
+    {param content}
+        {if $filePath and $revisionId}
+            {stash_i18n('stash.web.repo.diff.toolarge.detail',
+            'The diff for this file is too large to render. You can still retrieve it manually with the following Git command.')}
+            <p class="scm-command">
+                {if $parentRevisionId}
+                    git diff -C -M {$parentRevisionId} {$revisionId} -- "{$filePath}"
+                {else}
+                    git log -p {$revisionId} -- "{$filePath}"
+                {/if}
+            </p>
+        {else}
+            <p>{stash_i18n('stash.web.repo.diff.toolarge.detail', 'The diff for this file is too large to render')}</p>
+            {if $sideBySideDiffEnabled}
+                <p>
+                    {stash_i18n('stash.web.repo.diff.toolarge.tryunifieddiff', 'It might be possible to view this diff using unified diff. You can switch to unified diff via the options menu.')}
+                </p>
+            {/if}
+        {/if}
+    {/param}
+{/call}
+{/template}
+
+/**
+ * @param titleContent
+ */
+{template .emptyDiffMessage}
+    {call stash.widget.focusMessage.message}
+        {param extraClasses: 'content-view diff-view empty-file' /}
+        {param iconClass: 'icon-empty-file' /}
+        {param accessibilityText: stash_i18n('stash.web.repo.diff.nochange.icon', 'No diff') /}
+        {param title: $titleContent /}
+    {/call}
+{/template}
+
+/**
+ * @param? fileChangeType
+ */
+{template .emptyDiff}
+    {switch $fileChangeType}
+        {case 'ADD'}
+            {call .emptyDiffMessage}
+                {param titleContent: stash_i18n('stash.web.repo.diff.nochange.addedfile.detail', 'The added file is empty') /}
+            {/call}
+        {case 'DELETE'}
+            {call .emptyDiffMessage}
+                {param titleContent: stash_i18n('stash.web.repo.diff.nochange.removedfile.detail', 'The removed file is empty') /}
+            {/call}
+        {default}
+            {call .emptyDiffMessage}
+                {param titleContent: stash_i18n('stash.web.repo.diff.nochange.detail', 'The contents for this file have not changed') /}
+            {/call}
+    {/switch}
+{/template}
+
+/**
+ * @param message
+ */
+{template .generic}
+{call aui.message.error}
+    {param extraClasses : 'diff-message' /}
+    {param content}{$message}{/param}
+{/call}
+{/template}
+
+
+/**
+ * @param? titleContent
+ * @param? messageContent
+ */
+{template .conflict}
+    <div class="diff-conflict-message-container">
+        {call widget.aui.message.warning}
+            {param title: $titleContent /}
+            {param content}
+                {if $messageContent}
+                    {$messageContent|noAutoescape}
+                {else}
+                    {stash_i18n('stash.web.pull-request.diff.conflict.detail',
+                    'This file is in a conflicted state. You will need to resolve the conflict manually before you can merge this pull request.')}
+                {/if}
+            {/param}
+        {/call}
+    </div>
+{/template}

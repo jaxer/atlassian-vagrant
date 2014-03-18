@@ -1,0 +1,51 @@
+{namespace stash.page.pullRequest}
+
+/**
+ * @param repository
+ * @param pullRequestState
+ * @param pullRequestPage
+ * @param activeTab
+ * @param? pullRequestOrder
+ * @param? dataAttributes
+ * @param? pageBottomContent
+ * @param? extraClasses
+ */
+{template .list}
+{webResourceManager_requireResourcesForContext('stash.page.pullRequest.list')}
+    {call stash.layout.repository}
+        {{param windowTitle: stash_i18n('stash.web.list-pull-requests.windowtitle', 'Pull requests for repository {0}', $repository.slug) /}}
+        {param dataAttributes: $dataAttributes /}
+        {param content}
+            <div class='pull-requests-content'>
+                {call widget.aui.webItemTabs}
+                    {param location: 'stash.pull-requests.list.nav' /}
+                    {param context: [ 'repository' : $repository, 'pullRequestPage' : $pullRequestPage] /}
+                    {param activeTab: $activeTab /}
+                    {param isDisabled: true /}
+                    {param tabPanesContent}
+                        {call widget.aui.tabPane}
+                            {param isActive: true /}
+                            {param content}
+                            {/param}
+                        {/call}
+                    {/param}
+                {/call}
+                {call stash.feature.pullRequest.pullRequestTable}
+                    {param pullRequestPage: $pullRequestPage /}
+                    {param extraClasses: $extraClasses /}
+                    {param alwaysDisplayRepositories: false /}
+                {/call}
+            </div>
+        {/param}
+        {param repository: $repository /}
+        {param activeNav: 'stash.repository.nav.pull-requests' /}
+        {param pageBottomContent}
+            <script>
+                require('page/pull-requests-list').onReady('{$pullRequestState|escapeJs}', {if $pullRequestOrder}'{$pullRequestOrder|escapeJs}'{else}null{/if});
+            </script>
+            {if $pageBottomContent}
+                {$pageBottomContent|noAutoescape}
+            {/if}
+        {{/param}}
+    {/call}
+{/template}

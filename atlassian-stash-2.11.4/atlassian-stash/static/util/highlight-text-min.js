@@ -1,0 +1,1 @@
+define("util/highlight-text",["aui","underscore","util/regexp"],function(B,C,D){var A=function(E){return D.escape(B.escapeHtml(E))};return{highlight:function(J,G,F){if(!G||G.length===0){return B.escapeHtml(J)}var I=typeof G==="string"?A(G):C.map(G,A).join("|");var E=F==null?"gi":F;var H=new RegExp(I,E);return B.escapeHtml(J).replace(H,"<strong>$&</strong>")}}});

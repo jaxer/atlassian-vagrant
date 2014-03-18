@@ -1,0 +1,55 @@
+{namespace stash.page}
+
+/**
+ * @param project
+ * @param repository
+ * @param activeNav
+ * @param atRevisionRef
+ * @param isRepoAdmin
+ * @param dataAttributes
+ **/
+{template .noDefaultBranch}
+    {webResourceManager_requireResourcesForContext('stash.page.repository.noDefaultBranch')}
+    {call stash.layout.branch}
+        {param dataAttributes: $dataAttributes /}
+        {param project: $project /}
+        {param repository: $repository /}
+        {param atRevisionRef: $atRevisionRef /}
+        {param activeNav: $activeNav /}
+        {param content}
+            {call widget.aui.group.group}
+                {param content}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {call .noDefaultBranchMessage}
+                                {param escapedBranchName}{$atRevisionRef.displayId}{/param}
+                                {param escapedUrl}{nav_repo_settings($project, $repository)}{/param}
+                                {param isRepoAdmin: $isRepoAdmin /}
+                            {/call}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+        {param pageBottomContent}
+            <script>require('page/repository/noDefaultBranch').onReady();</script>
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param escapedBranchName
+ * @param escapedUrl
+ * @param isRepoAdmin
+ **/
+{template .noDefaultBranchMessage private="true"}
+    {call widget.aui.message.warning}
+        {param content}
+            {if $isRepoAdmin}
+                {{stash_i18n('stash.web.repositories.nodefaultbranch.admin.html', 'The default branch is set to "{0}" but does not exist. Configure the default branch in the <a href="{1}">repository settings</a>.', $escapedBranchName, $escapedUrl)|noAutoescape}}
+            {else}
+                {{stash_i18n('stash.web.repositories.nodefaultbranch.html', 'The default branch is set to "{0}" but does not exist. Contact your project administrator to change the default branch.', $escapedBranchName)|noAutoescape}}
+            {/if}
+        {/param}
+    {/call}
+{/template}

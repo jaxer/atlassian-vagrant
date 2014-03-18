@@ -1,0 +1,77 @@
+{namespace stash.page.admin.db}
+
+/**
+ * @param dbTypes
+ * @param currentDbType
+ * @param? dbConfigForm
+ * @param? formErrors
+ * @param? fieldErrors
+ * @param? testPassed
+ * @param? migrationException
+ */
+{template .migrateConfig}
+{webResourceManager_requireResourcesForContext('stash.page.admin.editDbConfig')}
+    {call stash.layout.focused}
+        {param contentTitle: stash_i18n('stash.web.admin.db.migrate.title', 'Migrate Database') /}
+        {param focusedPageSize: 'large' /}
+        {param content}
+            {if $testPassed}
+                {call widget.aui.message.success}
+                    {param content}
+                        {stash_i18n('stash.web.admin.db.migrate.test.passed', 'Successfully established database connection')}
+                    {/param}
+                {/call}
+            {/if}
+            <p class="migration-form-description">{{stash_i18n('stash.web.db.migrate.database.help',
+                   'Stash will be unavailable to users while a migration is in progress. See our {0}documentation{1} for more information',
+                   '<a href="' + cav_help_url('stash.help.db.migration') + '">', '</a>')|noAutoescape}}</p>
+            {call widget.form.xsrfProtectedForm}
+                {param action: '' /}
+                {param errors: $formErrors /}
+                {param longLabels: true /}
+                {param content}
+                    {if $migrationException}
+                        {call stash.widget.exception}
+                            {param messageContent}
+                                {$migrationException.localizedMessage}
+                            {/param}
+                            {param throwable: $migrationException /}
+                        {/call}
+                    {/if}
+                    {call stash.feature.admin.db.editDbConfigFields}
+                        {param dbConfigForm: $dbConfigForm /}
+                        {param fieldErrors: $fieldErrors /}
+                        {param dbTypes: $dbTypes /}
+                        {param currentDbType: $currentDbType /}
+                    {/call}
+                    {call widget.aui.form.buttons}
+                        {param content}
+                            {call widget.aui.form.submit}
+                                {param id: 'submit' /}
+                                {param isPrimary: true /}
+                                {param disabled: not $currentDbType.driverAvailable /}
+                                {param accessKey: 's' /}
+                                {param label: stash_i18n('stash.web.button.migrate', 'Start migration') /}
+                            {/call}
+                            {call widget.aui.form.submit}
+                                {param id: 'test' /}
+                                {param disabled: not $currentDbType.driverAvailable /}
+                                {param label: stash_i18n('stash.web.button.test', 'Test') /}
+                            {/call}
+                            {call widget.aui.form.cancelButton}
+                                {param id: 'cancel' /}
+                                {param href: nav_admin_db() /}
+                            {/call}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+        {param pageBottomContent}
+            <script>
+                require('widget/exception').onReady();
+                require('page/admin/db/migrate').onReady();
+            </script>
+        {/param}
+    {/call}
+{/template}

@@ -1,0 +1,32 @@
+{namespace stash.page}
+
+/**
+ * Only support client web-panels now
+ * @param repository
+ * @param changeset
+ */
+{template .changesetRelatedEntityWebPanels}
+    {foreach $webPanel in getWebPanels('stash.changeset.related-entities', [ 'repository' : $repository, 'changeset' : $changeset ])}
+        {$webPanel|noAutoescape}
+    {/foreach}
+{/template}
+
+/**
+ * This is for backwards compatibility and is called by on the server and client side
+ * @param repository
+ * @param changeset
+ * @deprecated since 2.8 for removal in 3.0
+ */
+{template .changesetExtrasWebSectionsAndPanels}
+    {foreach $webSection in getWebSections('stash.changeset.extras', [ 'repository' : $repository, 'changeset' : $changeset ])}
+    <dl>
+        <dt>{$webSection.labelText}</dt>
+        {foreach $webPanel in getWebPanels($webSection.key, [ 'repository' : $repository, 'changeset' : $changeset ])}
+            <dd>{$webPanel|noAutoescape}</dd>
+        {/foreach}
+    </dl>
+    {/foreach}
+    {foreach $webPanel in getWebPanels('stash.changeset.extras', [ 'repository' : $repository, 'changeset' : $changeset ])}
+        {$webPanel|noAutoescape}
+    {/foreach}
+{/template}

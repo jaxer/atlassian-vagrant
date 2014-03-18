@@ -1,0 +1,1 @@
+define("page/admin/userCreate",["exports","jquery"],function(A,C){function B(){C("#password, #confirmPassword").parent(".field-group").toggleClass("hidden",C(this).is(":checked"))}A.onReady=function(){var D=C("#notify");D.click(B);B.call(D[0])}});

@@ -1,0 +1,5 @@
+form.aui textarea.textarea.monospace{font-family:Courier,"Courier New",monospace;font-size:11px;white-space:pre;}
+form.aui>.aui-message+*{margin-top:10px;}
+.stash-theme{}.stash-theme form.aui .buttons-container .aui-button.aui-button-link.cancel{padding:5px 0;}
+.stash-theme.aui-page-focused .aui-page-panel .field-group p:last-child{margin-bottom:0;padding-bottom:0;}
+.stash-theme #oauth-authorize form.aui+.aui-message{margin-top:16px;}

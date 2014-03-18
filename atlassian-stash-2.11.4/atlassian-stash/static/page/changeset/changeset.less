@@ -1,0 +1,174 @@
+@import "../../global.less";
+
+.aui-theme.default #content .aui-page-panel-content,
+.stash-theme #content .aui-page-panel-content {
+    padding: 0;
+}
+
+.changeset-metadata {
+    padding: @doubleSpacing @doubleSpacing 0 @doubleSpacing;
+    border-bottom: 1px solid @dividerColor;
+
+    .changeset-metadata-details {
+        > h3 {
+            margin: 0 0.75em 0 0;
+            font-weight: bold;
+            font-size: @font-size-default;
+            display: inline;
+        }
+
+        > time {
+            display: inline;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        > .commit-message {
+            display: block;
+            color: @bodyTextColor;
+        }
+    }
+}
+
+.aui-group.aui-group-split > .changeset-metadata-user-avatar {
+    width: @aui-avatar-size-large + @baseSpacing;
+    padding-bottom: @baseSpacing;
+}
+
+.aui-group.aui-group-split > .changeset-metadata-details {
+    text-align: left;
+    padding: 0 0 @baseSpacing 0;
+}
+
+.changeset-metadata-changeset-id {
+    padding-left: @doubleSpacing;
+    padding-right: @doubleSpacing;
+    float: right;
+    
+    span:first-child {
+        .text-overflow();
+        .transition(max-width 0.7s ease-in-out);
+        font-family: Courier, "Courier New", monospace;
+        margin-right: @halfSpacing;
+        font-size: @font-size-default;
+        display:block;
+        max-width: 5em;
+
+        &:hover {
+            max-width: 30em;
+        }
+    }
+
+    .merge-lozenge {
+        float:right;
+    }
+}
+
+.changeset-metadata-diff-to {
+    .box-sizing();
+    margin: @baseSpacing 0;
+
+    > strong {
+        color: @bodyTextColor;
+        margin-right: @baseSpacing;
+    }
+
+    .aui-dropdown2-trigger {
+        font-family: monospace;
+    }
+}
+
+#diff-to-parent-dropdown,
+#diff-to-parent-dropdown ul{
+    .border-radius(@baseBorderRadius);
+    background: @contentBackgroundColor;
+}
+
+#diff-to-parent-dropdown {
+    border: 1px solid @activeDividerColor;
+    width: 420px;
+    max-width: none; // @aui-override override aui-dropdown2
+}
+
+.changeset-extra {
+    white-space: nowrap;
+    float: right;
+    width: 200px;
+
+    // Keep the dl/dt stuff for backwards-compatiblity until 3.0
+    dl {
+        list-style: none;
+        padding: 0 0 0 16px;
+        margin: 0;
+    }
+
+    dt {
+        display: inline-block;
+    }
+
+    dt + dd:before {
+        content: ': ';
+    }
+
+    dd:before {
+        content: ', ';
+    }
+
+    dd {
+        display: inline-block;
+        margin: 0;
+    }
+
+    .aui-dd-parent {
+        display: inline-block;
+        vertical-align: top;
+
+        .aui-dd-trigger {
+            display: inline-block;
+            height: 18px;
+            vertical-align: top;
+            background: none;
+            width: auto;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            text-indent: 0;
+            padding-bottom: 5px;
+            color: #3F78B2;
+            .border-radius(0);
+
+            &:hover,
+            &:focus {
+                background: none;
+                color: #3F78B2;
+            }
+
+            > .icon-dropdown {
+                /* CSS border triangle trick + margins for positioning */
+                width: 0;
+                height: 0;
+                margin: 6px 0 0 0;
+                border: 4px solid transparent;
+                border-bottom: none;
+                border-top-color: #3F78B2;
+                display: inline-block;
+                min-width: 0;
+                vertical-align: text-top;
+            }
+        }
+
+
+
+        .aui-dropdown {
+            min-width: 100%;
+
+            li a,
+            li span {
+                max-width: 10em;
+                overflow-x: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    } // .aui-dd-parent
+}

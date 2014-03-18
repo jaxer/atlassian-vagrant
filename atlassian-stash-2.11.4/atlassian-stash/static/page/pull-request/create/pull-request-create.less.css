@@ -1,0 +1,18 @@
+.pull-request-create form.aui .aui-group>.aui-item+.aui-item{padding:0px;}
+.pull-request-create form.aui .project-key{color:#707070;}
+.pull-request-create form.aui .searchable-selector-trigger{display:block;margin-top:10px;}.pull-request-create form.aui .searchable-selector-trigger:first-child{margin-top:0;}
+.pull-request-create form.aui .revision-reference-selector-trigger{margin-left:0;display:inline-block;}.pull-request-create form.aui .revision-reference-selector-trigger+input+.spinner{width:16px;height:16px;margin-left:10px;display:inline-block;vertical-align:text-bottom;}
+.pull-request-create form.aui .field-group:first-child{margin-top:20px;}
+.pull-request-create form.aui .aui-group .aui-item.icon-right-arrow{width:42px;padding-top:17%;}.pull-request-create form.aui .aui-group .aui-item.icon-right-arrow .aui-icon{display:block;margin:0 auto;color:#707070;}
+.pull-request-create form.aui .buttons-container{min-height:0;padding-bottom:0;}.pull-request-create form.aui .buttons-container .buttons{padding-top:0;}.pull-request-create form.aui .buttons-container .buttons .aui-button{margin-top:0;}
+.pull-request-create form.aui h3{border-bottom:none;color:#333333;font-size:16px;margin-top:10px;margin-bottom:0;padding-bottom:0;}
+.pull-request-create form.aui h3.entity-empty{padding:0;margin:0;}
+.pull-request-create form.aui .feature-box>div{min-height:185px;margin-bottom:10px;}
+.pull-request-create .changeset-badge-detailed{margin-top:20px;}
+.pull-request-create #content #create-pull-request-commits{border-top:1px solid #cccccc;padding-top:20px;margin-top:30px;}.pull-request-create #content #create-pull-request-commits .commits-table{table-layout:fixed;}.pull-request-create #content #create-pull-request-commits .commits-table .author{width:160px;}
+.pull-request-create #content #create-pull-request-commits .commits-table .changeset{width:85px;}
+.pull-request-create #content #create-pull-request-commits .commits-table .timestamp{width:100px;}
+.pull-request-create #content #create-pull-request-commits .load-more-trigger{margin-top:10px;margin-bottom:0;padding-bottom:0;text-align:center;}
+.pull-request-create #content #create-pull-request-commits .commits-table-message.no-more-results{margin-bottom:0;padding-bottom:0;}
+.pull-request-create #content #create-pull-request-commits .commit-list-jira-issues-col,.pull-request-create #content #create-pull-request-commits .build-status-commit-list-col{width:120px;}.pull-request-create #content #create-pull-request-commits .commit-list-jira-issues-col>a,.pull-request-create #content #create-pull-request-commits .build-status-commit-list-col>a{width:100%;}
+.pull-request-create #content #create-pull-request-commits .commit-list-jira-issues-col li{width:120px;word-wrap:break-word;}

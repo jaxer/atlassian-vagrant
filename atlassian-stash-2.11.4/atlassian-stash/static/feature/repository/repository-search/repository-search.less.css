@@ -1,0 +1,8 @@
+#repository-search{line-height:1.4285;}#repository-search::-ms-clear{display:none;}
+#repository-search+.spinner{display:none;position:relative;left:6px;top:-20px;width:16px;color:black;}
+#repository-search.loading+.spinner{display:block;}
+#repository-search.loading{background-image:none;}
+.repository-search-dialog .results{padding:0;max-height:500px;}.repository-search-dialog .results .result a{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;-webkit-box-align:center;-moz-box-align:center;-ms-flex-align:center;-webkit-align-items:center;align-items:center;word-wrap:normal;}
+.repository-search-dialog .results .repository-name{max-width:200px;}
+.repository-search-dialog .repository-menu-item{-o-text-overflow:ellipsis;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.repository-search-dialog .repository-menu-item.focused .repository-project-name,.repository-search-dialog .repository-menu-item:hover .repository-project-name,.repository-search-dialog .repository-menu-item.focused .repository-separator,.repository-search-dialog .repository-menu-item:hover .repository-separator{color:#ffffff;}

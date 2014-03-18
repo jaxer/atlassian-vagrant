@@ -1,0 +1,1 @@
+define("model/file-change-types",function(){return{ADD:"ADD",DELETE:"DELETE",MODIFY:"MODIFY",COPY:"COPY",MOVE:"MOVE",RENAME:"RENAME",UNKNOWN:"UNKNOWN",changeTypeFromId:function(A){if(Object.prototype.hasOwnProperty.call(this,A)&&typeof this[A]==="string"){return this[A]}return undefined}}});

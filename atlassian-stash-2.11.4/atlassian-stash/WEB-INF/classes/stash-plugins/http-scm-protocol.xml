@@ -1,0 +1,5 @@
+<atlassian-plugin key="com.atlassian.stash.stash-http-scm-protocol" name="System HTTP SCM Protocol">
+
+    <scm-protocol key="http-scm-protocol" class="com.atlassian.stash.internal.scm.protocol.http.HttpScmProtocol"/>
+
+</atlassian-plugin>

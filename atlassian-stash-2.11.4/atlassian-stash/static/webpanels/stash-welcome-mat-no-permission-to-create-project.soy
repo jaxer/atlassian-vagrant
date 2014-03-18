@@ -1,0 +1,12 @@
+{namespace stash.web.project.list.banner}
+/**
+ *
+ */
+{template .stashWelcomeMatNoPermissionToCreateProject}
+<p class="entity-empty-desc">
+    {{stash_i18n('stash.web.welcome-mat.no.projects.description',
+        'There are no projects that you can see and you don\'\'t have permission to create any.\n' +
+        'You can view and create personal repositories from your {0}profile{1}.',
+        '<a href="' + nav_profile() + '">', '</a>')|noAutoescape}}
+</p>
+{/template}

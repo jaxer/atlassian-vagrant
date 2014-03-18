@@ -1,0 +1,73 @@
+@import "/static/global.less";
+
+@fileFinderWidth: 300px;
+@fileFinderInputPadding: 4px;
+
+/* TODO: Extract out a filtered-table widget */
+
+#content .file-finder {
+    float: none;
+    white-space: normal;
+    display: block;
+    padding: 0;
+    vertical-align: bottom;
+
+
+    .file-finder-input {
+        .box-sizing();
+        .border-radius(4px);
+        border: 1px solid #BBB;
+        width: @fileFinderWidth;
+        height: 30px;
+        padding: 2px 2px 2px 4px;
+        display: none;
+
+        &.visible {
+            display: inline-block;
+        }
+    }
+
+    .aui-iconfont-search {
+        color: @secondaryTextColor;
+        margin-right: @halfSpacing;
+        vertical-align: middle;
+    }
+
+    input[type=text] {
+        .box-sizing();
+        border: 0;
+        width: @fileFinderWidth - @icon-size-xxsmall - @halfSpacing - (2 * @fileFinderInputPadding);
+        line-height: 24px;
+        height: 24px;
+        padding: 0 @fileFinderInputPadding;
+        margin: 0;
+        vertical-align: middle;
+        font-size: @font-size-small;
+        font-family: sans-serif;
+        display: none;
+    }
+}
+
+.aui-buttons.find-files {
+    right: @doubleSpacing;
+    display: inline-block;
+}
+
+#file-finder-tip {
+    font-style: italic;
+    font-size: 13px;
+    font-family: sans-serif;
+    color: @descriptionTextColor;
+    padding-left: @baseSpacing;
+    line-height: 26px;
+    display: none;
+
+    &.visible {
+        display: inline-block;
+    }
+}
+
+// Prevent wrapping of seperator in narrow res when in file finder mode
+.aui-toolbar2 .breadcrumbs.file-finder-mode {
+    display: none;
+}

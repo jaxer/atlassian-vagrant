@@ -1,0 +1,53 @@
+{namespace stash.admin.users}
+
+/**
+ * @param displayName
+ */
+{template .clearCaptchaDialog}
+    <div>
+        <p>{{stash_i18n('stash.web.users.captcha.clear.explanation', '{0} has too many failed logins and must complete a CAPTCHA challenge before continuing.', $displayName)}}</p>
+        <p>{stash_i18n('stash.web.users.captcha.clear.confirmation', 'Clear the CAPTCHA and allow them to log in again?')}</p>
+    </div>
+{/template}
+
+/**
+ *
+ **/
+{template .passwordResetForm}
+    {call widget.aui.form.form}
+        {param action: nav_rest_admin_users() + '/credentials'/}
+        {param autocomplete: 'off'/}
+        {param content}
+            {call widget.aui.form.password}
+                {param id: 'password' /}
+                {param labelContent: stash_i18n('stash.web.users.password', 'Password') /}
+                {param initialValue: '' /}
+                {param required: true /}
+            {/call}
+            {call widget.aui.form.password}
+                {param id: 'passwordConfirm' /}
+                {param labelContent: stash_i18n('stash.web.users.confirmpassword', 'Confirm password') /}
+                {param initialValue: '' /}
+                {param required: true /}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ *
+ **/
+{template .renameUserForm}
+    {call widget.aui.form.form}
+        {param action: nav_rest_admin_users() + '/rename' /}
+        {param autocomplete: 'off'/}
+        {param content}
+            {call widget.aui.form.text}
+                {param id: 'newName' /}
+                {param labelContent: stash_i18n('stash.web.users.newName', 'Username') /}
+                {param initialValue: '' /}
+                {param required: true /}
+            {/call}
+        {/param}
+    {/call}
+{/template}

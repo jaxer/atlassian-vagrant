@@ -1,0 +1,39 @@
+{namespace stash.feature.pullRequest}
+
+/**
+ * @param? title
+ * @param? description
+ * @param? reviewers
+ * @param? toRef
+ * @param? errors
+ * @param? fieldErrors
+ */
+{template .edit}
+        {if $errors }
+            {foreach $error in $errors}
+                {call widget.aui.message.error}
+                    {param content: $error.message /}
+                {/call}
+            {/foreach}
+        {/if}
+        {call widget.aui.form.form}
+            {param action: '' /}
+            {param autocomplete: 'off' /}
+            {param content}
+                {call widget.aui.form.field}
+                    {param id: 'toRef' /}
+                    {param labelContent: stash_i18n('stash.web.pull-request.edit.toref.title', 'Destination') /}
+                    {param description: stash_i18n('stash.web.pull-request.edit.toref.description', 'Update the destination branch for the pull request') /}
+                    {param errors: $fieldErrors ? $fieldErrors.toRef : null /}
+                    {param input}
+                        {call stash.feature.repository.branchSelectorTriggerWithField}
+                            {param id: 'toRef' /}
+                            {param fieldName: 'toRef' /}
+                            {param ref: $toRef /}
+                        {/call}
+                    {/param}
+                {/call}
+                {call .detailsForm data="all"/}
+            {/param}
+        {/call}
+{/template}

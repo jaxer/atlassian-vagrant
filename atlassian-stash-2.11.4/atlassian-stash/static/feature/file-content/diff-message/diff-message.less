@@ -1,0 +1,20 @@
+@import "/static/global.less";
+
+.diff-message,
+.diff-message:first-child { /* :first-child overrides similar AUI message selector. */
+    margin: @tripleSpacing auto;
+    max-width: 600px;
+    white-space: normal;
+}
+
+.diff-conflict-message-container {
+    padding: @doubleSpacing;
+    background: @contentBackgroundColor;
+    white-space:normal;
+
+    .aui-message {
+        margin-bottom: 0;
+    }
+}
+    
+        

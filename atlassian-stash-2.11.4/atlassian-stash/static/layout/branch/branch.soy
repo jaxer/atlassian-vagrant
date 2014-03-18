@@ -1,0 +1,93 @@
+{namespace stash.layout}
+
+/**
+ * @param windowTitle
+ * @param? activeNav
+ * @param? bodyClass
+ * @param? dataAttributes
+ * @param? headContent
+ * @param? panelClass
+ * @param repository
+ * @param atRevisionRef
+ * @param content
+ * @param? toolbarPrimaryExtraContent
+ * @param? toolbarSecondaryExtraContent
+ * @param? pageBottomContent
+ */
+{template .branch}
+    {webResourceManager_requireResourcesForContext('stash.layout.branch')}
+    {requirePageData('stash.branch.layout.actions.dropdown', [ 'repository' : $repository, 'atRevisionRef' : $atRevisionRef ])}
+    {let $revisionSelectorId: 'repository-layout-revision-selector' /}
+    {call .repository data="all"}
+        {param activeNav: $activeNav /}
+        {param dataAttributes: $dataAttributes /}
+        {param panelClass: $panelClass /}
+        {param content}
+            {call aui.toolbar2.toolbar2}
+                {param extraClasses: 'branch-selector-toolbar' /}
+                {param content}
+                    {call aui.toolbar2.item}
+                        {param item: 'primary' /}
+                        {param content}
+                            {call widget.aui.group.group}
+                                {param content}
+                                    {call widget.aui.group.item}
+                                        {param content}
+                                            {call stash.buttons.buttons}
+                                                {param content}
+                                                    {call stash.feature.repository.revisionReferenceSelectorTrigger}
+                                                        {param id: $revisionSelectorId /}
+                                                        {param ref: $atRevisionRef /}
+                                                    {/call}
+                                                    {call aui.dropdown2.trigger}
+                                                        {param id: 'branch-actions' /}
+                                                        {param tagName: 'button' /}
+                                                        {param content}
+                                                            {call aui.icons.icon}
+                                                                {param useIconFont: true /}
+                                                                {param icon: 'more' /}
+                                                            {/call}
+                                                        {/param}
+                                                        {param extraClasses: 'aui-button aui-dropdown2-trigger-arrowless' /}
+                                                        {param extraAttributes: [ 'type': 'button' , 'autocomplete' : 'off' ] /}
+                                                        {param menu: [ 'id' : 'branch-actions-menu' ] /}
+                                                    {/call}
+                                                {/param}
+                                            {/call}
+                                        {/param}
+                                    {/call}
+                                    {if $toolbarPrimaryExtraContent}
+                                        {$toolbarPrimaryExtraContent|noAutoescape}
+                                    {/if}
+                                {/param}
+                            {/call}
+
+                        {/param}
+                    {/call}
+                    {call aui.toolbar2.item}
+                        {param item: 'secondary' /}
+                        {param extraClasses: 'changeset-badge-container' /}
+                        {param content}
+                            {if $toolbarSecondaryExtraContent}
+                                {$toolbarSecondaryExtraContent|noAutoescape}
+                            {/if}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+            {$content |noAutoescape}
+        {/param}
+        {param pageBottomContent}
+            {call aui.dropdown2.contents}
+                {param id: 'branch-actions-menu' /}
+                {param extraClasses: 'aui-style-default' /}
+            {/call}
+            <script>
+            require('layout/branch').onReady('#{$revisionSelectorId}', '#branch-checkout');
+            </script>
+            {if $pageBottomContent}
+                {$pageBottomContent|noAutoescape}
+            {/if}
+        {/param}
+    {/call}
+{/template}

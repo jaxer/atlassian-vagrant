@@ -1,0 +1,157 @@
+@import "/static/global.less";
+@import "file-content-variables.less";
+
+.file-content {
+    .box-sizing();
+    background-color: @contentBackgroundColor;
+    width: auto;
+    display: block;
+    vertical-align: top;
+
+    .diff-view .line-numbers {
+        left: @doubleSpacing + 1px; // 1px extra for the #file-content border
+    }
+
+    .content-view {
+        .box-sizing();
+        position: relative;
+        min-height: 50px;
+        width: 100%;
+        white-space: nowrap;
+        clear: both;
+        overflow: hidden;
+
+        &.fully-loaded {
+            padding-bottom: 0;
+        }
+
+        &.scroll-x,
+        &.diff-view.scroll-x {
+            overflow-x: auto;
+        }
+
+        &.empty-file {
+            color: @secondaryTextColor;
+            padding: 50px 0;
+            min-height: 250px;
+            line-height: inherit;
+
+            .icon-empty-file, .icon-empty-diff {
+                .square(@icon-size-large);
+                background-image: url(icons/icon-document.svg);
+                background-size: @icon-size-large;
+            }
+        }
+
+        + .aui-message {
+            margin: 0 @doubleSpacing @doubleSpacing;
+        }
+
+        .line {
+            font-size: @font-size-small;
+        }
+    }
+
+    @fileCommentsDividerWidth: 2px;
+    @fileCommentsDividerColor: @textContentBackgroundColor;
+    .file-comments .comment-container {
+        border-bottom: @fileCommentsDividerWidth solid @fileCommentsDividerColor;
+    }
+
+    .file-toolbar {
+        /* AUI does not provide a trigger button style unless its a dropdown.
+           However, revision picker is an inline-dialog */
+        .until-changeset-button:after {
+            .dropdown-arrow();
+            content: "";
+            margin-left: 6px;
+            margin-top: -2px;
+            vertical-align: middle;
+            position: relative;
+        }
+
+        // We need to wrap the options menu; in webkit a horizontal scrollbar appears when the dropdown2 menu is shown
+        .diff-view-options {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            vertical-align: top; // Strangely this fixes a layout issue in Gecko/Trident
+            margin-left: 0
+        }
+    }
+
+    .blame,
+    .line-numbers,
+    .source-container,
+    .source {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .line-numbers {
+        background-color: @contentBackgroundColor;
+        z-index: 1;
+        border: solid @lightDividerColor;
+        border-width: 0 1px 0 0;
+        text-align: right;
+        width: 55px; /* avoid jumping around when pages are loaded: this fits 5 digits. min-width and max-width
+                        not supported when element is display: table-cell */
+
+        pre {
+            .transition(~"border-color 0.2s, background-color 0.2s");
+            margin-top: 0; /* to reset AUI Typography's default 10px margin on the top of PREs */
+            padding: 0 0.5em; // @TODO: This should probably be changed to halfSpacing?
+            line-height: 18px;
+        }
+    }
+
+    .source-container {
+        .box-sizing();
+        width: 100%;
+        padding: 0;
+        left: 0;
+        overflow: hidden; /* See IE9 comment above.
+                             JP: this might be obsolete now as we're not using display: table-cell for the source view */
+    }
+
+    pre.code {
+        .tab-width(4);
+        display: table;
+        width: 100%;
+        line-height: 18px;
+
+        code {
+            padding: 0 1em 0 0.5em; /* override highlight.js padding which ruins alignment */
+
+
+            pre {
+                padding: 0 5px;
+            }
+        }
+
+        span {
+            font-style: normal;  /* "Fix" for strange case where odd line-heights cause misalignment between
+                              line numbers and source, only on Windows.  Turns out italics affect calculated height, so
+                              override highlight.js. */
+            line-height: 15px;   /* bold text also affects line height, and forcing it to 15px here fixes that */
+        }
+    }
+
+    .file-content-spinner {
+        width: 100px;
+        height: 200px;
+        position: relative;
+        margin-left: -50px;
+        bottom: 0;
+        left: 50%;
+    }
+}
+
+// This AUI Dropdown2 needs to have a higher z-index than the .file-content area
+.diff-options-dropdown {
+    z-index: 10;
+
+    a {
+        cursor: pointer;
+    }
+}

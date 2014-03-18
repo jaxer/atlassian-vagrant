@@ -1,0 +1,37 @@
+{namespace stash.users.profile}
+
+/**
+ * @param projectKey
+ */
+{template .noRepositoriesSelf}
+    {call stash.widget.welcomeMat}
+        {param title: stash_i18n('stash.web.users.profile.no.repositories.self.heading', 'You don\'\'t have any personal repositories') /}
+        {param extraClasses: 'no-results repository-list' /}
+        {param content}
+            {{stash_i18n('stash.web.users.profile.no.repositories.self.description', '{0}Get started by creating your first repository in Stash.{1}', '<p>', '</p>')|noAutoescape}}
+
+            {call stash.buttons.button}
+                {param isPrimary: true /}
+                {param buttonText: stash_i18n('stash.web.users.profile.create.first.repository.button.text', 'Create your first repository') /}
+                {param href: nav_repo_create($projectKey) /}
+                {param extraClasses: 'create-repository-button' /}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param userDisplayName
+ */
+{template .noRepositories}
+    {call stash.widget.welcomeMat}
+        {{param title: stash_i18n('stash.web.users.profile.no.repositories.heading', 'Nothing to see here') /}}
+        {param extraClasses: 'no-results repository-list' /}
+        {param backgroundClass: 'private-repository' /}
+        {param content}
+            <p>
+            {{stash_i18n('stash.web.users.profile.no.repositories.description', '{0} is not sharing any repositories with you.', $userDisplayName)}}
+            </p>
+        {/param}
+    {/call}
+{/template}

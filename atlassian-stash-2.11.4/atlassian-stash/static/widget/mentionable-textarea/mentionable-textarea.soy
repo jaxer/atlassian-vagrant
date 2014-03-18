@@ -1,0 +1,39 @@
+{namespace stash.widget.mentionableTextarea}
+
+/**
+ * @param? query
+ * @param? results
+ * @param? activeItemIndex
+ */
+{template .dialog}
+    <ul>
+        {if $results and $results.length}
+            {foreach $result in $results}
+                {call .result}
+                    {param result: $result/}
+                    {param isActive: $activeItemIndex ? index($result) == $activeItemIndex : index($result) == 0/}
+                {/call}
+            {/foreach}
+        {else}
+            {if $query}
+                <li class="no-results"><span>{stash_i18n('stash.web.user.autocomplete.no.results', 'No matching users found')}</span></li>
+            {else}
+                <li class="mentions-help"><span>{stash_i18n('stash.web.user.autocomplete.type.username', 'Start typing to search for people')}</span></li>
+            {/if}
+        {/if}
+    </ul>
+{/template}
+
+/**
+ * @param result
+ * @param? isActive
+ */
+{template .result}
+    <li class="result {$isActive ? 'active' : ''}">
+        {call stash.widget.avatarWithNameAndEmail}
+            {param size: 'small'/}
+            {param unknownName: '' /}
+            {param person: $result/}
+        {/call}
+    </li>
+{/template}

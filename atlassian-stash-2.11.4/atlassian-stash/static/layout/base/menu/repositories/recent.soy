@@ -1,0 +1,28 @@
+{namespace stash.layout.menu}
+
+/**
+ */
+{template .loadingRecentReposMenuItem}
+    <li>
+        <span class="loading-recent-repos">{{stash_i18n('stash.web.menu.repositories.recentlyviewed.loading', 'Loading...')}}</span>
+    </li>
+{/template}
+
+/**
+ */
+{template .noRecentReposMenuItem}
+    <li>
+        <span class="no-recent-repos">{{stash_i18n('stash.web.menu.repositories.recentlyviewed.none', 'No recently viewed repositories')}}</span>
+    </li>
+{/template}
+
+/**
+ */
+{template .errorLoadingRecentReposMenuItem}
+    <li>
+        <span>{{stash_i18n('stash.web.menu.repositories.recentlyviewed.error', 'An error occurred')}}</span>
+    </li>
+{/template}
+
+
+

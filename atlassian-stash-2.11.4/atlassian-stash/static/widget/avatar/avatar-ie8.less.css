@@ -1,0 +1,6 @@
+.badged-avatar .approved,.aui-avatar-badged .approved{background-image:url(icons/icon-approved.png) !important;}
+.stash-theme .group-avatar.xxxlarge{background:transparent url(group-avatar-128.png) no-repeat 0 0;}
+.stash-theme .group-avatar.large{background:transparent url(group-avatar-48.png) no-repeat 0 0;}
+.stash-theme .group-avatar.medium{background:transparent url(group-avatar-32.png) no-repeat 0 0;}
+.stash-theme .group-avatar.small{background:transparent url(group-avatar-24.png) no-repeat 0 0;}
+.stash-theme .group-avatar.xsmall{background:transparent url(group-avatar-16.png) no-repeat 0 0;}

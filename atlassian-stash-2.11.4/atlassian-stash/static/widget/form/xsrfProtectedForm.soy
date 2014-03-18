@@ -1,0 +1,21 @@
+{namespace widget.form}
+/**
+ * @param contents deprecated since 2.6 for removal in 3.0. Use the $content param instead.
+ * @param content
+ * @param action
+ * @param? method
+ * @param? unsectioned
+ * @param? longLabels
+ * @param? topLabels
+ * @param? extraClass
+ * @param? autocomplete
+ * @param? errors
+ * @param? detailedErrors
+ * @param? additionalErrorContent
+ */
+{template .xsrfProtectedForm}
+    {call widget.aui.form.form data="all"}
+        {param xsrfTokenName: $ij.xsrfTokenName ? $ij.xsrfTokenName : null /}
+        {param xsrfTokenValue: $ij.xsrfTokenValue ? $ij.xsrfTokenValue : null /}
+    {/call}
+{/template}

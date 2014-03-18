@@ -1,0 +1,167 @@
+{namespace stash.decorators.atlassian}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ */
+{template .admin}
+    {call stash.layout.admin}
+        {param windowTitle: $title /}
+        {param headContent: $head /}
+        // Support 'admin.active.tab' for Atlassian plugin compatibility, but otherwise everything else in Stash is usually 'activeTab'
+        {param activeTab: $properties.meta ? ($properties.meta.activeTab ? $properties.meta.activeTab : $properties.meta.admin.active.tab) : '' /}
+        {param content}
+            {call widget.aui.group.group}
+                {param content}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {$body|noAutoescape}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param title The window title
+ */
+{template .general}
+    {call stash.layout.base}
+        {param windowTitle: $title /}
+        {param headContent: $head /}
+        {param content}
+            {$body|noAutoescape}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param title window title
+ */
+{template .popup}
+    {call stash.layout.base}
+        {param windowTitle: $title /}
+        {param headContent: $head /}
+        {param content}
+            {call widget.aui.group.group}
+                {param content}
+                    {call widget.aui.group.item}
+                        {param content}
+                            {$body|noAutoescape}
+                        {/param}
+                    {/call}
+                {/param}
+            {/call}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ * @deprecated use the .focusedPageLarge template (or the stash.focused.large decorator) instead
+ */
+{template .wideForm}
+    {call stash.layout.focused}
+        {param windowTitle: $title /}
+        {param headContent: $head /}
+        {param contentTitle: $properties.meta and $properties.meta.heading ? $properties.meta.heading : '' /}
+        {param focusedPageSize: 'large' /}
+        {param content}
+            {$body|noAutoescape}
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ */
+{template .focusedPageSmall}
+    {call .focusedLayout}
+        {param title: $title /}
+        {param head: $head /}
+        {param properties: $properties /}
+        {param body: $body /}
+        {param focusedPageSize: 'small' /}
+    {/call}
+{/template}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ */
+{template .focusedPageMedium}
+    {call .focusedLayout}
+        {param title: $title /}
+        {param head: $head /}
+        {param properties: $properties /}
+        {param body: $body /}
+        {param focusedPageSize: 'medium' /}
+    {/call}
+{/template}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ */
+{template .focusedPageLarge}
+    {call .focusedLayout}
+        {param title: $title /}
+        {param head: $head /}
+        {param properties: $properties /}
+        {param body: $body /}
+        {param focusedPageSize: 'large' /}
+    {/call}`
+{/template}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ */
+{template .focusedPageXLarge}
+    {call .focusedLayout}
+        {param title: $title /}
+        {param head: $head /}
+        {param properties: $properties /}
+        {param body: $body /}
+        {param focusedPageSize: 'xlarge' /}
+    {/call}
+{/template}
+
+/**
+ * @param title The window title
+ * @param head Any extra <head> contents provided by the page being decorated
+ * @param body The body of the page being decorated
+ * @param properties meta properties
+ * @param? focusedPageSize small, medium, large, xlarge. If not specified, it default to 'xlarge'
+ */
+{template .focusedLayout private="true"}
+    {call stash.layout.focused}
+        {param windowTitle: $title /}
+        {param headContent: $head /}
+        {param contentTitle: $properties.meta and $properties.meta.heading ? $properties.meta.heading : '' /}
+        {param focusedPageSize: $focusedPageSize /}
+        {param content}
+            {$body|noAutoescape}
+        {/param}
+    {/call}
+{/template}

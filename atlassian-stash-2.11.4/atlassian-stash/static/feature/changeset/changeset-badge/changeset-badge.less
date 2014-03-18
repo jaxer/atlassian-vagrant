@@ -1,0 +1,36 @@
+@import "../../../global.less";
+
+.changeset-badge-oneline {
+    display: inline-block;
+    font-size: @font-size-default;
+
+    .user-avatar {
+        vertical-align: middle;
+        margin-right: @baseSpacing;
+    }
+
+    .changeset-author {
+        color: @bodyTextColor;
+        font-weight: bold;
+        margin-right: @halfSpacing;
+    }
+
+    time {
+        margin-left: 8px;
+        font-size: @font-size-small;
+        color: @secondaryTextColor;
+    }
+
+    .changesetid {
+        color: @primaryLinkColor;
+        display: inline-block;
+        vertical-align: baseline;
+        margin-left: @halfSpacing;
+    }
+}
+
+.changeset-badge-detailed .changeset-message {
+    font-size: @font-size-default;
+    margin-bottom: 0;
+    word-wrap: break-word;
+}

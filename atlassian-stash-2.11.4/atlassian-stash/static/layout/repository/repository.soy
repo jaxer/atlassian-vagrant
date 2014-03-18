@@ -1,0 +1,223 @@
+{namespace stash.layout}
+
+/**
+ * @param windowTitle
+ * @param? bodyClass
+ * @param? panelClass
+ * @param? headContent
+ * @param repository
+ * @param? atRevisionRef
+ * @param? activeNav
+ * @param content
+ * @param? pageBottomContent
+ * @param? dataAttributes
+ */
+{template .repository}
+    {webResourceManager_requireResourcesForContext('stash.layout.repository')}
+    {requirePageData('stash.layout.repository', [ 'repository': $repository ])}
+    {call .entity data="all"}
+        {param activeHeaderNav: 'repositories-menu' /}
+        {param headerImageContent}
+            {call stash.feature.project.avatar}
+                {param size: 'xlarge' /}
+                {param project: $repository.project /}
+            {/call}
+        {/param}
+        {param entityName: $repository.name /}
+        {param entityContext: [ 'repository' : $repository ] /}
+        {param entityParentUrl: $repository.project.owner ? nav_user($repository.project.owner) : nav_project($repository.project) /}
+        {param entityParentName: $repository.project.name /}
+        {param entityNav: getWebItems('stash.repository.nav', [ 'repository' : $repository ]) /}
+        {param entityNameExtraContent}
+            {call .repositoryBadges}
+                {param repositoryBadges: getWebItems('stash.web.repository.badges', [ 'repository' : $repository ]) /} // Deprecated since 2.5 for removal in 3.0, use stash.web.repository.header or stash.web.repository.header.buttons plugin point instead
+            {/call}
+            {call stash.feature.repository.publicLozenge}
+                {param repository: $repository /}
+            {/call}
+            {if $repository.origin}
+                <span class="fork-origin">
+                    {call .forkOrigin}
+                        {param projectLink}
+                            {if $repository.project.key != $repository.origin.project.key}
+                                <a title="{$repository.origin.project.name}"
+                                    href="{nav_project($repository.origin.project)}">{$repository.origin.project.name}</a>
+                            {/if}
+                        {/param}
+                        {param repoLink}
+                            <a title="{$repository.origin.project.name} / {$repository.origin.name}"
+                                href="{nav_repo_browse($repository.origin.project.key, $repository.origin.slug)}">{$repository.origin.name}</a>
+                        {/param}
+                    {/call}
+                </span>
+            {/if}
+        {/param}
+        {param panelClass: $panelClass /}
+        {param entityHeaderRightItems}
+            {call .cloneWebPanelSection}
+                {param repository: $repository /}
+                {param location: 'stash.web.repository.clone.before' /} // Deprecated since 2.4 for removal in 3.0, use stash.web.repository.header or stash.web.repository.header.buttons plugin point instead
+                {param atRevisionRef: $atRevisionRef /}
+            {/call}
+            {call .repositoryWebPanelSection}
+                {param repository: $repository /}
+                {param location: 'stash.web.repository.header' /}
+                {param atRevisionRef: $atRevisionRef /}
+            {/call}
+            {call .cloneWebPanelSection}
+                {param repository: $repository /}
+                {param location: 'stash.web.repository.clone.after' /} // Deprecated since 2.4 for removal in 3.0, use stash.web.repository.header or stash.web.repository.header.buttons plugin point instead
+                {param atRevisionRef: $atRevisionRef /}
+            {/call}
+            {call stash.widget.webFragmentButtons}
+                {param location: 'stash.web.repository.header.buttons' /}
+                {param context: $atRevisionRef ?
+                    [ 'repository' : $repository, 'atRevisionRef' : $atRevisionRef ] :
+                    [ 'repository' : $repository ]
+                /}
+                {param isReverse: true /}
+            {/call}
+        {/param}
+        {param pageBottomContent}
+            <script>require('layout/repository').onReady({to_json($repository)|noAutoescape}, '#clone-repo-button', '#clone-repo-dialog-content');</script>
+            {if $pageBottomContent}
+                {$pageBottomContent|noAutoescape}
+            {/if}
+        {/param}
+    {/call}
+{/template}
+
+
+/**
+ * @param repositoryBadges
+ */
+{template .repositoryBadges private="true"}
+    {if length($repositoryBadges) > 0}
+        <ul class="repository-badges">
+            {foreach $webItem in $repositoryBadges}
+                <li class="repository-badge">
+                    {call stash.widget.webItem}
+                        {param url: $webItem.url /}
+                        {param tooltip: $webItem.tooltip /}
+                        {param styleClass: 'badge aui-icon ' + $webItem.styleClass /}
+                        {param linkText: $webItem.linkText /}
+                    {/call}
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
+{/template}
+
+
+/**
+ * @param? projectLink
+ * @param repoLink
+ */
+{template .forkOrigin}
+    {if $projectLink}
+        {{stash_i18n('stash.web.repository.fork.origin.different.project', 'fork of {0} / {1}', $projectLink, $repoLink)|noAutoescape}}
+    {else}
+        {{stash_i18n('stash.web.repository.fork.origin.same.project', 'fork of {0}', $repoLink)|noAutoescape}}
+    {/if}
+{/template}
+
+/**
+ * @param repository
+ * @param location
+ * @param? atRevisionRef
+ * @deprecated since 2.4 for removal in 3.0
+ */
+{template .cloneWebPanelSection private="true"}
+    {if $atRevisionRef}
+        {foreach $webPanel in getWebPanels($location, [ 'repository' : $repository, 'atRevisionRef' : $atRevisionRef ])}
+            {$webPanel|noAutoescape}
+        {/foreach}
+    {else}
+        {foreach $webPanel in getWebPanels($location, [ 'repository' : $repository ])}
+            {$webPanel|noAutoescape}
+        {/foreach}
+    {/if}
+{/template}
+
+/**
+ * @param repository
+ * @param location
+ * @param? atRevisionRef
+ */
+{template .repositoryWebPanelSection private="true"}
+    {if $atRevisionRef}
+        {foreach $webPanel in reverse(getWebPanels($location, [ 'repository' : $repository, 'atRevisionRef' : $atRevisionRef ]))}
+            {$webPanel|noAutoescape}
+        {/foreach}
+    {else}
+        {foreach $webPanel in reverse(getWebPanels($location, [ 'repository' : $repository ]))}
+            {$webPanel|noAutoescape}
+        {/foreach}
+    {/if}
+{/template}
+
+/**
+ * @param webItems
+ */
+{template .repositoryCloneWebItems private="true"}
+    {if length($webItems) == 1}
+        {foreach $webItem in $webItems}
+            {call stash.buttons.button}
+                {param id: $webItem.linkId /}
+                {param buttonText: $webItem.linkText /}
+                {param isDisabled: true /}
+                {param extraClasses: 'repository-protocol' /}
+                {param extraAttributes: [ 'data-clone-url' : $webItem.url, 'data-module-key' : $webItem.moduleKey ]/}
+            {/call}
+        {/foreach}
+    {else}
+        {call widget.aui.dropdown2}
+            {param menuId: 'repository-protocol-selector' /}
+            {param triggerClass: 'repository-protocol aui-button' /}
+            {param menuContent}
+                <ul>
+                    {foreach $webItem in $webItems}
+                        <li id="{$webItem.linkId}" data-clone-url="{$webItem.url}" data-module-key="{$webItem.moduleKey}" >
+                            <a href="#">{$webItem.linkText}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            {/param}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * @param repository
+ */
+{template .repositoryCloneDialog private="true"}
+    <div class="hidden">
+        <div id="clone-repo-dialog-content">
+            <div class="clone-url">
+                {call .repositoryCloneUrl}
+                    {param repository: $repository /}
+                    {param contentAfter}
+                    {/param}
+                {/call}
+                {foreach $webPanel in getWebPanels('stash.web.repository.clone.dialog.help.info', [ 'repository' : $repository ])}
+                    <p>{$webPanel|noAutoescape}</p>
+                {/foreach}
+            </div>
+            {foreach $webPanel in getWebPanels('stash.web.repository.clone.dialog.content', [ 'repository' : $repository ])}
+                {$webPanel|noAutoescape}
+            {/foreach}
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param repository
+ */
+{template .repositoryCloneUrl private="true"}
+    <div class="aui-buttons">
+        {call .repositoryCloneWebItems}
+            {param webItems: getWebItems('stash.web.repository.clone', [ 'repository' : $repository ]) /}
+        {/call}
+        <input type="text" class="text quick-copy-text stash-text" readonly="readonly" spellcheck="false" value="{nav_clone($repository.project, $repository, ['urlMode' : 'absolute'])}" />
+    </div>
+{/template}

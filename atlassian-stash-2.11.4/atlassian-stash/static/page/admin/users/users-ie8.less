@@ -1,0 +1,23 @@
+@import "../../../global.less";
+
+table#list-users {
+    table-layout: fixed;
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+
+        &[headers=fullname] a {
+            max-width: none;
+            word-wrap: break-word;
+        }
+
+        &[headers=username] div {
+            max-width: none;
+        }
+
+        &[headers=email] div {
+            max-width: none;
+        }
+    }
+}

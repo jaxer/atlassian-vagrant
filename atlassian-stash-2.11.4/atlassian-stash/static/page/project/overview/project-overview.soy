@@ -1,0 +1,51 @@
+{namespace stash.project}
+
+/**
+* @param project
+* @param dataAttributes
+* @param repositoryPage
+*/
+{template .projectOverview}
+{webResourceManager_requireResourcesForContext('stash.page.project.overview')}
+{call stash.layout.project}
+    {{param windowTitle: stash_i18n('stash.web.project.overview.window.title', '{0} Project Overview', $project.name) /}}
+    {param activeNav: 'projects-repositories-tab' /}
+    {param project: $project /}
+    {param dataAttributes: $dataAttributes /}
+    {param content}
+        {call widget.aui.group.group}
+            {param content}
+                {call widget.aui.group.item}
+                    {param content}
+                        {call widget.aui.group.group}
+                            {param extraClasses: 'project-banners' /}
+                            {param content}
+                                {foreach $webPanel in getWebPanels('stash.web.project.overview.banner',
+                                [ 'repositoryPage' : $repositoryPage, 'project' : $project ])}
+                                    {call widget.aui.group.item}
+                                        {param content}
+                                            {$webPanel|noAutoescape}
+                                        {/param}
+                                    {/call}
+                                {/foreach}
+                            {/param}
+                        {/call}
+                        {if $repositoryPage.size == 0 and $repositoryPage.start == 0 and $repositoryPage.isLastPage}
+                            // No repositories
+                        {else}
+                            {call stash.feature.repository.repositoryTable}
+                                {param id: 'repositories-table' /}
+                                {param repositoryPage: $repositoryPage /}
+                                {param showPublicStatus: true /}
+                            {/call}
+                        {/if}
+                    {/param}
+                {/call}
+            {/param}
+        {/call}
+    {/param}
+    {param pageBottomContent}
+        <script>require('page/project/overview').onReady('#repositories-table');</script>
+    {/param}
+{/call}
+{/template}
