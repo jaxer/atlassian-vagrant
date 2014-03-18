@@ -16,8 +16,6 @@ class java {
   exec {
     "accept_license":
     command => "echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections && echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections",
-#    cwd => "/home/vagrant",
-#    user => "vagrant",
     path    => "/usr/bin/:/bin/",
     require => Package["curl"],
     before => Package["oracle-java7-installer"],
