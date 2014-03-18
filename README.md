@@ -35,6 +35,7 @@ Now you should have both servers running on same default ports.
 ### Maintenance
 
 Restart both with
+
     sudo /etc/init.d/jira restart
     sudo /etc/init.d/stash restart
 
