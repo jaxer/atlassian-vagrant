@@ -1,1 +1,0 @@
-define("model/participant",["backbone-brace","model/stash-user"],function(B,A){return B.Model.extend({namedAttributes:{approved:"boolean",role:"string",user:A}})});

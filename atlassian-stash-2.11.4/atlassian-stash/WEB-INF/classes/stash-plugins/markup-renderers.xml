@@ -1,5 +1,0 @@
-<atlassian-plugin key="com.atlassian.stash.stash-markup-renderers-plugin" name="Custom Markup Renderers">
-
-    <markup-renderer-component key="changesetMarkupRenderer" class="com.atlassian.stash.internal.web.markup.ChangesetMarkupRenderer" />
-
-</atlassian-plugin>

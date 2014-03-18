@@ -1,1 +1,0 @@
-define("layout/project",["model/page-state","model/project"],function(A,B){return{onReady:function(C){A.setProject(new B(C))}}});

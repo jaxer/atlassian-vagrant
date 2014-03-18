@@ -1,8 +1,0 @@
-.first-line-of-hunk .CodeMirror-gutter-elt{margin-top:40px;}
-.first-line-of-hunk:first-child .CodeMirror-gutter-elt{margin-top:17px;}
-.skipped-container{font-size:12px;color:#707070;cursor:pointer;line-height:6px;}.skipped-container .showmore{text-align:center;background-color:#dddddd;}
-.unified-diff .line .line-number-marker{border-right-color:#cccccc;}
-.unified-diff .CodeMirror-scroll{background-color:#dddddd;}
-.context.line.new,.context.line.new .CodeMirror-gutter-elt>*{-webkit-animation:diff-target-fade 1.5s 1;-moz-animation:diff-target-fade 1.5s 1;-o-animation:diff-target-fade 1.5s 1;animation:diff-target-fade 1.5s 1;}
-.diff-type-ADD .line-number-from,.diff-type-DELETE .line-number-to{display:none;}
-@-webkit-keyframes diff-target-fade{0%{background-color:#fffee8;} 100%{background-color:#ffffff;}}@-moz-keyframes diff-target-fade{0%{background-color:#fffee8;} 100%{background-color:#ffffff;}}@-ms-keyframes diff-target-fade{0%{background-color:#fffee8;} 100%{background-color:#ffffff;}}

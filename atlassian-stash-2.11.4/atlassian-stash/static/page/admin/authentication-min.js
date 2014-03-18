@@ -1,1 +1,0 @@
-define("page/admin/authentication",["exports","jquery"],function(A,B){A.onReady=function(E,G){var D=B(G);var F=B(E);var C=function(){if(F.prop("checked")){D.prop("disabled",false)}else{D.prop("disabled",true);D.prop("checked",false)}};F.click(function(){C()});C()}});

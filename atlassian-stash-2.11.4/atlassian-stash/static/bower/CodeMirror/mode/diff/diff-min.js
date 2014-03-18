@@ -1,1 +1,0 @@
-CodeMirror.defineMode("diff",function(){var A={"+":"positive","-":"negative","@":"meta"};return{token:function(D){var C=D.string.search(/[\t ]+?$/);if(!D.sol()||C===0){D.skipToEnd();return("error "+(A[D.string.charAt(0)]||"")).replace(/ $/,"")}var B=A[D.peek()]||D.skipToEnd();if(C===-1){D.skipToEnd()}else{D.pos=C}return B}}});CodeMirror.defineMIME("text/x-diff","diff");

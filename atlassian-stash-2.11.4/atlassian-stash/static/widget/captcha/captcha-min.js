@@ -1,1 +1,0 @@
-define("widget/captcha",["jquery","util/navbuilder","exports"],function(C,B,A){A.initialise=function(F,D){var E=C(F);C(D).click(function(G){E.attr("src",B.captcha().build());return false})}});

@@ -1,1 +1,0 @@
-define("page/project-create",["jquery","feature/project/project-avatar-picker","exports"],function(C,B,A){A.onReady=function(){C("#key").generateFrom(C("#name"),{maxNameLength:64,maxKeyLength:64});new B(".avatar-picker-field")}});

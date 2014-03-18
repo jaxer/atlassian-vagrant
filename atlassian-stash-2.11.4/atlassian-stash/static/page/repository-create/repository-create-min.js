@@ -1,1 +1,0 @@
-define("page/repository-create",["model/page-state","model/project","feature/repository/cloneUrlGen","exports"],function(B,C,D,A){A.onReady=function(E){B.setProject(new C(E));D.bindUrlGeneration("#name","#name + .description .clone-url > span")}});

@@ -1,1 +1,0 @@
-require("util/oauth").interceptLinks(".ual-authenticate");

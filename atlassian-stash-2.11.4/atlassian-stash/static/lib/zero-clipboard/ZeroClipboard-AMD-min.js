@@ -1,1 +1,0 @@
-define("zero-clipboard",["aui"],function(B){var A=window.ZeroClipboard;A.setDefaults({moviePath:B.contextPath()+"/s/"+A.version+"/_/download/resources/com.atlassian.stash.stash-web-plugin:zero-clipboard/ZeroClipboard.swf",useNoCache:false});return A});require("zero-clipboard");

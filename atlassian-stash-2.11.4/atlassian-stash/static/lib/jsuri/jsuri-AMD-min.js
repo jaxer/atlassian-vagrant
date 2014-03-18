@@ -1,1 +1,0 @@
-define("lib/jsuri",function(){var A=window.Uri;return A});

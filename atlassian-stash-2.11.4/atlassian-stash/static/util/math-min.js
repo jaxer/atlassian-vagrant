@@ -1,1 +1,0 @@
-define("util/math",["underscore","exports"],function(E,C){function B(I,H){return I*H}function F(I,H){return I+H}function A(H){return function(I){return Math.min(H,I)}}function D(H){return function(I){return Math.max(H,I)}}function G(I,H){return E.compose(D(I),A(H))}C.add=F;C.clamp=G;C.highPass=D;C.lowPass=A;C.multiply=B});

@@ -1,1 +1,0 @@
-define("feature/file-content/diff-handler/diff-handler-internal",["underscore","feature/file-content/diff-view-segment-types","exports"],function(B,C,A){A.isAddedOrRemoved=function(E){function D(F){return B.all(E.hunks,function(G){return B.all(G.segments,function(H){return H.type===F})})}return D(C.ADDED)||D(C.REMOVED)}});

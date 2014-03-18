@@ -1,1 +1,0 @@
-define("model/stash-user",["model/person","util/deprecation"],function(B,C){var A=B.extend({namedAttributes:{active:"boolean",avatarUrl:"string",displayName:"string",id:"number",isAdmin:"boolean",link:Object,links:Object,slug:"string"}});C.braceAsJson(A,"StashUser","2.5","3.0");return A});

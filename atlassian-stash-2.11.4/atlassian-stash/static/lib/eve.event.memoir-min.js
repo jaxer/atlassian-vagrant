@@ -1,1 +1,0 @@
-(function(A,B){B.bind("memoir.popstate",function(C){A("memoir.popstate",this,C)});B.bind("memoir.changestate",function(C){A("memoir.changestate",this,C)})})(window.eve||require("eve"),window.memoir||require("memoir"));

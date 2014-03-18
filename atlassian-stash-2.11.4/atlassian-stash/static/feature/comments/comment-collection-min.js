@@ -1,1 +1,0 @@
-define("feature/comments/comment-collection",["backbone","feature/comments/comment-model","util/navbuilder"],function(B,A){return B.Collection.extend({initialize:function(D,C){C=C||{};this.anchor=C.anchor},model:A,url:function(){return this.anchor.urlBuilder().build()}})});

@@ -1,1 +1,0 @@
-define("util/object",["exports"],function(C){function B(E){return E}var D=Object.prototype.hasOwnProperty;C.freeze=Object.freeze||B;C.deepFreeze=!Object.freeze?B:function A(H,E){if(H!==null&&typeof H==="object"){var G=Object.isFrozen(H);if(!G){Object.freeze(H)}if(!G||E){for(var F in H){if(D.call(H,F)){A(H[F])}}}}return H}});

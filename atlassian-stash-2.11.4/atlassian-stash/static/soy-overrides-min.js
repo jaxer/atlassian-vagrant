@@ -1,1 +1,0 @@
-goog.string.newLineToBr=function(A,B){return A.replace(/\r\n|\r|\n/g,"<br/>")};

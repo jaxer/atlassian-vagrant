@@ -1,1 +1,0 @@
-define("feature/repository/branch-selector",["jquery","feature/repository/revision-reference-selector"],function(C,A){function B(E,D){D=C.extend({show:{branches:true,tags:false,commits:false},triggerPlaceholder:stash_i18n("stash.web.branchSelector.default","Select branch")},D);return new A(E,D)}return B});

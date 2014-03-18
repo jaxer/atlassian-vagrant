@@ -1,1 +1,0 @@
-define("model/file-content-types",["deprecate"],function(B){var A={SOURCE:"source",DIFF:"diff"};return B.obj(A,"model/file-content-types::","model/file-content-modes::","2.11","3.0")});

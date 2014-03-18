@@ -1,4 +1,0 @@
-#Include the full module keys that your app feels are required for the application to function properly.
-#The UPM will not present users with a disable button for the modules of the plugin that are specified here.
-#The UPM will also not include a disable button for the plugin that contains this module.
-#NOTE: use this mechanism if you have a plugin that has some modules that are required but others that are optional

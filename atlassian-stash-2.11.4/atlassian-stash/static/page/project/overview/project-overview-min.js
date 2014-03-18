@@ -1,1 +1,0 @@
-define("page/project/overview",["jquery","util/flash-notifications","feature/repository/repository-table","exports"],function(D,C,A,B){B.onReady=function(E){C.attachNotifications(".project-banners","before");if(D(E).length){new A(E,{showPublicStatus:true,bufferPixels:D("#footer").height()}).init()}}});

@@ -1,6 +1,0 @@
-.list-and-detail-view{height:100%;}
-.list-view{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;height:100%;width:300px;overflow-y:auto;display:inline-block;vertical-align:top;border-right:1px solid #cccccc;}.list-view>ul{list-style:none;padding:0;}.list-view>ul>li{border-top:1px solid #cccccc;padding:10px;cursor:pointer;}.list-view>ul>li:last-child{border-bottom:1px solid #cccccc;}
-.list-view>ul>li.selectedItem{border-top:1px solid #ccd9ea;background-color:#ebf2f9;}.list-view>ul>li.selectedItem+li{border-top:1px solid #ccd9ea;}
-.list-view>ul>li.selectedItem:last-child{border-bottom:1px solid #ccd9ea;}
-.list-view>ul>li:first-child{border-top:none;}
-.detail-view{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;height:100%;width:680px;overflow-y:auto;display:inline-block;vertical-align:top;padding:20px;}

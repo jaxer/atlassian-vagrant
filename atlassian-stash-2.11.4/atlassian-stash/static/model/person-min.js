@@ -1,1 +1,0 @@
-define("model/person",["backbone-brace"],function(A){return A.Model.extend({namedAttributes:{emailAddress:"string",name:"string"},idAttribute:"name",initialize:function(){if(this.namedAttributes.id==null){this.setId(this.attributes[this.idAttribute])}}})});

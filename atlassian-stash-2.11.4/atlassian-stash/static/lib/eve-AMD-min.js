@@ -1,1 +1,0 @@
-define("eve",["util/deprecation"],function(E){var C=window.eve;var F=E.fn(C,"eve","util/events:trigger","2.4");var D=["nt","on","off","listeners","unbind","stop","once"];for(var B=0,A=D.length;B<A;B++){F[D[B]]=E.fn(C[D[B]],"eve."+D[B],"util/events:"+D[B],"2.4")}F.version=C.version;F.toString=C.toString;return F});
