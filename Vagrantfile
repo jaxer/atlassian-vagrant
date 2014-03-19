@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant::Config.run do |config|
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
   config.vm.box = "precise32"
   config.vm.forward_port 7990, 7990
   config.vm.forward_port 8080, 8080
